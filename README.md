@@ -1,7 +1,14 @@
+# NSONE Python SDK
 
-= NSONE Python SDK
+Data-driven DNS platform
+http://nsone.net
 
-== Installation
+## Installation
 
-== Documentation
+(work in progress)
+
+## Documentation
+
+http://nsone.net/api/
+
 
