@@ -12,12 +12,9 @@ os.chdir(os.path.abspath(path))
 requests = 'requests >= 0.8.8'
 install_requires = [requests]
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'nsone'))
-from version import VERSION
-
 setup(
     name='nsone',
-    version=VERSION,
+    version=nsone.version,
     description='NSONE python bindings',
     author='Shannon Weyrick',
     author_email='sweyrick@nsone.net',
