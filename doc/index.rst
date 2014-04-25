@@ -11,7 +11,12 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+Package
+-------
 
+.. toctree::
+
+   api/modules
 
 Indices and tables
 ==================
