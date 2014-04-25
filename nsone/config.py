@@ -18,6 +18,9 @@ class Config:
     Config files are simple JSON text files.
     To set or retrieve vales, use the object like a dict.
     """
+    ENDPOINT = 'api.nsone.net'
+
+    PORT = 443
 
     def __init__(self, path=None):
         """
@@ -32,7 +35,7 @@ class Config:
     def loadFromString(self, body):
         """
         Load config data (i.e. JSON text) from the given string
-        
+
         :param str body: config data in JSON format
         """
         try:

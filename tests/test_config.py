@@ -1,3 +1,8 @@
+#
+# Copyright (c) 2014 NSONE, Inc.
+#
+# License under The MIT License (MIT). See LICENSE in project root.
+#
 
 import unittest
 from nsone.config import Config, ConfigException
@@ -11,7 +16,8 @@ class unit(unittest.TestCase):
         'keys': {
             'test1': {
                 'key': 'qACMD09OJXBxT7XOuRs8',
-                'desc': 'test key number 1'
+                'desc': 'test key number 1',
+                'writeLock': True
             }
         }
     }
