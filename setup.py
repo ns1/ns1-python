@@ -9,7 +9,7 @@ except ImportError:
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
 
-requests = 'requests >= 0.8.8'
+requests = 'requests == 2.2.1'
 install_requires = [requests]
 
 setup(
@@ -29,7 +29,8 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
-        #"Programming Language :: Python :: 3",
-        #"Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
         "Topic :: Software Development :: Libraries :: Python Modules",
     ])
