@@ -14,6 +14,7 @@ install_requires = [requests]
 
 setup(
     name='nsone',
+    # flake8: noqa
     version=nsone.version,
     description='NSONE python bindings',
     author='Shannon Weyrick',

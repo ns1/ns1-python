@@ -4,12 +4,10 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-import requests
+# import requests
+
 
 class BaseService:
-
-
-
 
     def __init__(self, config):
         self._config = config
@@ -17,5 +15,3 @@ class BaseService:
 
     def _make_request(self):
         pass
-
-

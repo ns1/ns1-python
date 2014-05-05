@@ -7,8 +7,6 @@ python:
 script: "nosetests -v"
 install:
   - pip install -r requirements.txt
-  - pip install pep8 --use-mirrors
-  - pip install https://github.com/dcramer/pyflakes/tarball/master
+  - pip install flake8 --use-mirrors
 before_script:
-  - pep8 .
-  - pyflakes .
+  - flake8 .

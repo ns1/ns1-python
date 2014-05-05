@@ -14,5 +14,3 @@ class Stats(BaseService):
 
     def usage(self, zone=None, domain=None, type=None):
         pass
-
-
