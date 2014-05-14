@@ -5,6 +5,7 @@
 #
 
 import json
+import os
 
 
 class ConfigException(Exception):
@@ -22,15 +23,28 @@ class Config:
 
     PORT = 443
 
+    API_VERSION = 'v1'
+
     def __init__(self, path=None):
         """
         :param str path: optional path. if given, try to load the given config
                          file
         """
         self._path = None
+        self._keyID = None
         self._data = {}
         if path:
             self.loadFromFile(path)
+
+    def _doDefaults(self):
+        if 'default_key' in self._data:
+            self.useKeyID(self._data['default_key'])
+        if 'endpoint' not in self._data:
+            self._data['endpoint'] = self.ENDPOINT
+        if 'port' not in self._data:
+            self._data['port'] = self.PORT
+        if 'api_version' not in self._data:
+            self._data['api_version'] = self.API_VERSION
 
     def loadFromString(self, body):
         """
@@ -41,7 +55,9 @@ class Config:
         try:
             self._data = json.loads(body)
         except Exception as e:
-            raise ConfigException('invalid config body: %s' % e.message)
+            raise ConfigException('%s: invalid config body: %s' %
+                                  (self._path, e.message))
+        self._doDefaults()
 
     def loadFromFile(self, path):
         """
@@ -49,6 +65,8 @@ class Config:
 
         :param str path: path to config file
         """
+        if '~' in path:
+            path = os.path.expanduser(path)
         f = open(path)
         body = f.read()
         f.close()
@@ -70,6 +88,35 @@ class Config:
         f = open(self._path, 'w')
         f.write(json.dumps(self._data))
         f.close()
+
+    def useKeyID(self, keyID):
+        if keyID not in self._data['keys']:
+            raise ConfigException('keyID does not exist: %s' % keyID)
+        self._keyID = keyID
+
+    def getKeyConfig(self, keyID=None):
+        k = keyID if keyID is not None else self._keyID
+        if not k or k not in self._data['keys']:
+            raise ConfigException('request key does not exist: %s' % k)
+        return self._data['keys'][k]
+
+    def isKeyWriteLocked(self, keyID=None):
+        kcfg = self.getKeyConfig(keyID)
+        return 'writeLock' in kcfg and kcfg['writeLock'] is True
+
+    def getAPIKey(self, keyID=None):
+        kcfg = self.getKeyConfig(keyID)
+        if 'key' not in kcfg:
+            raise ConfigException('invalid config: missing api key')
+        return kcfg['key']
+
+    def getEndpoint(self):
+        port = ''
+        if self._data['port'] != self.PORT:
+            port = ':' + port
+        return 'https://%s%s/%s/' % (self._data['endpoint'],
+                                     port,
+                                     self._data['api_version'])
 
     def __str__(self):
         return 'config file [%s]: %s' % (self._path, str(self._data))

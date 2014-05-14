@@ -4,13 +4,28 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from service import BaseService
+import service
 
 
-class Stats(BaseService):
+class Stats(service.BaseService):
+
+    ROOT = 'stats'
 
     def qps(self, zone=None, domain=None, type=None):
-        pass
+        if zone is None:
+            return self._make_request(service.GET, '%s/%s' % (self.ROOT, 'qps'))
+        elif type is not None and domain is not None and zone is not None:
+            return self._make_request(service.GET, '%s/%s/%s/%s/%s' %
+                                                   (self.ROOT,
+                                                   'qps',
+                                                    zone,
+                                                    domain,
+                                                    type))
+        elif zone is not None:
+            return self._make_request(service.GET, '%s/%s/%s' %
+                                                   (self.ROOT,
+                                                    'qps',
+                                                    zone))
 
     def usage(self, zone=None, domain=None, type=None):
         pass
