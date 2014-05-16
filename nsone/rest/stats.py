@@ -13,11 +13,13 @@ class Stats(service.BaseService):
 
     def qps(self, zone=None, domain=None, type=None):
         if zone is None:
-            return self._make_request(service.GET, '%s/%s' % (self.ROOT, 'qps'))
+            return self._make_request(service.GET,
+                                      '%s/%s' %
+                                      (self.ROOT, 'qps'))
         elif type is not None and domain is not None and zone is not None:
             return self._make_request(service.GET, '%s/%s/%s/%s/%s' %
                                                    (self.ROOT,
-                                                   'qps',
+                                                    'qps',
                                                     zone,
                                                     domain,
                                                     type))
