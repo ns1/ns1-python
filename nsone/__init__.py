@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from config import Config
+from .config import Config
 
 version = "0.1"
 
