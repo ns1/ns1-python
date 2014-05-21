@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-import service
+from . import service
 
 
 class Stats(service.BaseService):

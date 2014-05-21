@@ -126,3 +126,6 @@ class Config:
 
     def __setitem__(self, key, value):
         self._data[key] = value
+
+    def get(self, item, default=None):
+        return self._data.get(item, default)

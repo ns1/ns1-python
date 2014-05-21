@@ -14,17 +14,21 @@ class NSONE:
     DEFAULT_CONFIG_FILE = '~/.nsone'
 
     def __init__(self, config=None, configFile=None, keyID=None):
-        self._config = config
-        if self._config is None:
+        self.config = config
+        if self.config is None:
             self._loadConfig(configFile)
         if keyID:
-            self._config.useKeyID(keyID)
+            self.config.useKeyID(keyID)
 
     def _loadConfig(self, configFile):
-        self._config = Config()
+        self.config = Config()
         configFile = self.DEFAULT_CONFIG_FILE if not configFile else configFile
-        self._config.loadFromFile(configFile)
+        self.config.loadFromFile(configFile)
+
+    def zones(self):
+        import nsone.rest.zones
+        return nsone.rest.zones.Zones(self.config)
 
     def stats(self):
         import nsone.rest.stats
-        return nsone.rest.stats.Stats(self._config)
+        return nsone.rest.stats.Stats(self.config)
