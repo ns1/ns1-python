@@ -119,7 +119,8 @@ class Config:
                                      self._data['api_version'])
 
     def __str__(self):
-        return 'config file [%s]: %s' % (self._path, str(self._data))
+        return 'config file [%s]: %s' % (self._path,
+                                         json.dumps(self._data, indent=True))
 
     def __getitem__(self, item):
         return self._data.get(item, None)
