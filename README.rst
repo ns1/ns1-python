@@ -8,6 +8,11 @@ NSONE Python SDK
 .. image:: https://travis-ci.org/nsone/nsone-python.png
         :target: https://travis-ci.org/nsone/nsone-python
 
+Status
+======
+Initial development, not for production use yet.
+
+
 Installation
 ============
 

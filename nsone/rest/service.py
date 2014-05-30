@@ -19,7 +19,14 @@ class ServiceException(Exception):
 
     def __init__(self, response):
         self.response = response
-        self.message = response.text
+        try:
+            resp = response.json()
+            if 'message' in resp:
+                self.message = resp['message']
+            else:
+                self.message = response.text
+        except:
+            self.message = response.text
 
 
 class BaseService:
@@ -42,7 +49,11 @@ class BaseService:
         kwargs['headers'] = {
             'X-NSONE-Key': self._config.getAPIKey()
         }
-        resp = REQ_MAP[type](self._make_url(path), **kwargs)
+        verify = not self._config.getKeyConfig().get('ignore-ssl-errors',
+                                                     self._config.get(
+                                                         'ignore-ssl-errors',
+                                                         False))
+        resp = REQ_MAP[type](self._make_url(path), verify=verify, **kwargs)
         if resp.status_code != 200:
             raise ServiceException(resp)
         # TODO make sure json is valid

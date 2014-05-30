@@ -94,6 +94,9 @@ class Config:
             raise ConfigException('keyID does not exist: %s' % keyID)
         self._keyID = keyID
 
+    def getCurrentKeyID(self):
+        return self._keyID
+
     def getKeyConfig(self, keyID=None):
         k = keyID if keyID is not None else self._keyID
         if not k or k not in self._data['keys']:
@@ -112,9 +115,17 @@ class Config:
 
     def getEndpoint(self):
         port = ''
-        if self._data['port'] != self.PORT:
-            port = ':' + port
-        return 'https://%s%s/%s/' % (self._data['endpoint'],
+        endpoint = ''
+        keyConfig = self.getKeyConfig()
+        if 'port' in keyConfig:
+            port = ':' + keyConfig['port']
+        elif self._data['port'] != self.PORT:
+            port = ':' + self._data['port']
+        if 'endpoint' in keyConfig:
+            endpoint = keyConfig['endpoint']
+        else:
+            endpoint = self._data['endpoint']
+        return 'https://%s%s/%s/' % (endpoint,
                                      port,
                                      self._data['api_version'])
 
