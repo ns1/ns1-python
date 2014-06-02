@@ -4,7 +4,9 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
+import sys
 import requests
+from nsone import version
 
 (GET, POST, DELETE, PUT) = range(0, 4)
 REQ_MAP = {
@@ -47,6 +49,8 @@ class BaseService:
             raise Exception('invalid request type')
         # TODO don't assume this doesn't exist in kwargs
         kwargs['headers'] = {
+            'User-Agent': 'nsone-python %s python %s'
+                          % (version, sys.version),
             'X-NSONE-Key': self._config.getAPIKey()
         }
         verify = not self._config.getKeyConfig().get('ignore-ssl-errors',

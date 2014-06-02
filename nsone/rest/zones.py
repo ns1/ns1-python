@@ -11,6 +11,9 @@ class Zones(service.BaseService):
 
     ROOT = 'zones'
 
+    def delete(self, zone):
+        return self._make_request(service.DELETE, '%s/%s' % (self.ROOT, zone))
+
     def list(self):
         return self._make_request(service.GET, '%s' % self.ROOT)
 
