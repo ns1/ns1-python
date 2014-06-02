@@ -25,6 +25,8 @@ class Config:
 
     API_VERSION = 'v1'
 
+    DEFAULT_CONFIG_FILE = '~/.nsone'
+
     def __init__(self, path=None):
         """
         :param str path: optional path. if given, try to load the given config
@@ -45,6 +47,30 @@ class Config:
             self._data['port'] = self.PORT
         if 'api_version' not in self._data:
             self._data['api_version'] = self.API_VERSION
+        if 'cli' not in self._data:
+            self._data['cli'] = {}
+
+    def createFromAPIKey(self, apikey, maybeWriteDefault=False):
+        """
+        Create a basic config from a single apikey
+        :param apikey: NSONE API Key, as created in the NSONE portal
+        :param maybeWrite: If True and DEFAULT_CONFIG_FILE doesn't exist,
+                           write out the resulting config there.
+        """
+        self._data = {
+            'default_key': 'default',
+            'keys': {
+                'default': {
+                    'key': apikey,
+                    'desc': 'imported API key'
+                }
+            }
+        }
+        self._keyID = 'default'
+        self._doDefaults()
+        if maybeWriteDefault:
+            path = os.path.expanduser(self.DEFAULT_CONFIG_FILE)
+            self.write(path)
 
     def loadFromString(self, body):
         """
@@ -85,6 +111,8 @@ class Config:
             raise ConfigException('no config path given')
         if path:
             self._path = path
+        if '~' in self._path:
+            self._path = os.path.expanduser(self._path)
         f = open(self._path, 'w')
         f.write(json.dumps(self._data))
         f.close()

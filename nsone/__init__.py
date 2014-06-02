@@ -11,8 +11,6 @@ version = "0.1"
 
 class NSONE:
 
-    DEFAULT_CONFIG_FILE = '~/.nsone'
-
     def __init__(self, config=None, configFile=None, keyID=None):
         self.config = config
         if self.config is None:
@@ -22,7 +20,8 @@ class NSONE:
 
     def _loadConfig(self, configFile):
         self.config = Config()
-        configFile = self.DEFAULT_CONFIG_FILE if not configFile else configFile
+        configFile = Config.DEFAULT_CONFIG_FILE \
+            if not configFile else configFile
         self.config.loadFromFile(configFile)
 
     def zones(self):
