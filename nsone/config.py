@@ -72,6 +72,14 @@ class Config:
             path = os.path.expanduser(self.DEFAULT_CONFIG_FILE)
             self.write(path)
 
+    def loadFromDict(self, d):
+        """
+        Load config data from the given dictionary
+        :param d: Python dictionary containing configuration items
+        """
+        self._data = d
+        self._doDefaults()
+
     def loadFromString(self, body):
         """
         Load config data (i.e. JSON text) from the given string

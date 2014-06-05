@@ -24,10 +24,29 @@ class NSONE:
             if not configFile else configFile
         self.config.loadFromFile(configFile)
 
+    ## REST INTERFACE ##
     def zones(self):
         import nsone.rest.zones
         return nsone.rest.zones.Zones(self.config)
 
+    def records(self):
+        import nsone.rest.records
+        return nsone.rest.records.Records(self.config)
+
     def stats(self):
         import nsone.rest.stats
         return nsone.rest.stats.Stats(self.config)
+
+    ## HIGH LEVEL INTERFACE ##
+    def loadZone(self, zone):
+        import nsone.zones
+        zone = nsone.zones.Zone(self.config, zone)
+        zone.load()
+        return zone
+
+    def createZone(self, zone, refresh=None, retry=None,
+                   expiry=None, nx_ttl=None):
+        import nsone.zones
+        zone = nsone.zones.Zone(self.config, zone)
+        zone.create(refresh, retry, expiry, nx_ttl)
+        return zone
