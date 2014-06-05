@@ -24,8 +24,7 @@ class Records(resource.BaseResource):
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
                                                    domain,
-                                                   type
-                                                  ),
+                                                   type),
                                   body=body)
 
     def delete(self, zone, domain, type):
@@ -33,13 +32,11 @@ class Records(resource.BaseResource):
                                   (self.ROOT,
                                    zone,
                                    domain,
-                                   type
-                                  ))
+                                   type))
 
     def retrieve(self, zone, domain, type):
         return self._make_request(resource.GET, '%s/%s/%s/%s' %
                                   (self.ROOT,
                                    zone,
                                    domain,
-                                   type
-                                  ))
+                                   type))

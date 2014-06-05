@@ -32,7 +32,7 @@ class Zone(object):
         if self.data:
             raise ZoneException('zone already loaded')
         self.data = self._rest.create(self.zone, refresh, retry,
-                                          expiry, nx_ttl)
+                                      expiry, nx_ttl)
 
     def add_A(self, domain, answers):
         record = Record(self, domain, 'A')

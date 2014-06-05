@@ -24,7 +24,7 @@ class NSONE:
             if not configFile else configFile
         self.config.loadFromFile(configFile)
 
-    ## REST INTERFACE ##
+    # REST INTERFACE
     def zones(self):
         import nsone.rest.zones
         return nsone.rest.zones.Zones(self.config)
@@ -37,7 +37,7 @@ class NSONE:
         import nsone.rest.stats
         return nsone.rest.stats.Stats(self.config)
 
-    ## HIGH LEVEL INTERFACE ##
+    # HIGH LEVEL INTERFACE
     def loadZone(self, zone):
         import nsone.zones
         zone = nsone.zones.Zone(self.config, zone)
