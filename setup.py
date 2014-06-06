@@ -9,9 +9,6 @@ except ImportError:
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
 
-requests = 'requests == 2.2.1'
-install_requires = [requests]
-
 setup(
     name='nsone',
     # flake8: noqa
@@ -21,7 +18,6 @@ setup(
     author_email='sweyrick@nsone.net',
     url='https://nsone.net/',
     packages=['nsone'],
-    install_requires=install_requires,
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

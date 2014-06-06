@@ -7,17 +7,12 @@
 import sys
 import copy
 import logging
-import requests
 import json
 from nsone import version
+from nsone.rest.transport.base import TransportBase
 
 (GET, POST, DELETE, PUT) = range(0, 4)
-REQ_MAP = {
-    GET: requests.get,
-    POST: requests.post,
-    DELETE: requests.delete,
-    PUT: requests.put
-}
+VERBS = [GET, POST, DELETE, PUT]
 
 
 class ResourceException(Exception):
@@ -39,6 +34,8 @@ class ResourceException(Exception):
 
 class BaseResource:
 
+    DEFAULT_TRANSPORT = 'requests'
+
     def __init__(self, config):
         """
 
@@ -47,13 +44,20 @@ class BaseResource:
         self._config = config
         self._log = logging.getLogger(__name__)
         # TODO verify we have a default key
+        # get a transport
+        transport = self._config.get('transport', self.DEFAULT_TRANSPORT)
+        if transport not in TransportBase.REGISTRY:
+            raise ResourceException('requested transport was not found: %s'
+                                    % transport)
+        self._transport = TransportBase.REGISTRY[transport]()
+
 
     def _make_url(self, path):
         return self._config.getEndpoint() + path
 
     def _make_request(self, type, path, **kwargs):
-        if type not in REQ_MAP:
-            raise Exception('invalid request type')
+        if type not in VERBS:
+            raise Exception('invalid request method')
         # TODO don't assume this doesn't exist in kwargs
         kwargs['headers'] = {
             'User-Agent': 'nsone-python %s python 0x%s %s'
@@ -70,8 +74,9 @@ class BaseResource:
         argcopy = copy.deepcopy(kwargs)
         argcopy['headers']['X-NSONE-Key'] = 'XXX'
         self._log.debug(argcopy)
-        resp = REQ_MAP[type](self._make_url(path), verify=verify, **kwargs)
-        if resp.status_code != 200:
-            raise ResourceException(resp)
+        # resp = REQ_MAP[type](self._make_url(path), verify=verify, **kwargs)
+        # if resp.status_code != 200:
+        #     raise ResourceException(resp)
         # TODO make sure json is valid
-        return resp.json()
+        # return resp.json()
+        return self._transport.send(type, self._make_url(path), **kwargs)
