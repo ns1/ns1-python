@@ -38,15 +38,14 @@ class NSONE:
         return nsone.rest.stats.Stats(self.config)
 
     # HIGH LEVEL INTERFACE
-    def loadZone(self, zone):
+    def loadZone(self, zone, callback=None):
         import nsone.zones
         zone = nsone.zones.Zone(self.config, zone)
-        zone.load()
+        zone.load(callback=callback)
         return zone
 
     def createZone(self, zone, refresh=None, retry=None,
-                   expiry=None, nx_ttl=None):
+                   expiry=None, nx_ttl=None, callback=None):
         import nsone.zones
         zone = nsone.zones.Zone(self.config, zone)
-        zone.create(refresh, retry, expiry, nx_ttl)
-        return zone
+        return zone.create(refresh, retry, expiry, nx_ttl, callback=callback)

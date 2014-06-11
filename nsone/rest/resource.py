@@ -10,26 +10,7 @@ import logging
 import json
 from nsone import version
 from nsone.rest.transport.base import TransportBase
-
-(GET, POST, DELETE, PUT) = range(0, 4)
-VERBS = [GET, POST, DELETE, PUT]
-
-
-class ResourceException(Exception):
-
-    def __init__(self, response):
-        self.response = response
-        try:
-            resp = response.json()
-            if 'message' in resp:
-                self.message = resp['message']
-            else:
-                self.message = response.text
-        except:
-            self.message = response.text
-
-    def __str__(self):
-        return self.message
+from nsone.rest.errors import ResourceException
 
 
 class BaseResource:
@@ -49,13 +30,14 @@ class BaseResource:
         if transport not in TransportBase.REGISTRY:
             raise ResourceException('requested transport was not found: %s'
                                     % transport)
-        self._transport = TransportBase.REGISTRY[transport]()
+        self._transport = TransportBase.REGISTRY[transport](self._config)
 
 
     def _make_url(self, path):
         return self._config.getEndpoint() + path
 
     def _make_request(self, type, path, **kwargs):
+        VERBS = ['GET', 'POST', 'DELETE', 'PUT']
         if type not in VERBS:
             raise Exception('invalid request method')
         # TODO don't assume this doesn't exist in kwargs
@@ -64,19 +46,10 @@ class BaseResource:
                           % (version, sys.hexversion, sys.platform),
             'X-NSONE-Key': self._config.getAPIKey()
         }
-        verify = not self._config.getKeyConfig().get('ignore-ssl-errors',
-                                                     self._config.get(
-                                                         'ignore-ssl-errors',
-                                                         False))
         if 'body' in kwargs:
             kwargs['data'] = json.dumps(kwargs['body'])
             del kwargs['body']
         argcopy = copy.deepcopy(kwargs)
         argcopy['headers']['X-NSONE-Key'] = 'XXX'
         self._log.debug(argcopy)
-        # resp = REQ_MAP[type](self._make_url(path), verify=verify, **kwargs)
-        # if resp.status_code != 200:
-        #     raise ResourceException(resp)
-        # TODO make sure json is valid
-        # return resp.json()
         return self._transport.send(type, self._make_url(path), **kwargs)

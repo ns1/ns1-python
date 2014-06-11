@@ -13,11 +13,11 @@ class Stats(resource.BaseResource):
 
     def qps(self, zone=None, domain=None, type=None):
         if zone is None:
-            return self._make_request(resource.GET,
+            return self._make_request('GET',
                                       '%s/%s' %
                                       (self.ROOT, 'qps'))
         elif type is not None and domain is not None and zone is not None:
-            return self._make_request(resource.GET,
+            return self._make_request('GET',
                                       '%s/%s/%s/%s/%s' %
                                       (self.ROOT,
                                        'qps',
@@ -25,7 +25,7 @@ class Stats(resource.BaseResource):
                                        domain,
                                        type))
         elif zone is not None:
-            return self._make_request(resource.GET,
+            return self._make_request('GET',
                                       '%s/%s/%s' %
                                       (self.ROOT,
                                        'qps',

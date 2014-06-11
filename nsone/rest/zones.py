@@ -11,7 +11,8 @@ class Zones(resource.BaseResource):
 
     ROOT = 'zones'
 
-    def create(self, zone, refresh=None, retry=None, expiry=None, nx_ttl=None):
+    def create(self, zone, refresh=None, retry=None, expiry=None, nx_ttl=None,
+               callback=None, errback=None):
         body = {}
         body['zone'] = zone
         if refresh:
@@ -22,15 +23,23 @@ class Zones(resource.BaseResource):
             body['expiry'] = expiry
         if nx_ttl:
             body['nx_ttl'] = nx_ttl
-        return self._make_request(resource.PUT,
+        return self._make_request('PUT',
                                   '%s/%s' % (self.ROOT, zone),
-                                  body=body)
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
 
-    def delete(self, zone):
-        return self._make_request(resource.DELETE, '%s/%s' % (self.ROOT, zone))
+    def delete(self, zone, callback=None, errback=None):
+        return self._make_request('DELETE', '%s/%s' % (self.ROOT, zone),
+                                  callback=callback,
+                                  errback=errback)
 
-    def list(self):
-        return self._make_request(resource.GET, '%s' % self.ROOT)
+    def list(self, callback=None, errback=None):
+        return self._make_request('GET', '%s' % self.ROOT,
+                                  callback=callback,
+                                  errback=errback)
 
-    def retrieve(self, zone):
-        return self._make_request(resource.GET, '%s/%s' % (self.ROOT, zone))
+    def retrieve(self, zone, callback=None, errback=None):
+        return self._make_request('GET', '%s/%s' % (self.ROOT, zone),
+                                  callback=callback,
+                                  errback=errback)

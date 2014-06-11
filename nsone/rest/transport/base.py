@@ -9,5 +9,14 @@ class TransportBase(object):
 
     REGISTRY = {}
 
-    def send(self, method, url, headers=None, verify=True, data=None):
+    def __init__(self, config):
+        self._config = config
+        self._verify = not self._config.getKeyConfig() \
+            .get('ignore-ssl-errors',
+                 self._config.get(
+                     'ignore-ssl-errors',
+                     False))
+
+    def send(self, method, url, headers=None, data=None,
+             callback=None, errback=None):
         pass

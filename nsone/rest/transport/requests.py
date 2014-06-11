@@ -3,9 +3,10 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+from __future__ import absolute_import
 
 from nsone.rest.transport.base import TransportBase
-from nsone.rest.resource import GET, POST, DELETE, PUT, ResourceException
+from nsone.rest.errors import ResourceException
 
 try:
     import requests
@@ -13,28 +14,42 @@ try:
 except:
     have_requests = False
 
-REQ_MAP = {
-    GET: requests.get,
-    POST: requests.post,
-    DELETE: requests.delete,
-    PUT: requests.put
-}
-
 
 class RequestsTransport(TransportBase):
 
-    ASYNC = False
-
-    def __init__(self):
+    def __init__(self, config):
         if not have_requests:
             raise ImportError('requests required for RequestsTransport')
+        TransportBase.__init__(self, config)
+        self.REQ_MAP = {
+            'GET': requests.get,
+            'POST': requests.post,
+            'DELETE': requests.delete,
+            'PUT': requests.put
+        }
 
-    def send(self, method, url, headers=None, verify=True, data=None):
+    def send(self, method, url, headers=None, data=None,
+             callback=None, errback=None):
 
-        resp = REQ_MAP[type](url, verify=verify, data=data)
+        resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
+                                    data=data)
         if resp.status_code != 200:
-            raise ResourceException(resp)
+            if errback:
+                errback(resp)
+                return
+            else:
+                raise ResourceException(resp.text, resp)
         # TODO make sure json is valid
-        return resp.json()
+        try:
+            jsonOut = resp.json()
+        except ValueError:
+            if errback:
+                errback(resp)
+                return
+            else:
+                raise ResourceException(resp.txt, resp)
+        if callback:
+            callback(jsonOut)
+        return jsonOut
 
 TransportBase.REGISTRY['requests'] = RequestsTransport

@@ -18,25 +18,31 @@ class Records(resource.BaseResource):
         body['answers'] = answers
         return body
 
-    def create(self, zone, domain, type, answers):
+    def create(self, zone, domain, type, answers, callback=None, errback=None):
         body = self._buildBody(zone, domain, type, answers)
-        return self._make_request(resource.PUT,
+        return self._make_request('PUT',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
                                                    domain,
                                                    type),
-                                  body=body)
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
 
-    def delete(self, zone, domain, type):
-        return self._make_request(resource.DELETE, '%s/%s/%s/%s' %
+    def delete(self, zone, domain, type, callback=None, errback=None):
+        return self._make_request('DELETE', '%s/%s/%s/%s' %
                                   (self.ROOT,
                                    zone,
                                    domain,
-                                   type))
+                                   type),
+                                  callback=callback,
+                                  errback=errback)
 
-    def retrieve(self, zone, domain, type):
-        return self._make_request(resource.GET, '%s/%s/%s/%s' %
+    def retrieve(self, zone, domain, type, callback=None, errback=None):
+        return self._make_request('GET', '%s/%s/%s/%s' %
                                   (self.ROOT,
                                    zone,
                                    domain,
-                                   type))
+                                   type),
+                                  callback=callback,
+                                  errback=errback)

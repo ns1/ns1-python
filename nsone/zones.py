@@ -20,21 +20,35 @@ class Zone(object):
         self.zone = zone
         self.data = None
 
-    def load(self):
+    def load(self, callback=None):
         if self.data:
             raise ZoneException('zone already loaded')
-        self.data = self._rest.retrieve(self.zone)
+        def success(result):
+            self.data = result
+            if callback:
+                return callback(self.data)
+        return self._rest.retrieve(self.zone, callback=success)
 
-    def delete(self):
-        self._rest.delete(self.zone)
+    def delete(self, callback=None):
+        def success(result):
+            if callback:
+                return callback(result)
+        return self._rest.delete(self.zone, callback=callback)
 
-    def create(self, refresh=None, retry=None, expiry=None, nx_ttl=None):
+    def create(self, refresh=None, retry=None, expiry=None, nx_ttl=None,
+               callback=None):
         if self.data:
             raise ZoneException('zone already loaded')
-        self.data = self._rest.create(self.zone, refresh, retry,
-                                      expiry, nx_ttl)
+        def success(result):
+            self.data = result
+            if callback:
+                return callback(self)
+            else:
+                return self
+        return self._rest.create(self.zone, refresh, retry,
+                                 expiry, nx_ttl, callback=success)
 
-    def add_A(self, domain, answers):
+    def add_A(self, domain, answers, callback=None):
         record = Record(self, domain, 'A')
-        record.create(answers)
+        record.create(answers, callback=callback)
         return record

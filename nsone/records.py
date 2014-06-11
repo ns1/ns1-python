@@ -23,14 +23,18 @@ class Record(object):
         self.data = None
         self.answers = None
 
-    def load(self):
+    def load(self, callback=None):
         if self.data:
             raise RecordException('record already loaded')
-        self.data = self._rest.retrieve(self.parentZone.zone,
-                                        self.domain, self.type)
-        self.answers = self.data['answers']
+        def success(result):
+            self.data = result
+            self.answers = self.data['answers']
+            if callback:
+                callback(self.data)
+        return self._rest.retrieve(self.parentZone.zone,
+                                   self.domain, self.type, callback=success)
 
-    def create(self, answers):
+    def create(self, answers, callback=None):
         if self.data:
             raise RecordException('record already loaded')
         realAnswers = []
@@ -38,7 +42,11 @@ class Record(object):
             answers = list(answers)
         for a in answers:
             realAnswers.append({'answer': [a]})
-        self.data = self._rest.create(self.parentZone.zone,
-                                      self.domain, self.type,
-                                      realAnswers)
-        self.answers = self.data['answers']
+        def success(result):
+            self.data = result
+            self.answers = self.data['answers']
+            if callback:
+                callback(self.data)
+        return self._rest.create(self.parentZone.zone,
+                                 self.domain, self.type,
+                                 realAnswers, callback=success)
