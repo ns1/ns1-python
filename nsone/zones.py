@@ -50,5 +50,4 @@ class Zone(object):
 
     def add_A(self, domain, answers, callback=None):
         record = Record(self, domain, 'A')
-        record.create(answers, callback=callback)
-        return record
+        return record.create(answers, callback=callback)

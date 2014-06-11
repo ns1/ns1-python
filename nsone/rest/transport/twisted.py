@@ -45,6 +45,7 @@ class TwistedTransport(TransportBase):
             raise ImportError('Twisted required for TwistedTransport')
         TransportBase.__init__(self, config)
         self.agent = Agent(reactor)
+        self.log = logging.getLogger(self.__module__)
 
     def _callback(self, response, user_callback):
         d = readBody(response)
@@ -52,10 +53,16 @@ class TwistedTransport(TransportBase):
         return d
 
     def _onBody(self, body, response, user_callback):
-        # print "success: %s  %s" % (response.code, body)
+        self.log.debug("%s %s %s" % (response.request.method,
+                                     response.request.absoluteURI,
+                                     response.code))
         if response.code != 200:
             raise ResourceException(body, response)
-        jsonOut = json.loads(body)
+        try:
+            jsonOut = json.loads(body)
+        except:
+            raise ResourceException('invalid json in response: %s' % body,
+                                    response)
         if user_callback:
             return user_callback(jsonOut)
         else:
@@ -70,7 +77,6 @@ class TwistedTransport(TransportBase):
 
     def send(self, method, url, headers=None, data=None,
              callback=None, errback=None):
-        logging.debug("%s %s" % (method, url))
         if headers:
             headers = Headers({str(k): [str(v)] for (k,v) in headers.iteritems()})
         bProducer = None

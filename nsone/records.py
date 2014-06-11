@@ -46,7 +46,9 @@ class Record(object):
             self.data = result
             self.answers = self.data['answers']
             if callback:
-                callback(self.data)
+                callback(self)
+            else:
+                return self
         return self._rest.create(self.parentZone.zone,
                                  self.domain, self.type,
                                  realAnswers, callback=success)
