@@ -26,6 +26,7 @@ class Record(object):
     def load(self, callback=None):
         if self.data:
             raise RecordException('record already loaded')
+
         def success(result):
             self.data = result
             self.answers = self.data['answers']
@@ -42,6 +43,7 @@ class Record(object):
             answers = list(answers)
         for a in answers:
             realAnswers.append({'answer': [a]})
+
         def success(result):
             self.data = result
             self.answers = self.data['answers']

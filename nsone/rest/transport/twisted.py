@@ -14,10 +14,8 @@ try:
     from twisted.web.client import Agent, readBody
     from twisted.web.http_headers import Headers
     from twisted.internet.defer import succeed
-    from twisted.web.iweb import IBodyProducer
     have_twisted = True
 except Exception as e:
-    print e
     have_twisted = False
 
 
@@ -78,7 +76,8 @@ class TwistedTransport(TransportBase):
     def send(self, method, url, headers=None, data=None,
              callback=None, errback=None):
         if headers:
-            headers = Headers({str(k): [str(v)] for (k,v) in headers.iteritems()})
+            headers = Headers({str(k): [str(v)]
+                               for (k, v) in headers.iteritems()})
         bProducer = None
         if data:
             bProducer = StringProducer(data)
@@ -88,4 +87,3 @@ class TwistedTransport(TransportBase):
         return d
 
 TransportBase.REGISTRY['twisted'] = TwistedTransport
-

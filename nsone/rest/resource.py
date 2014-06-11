@@ -32,7 +32,6 @@ class BaseResource:
                                     % transport)
         self._transport = TransportBase.REGISTRY[transport](self._config)
 
-
     def _make_url(self, path):
         return self._config.getEndpoint() + path
 

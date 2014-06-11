@@ -23,6 +23,7 @@ class Zone(object):
     def load(self, callback=None):
         if self.data:
             raise ZoneException('zone already loaded')
+
         def success(result):
             self.data = result
             if callback:
@@ -39,6 +40,7 @@ class Zone(object):
                callback=None):
         if self.data:
             raise ZoneException('zone already loaded')
+
         def success(result):
             self.data = result
             if callback:
