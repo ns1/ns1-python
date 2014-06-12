@@ -41,8 +41,7 @@ class NSONE:
     def loadZone(self, zone, callback=None):
         import nsone.zones
         zone = nsone.zones.Zone(self.config, zone)
-        zone.load(callback=callback)
-        return zone
+        return zone.load(callback=callback)
 
     def createZone(self, zone, refresh=None, retry=None,
                    expiry=None, nx_ttl=None, callback=None):

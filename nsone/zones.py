@@ -27,7 +27,9 @@ class Zone(object):
         def success(result):
             self.data = result
             if callback:
-                return callback(self.data)
+                return callback(self)
+            else:
+                return self
         return self._rest.retrieve(self.zone, callback=success)
 
     def delete(self, callback=None):
@@ -50,6 +52,18 @@ class Zone(object):
         return self._rest.create(self.zone, refresh, retry,
                                  expiry, nx_ttl, callback=success)
 
+    def add_AAAA(self, domain, answers, callback=None):
+        record = Record(self, domain, 'AAAA')
+        return record.create(answers, callback=callback)
+
     def add_A(self, domain, answers, callback=None):
         record = Record(self, domain, 'A')
+        return record.create(answers, callback=callback)
+
+    def add_CNAME(self, domain, answers, callback=None):
+        record = Record(self, domain, 'CNAME')
+        return record.create(answers, callback=callback)
+
+    def add_ALIAS(self, domain, answers, callback=None):
+        record = Record(self, domain, 'ALIAS')
         return record.create(answers, callback=callback)
