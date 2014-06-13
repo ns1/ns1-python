@@ -29,6 +29,19 @@ class Records(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
+    def update(self, zone, domain, type, answers, callback=None, errback=None):
+        body = {
+            'answers': answers
+        }
+        return self._make_request('POST',
+                                  '%s/%s/%s/%s' % (self.ROOT,
+                                                   zone,
+                                                   domain,
+                                                   type),
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
+
     def delete(self, zone, domain, type, callback=None, errback=None):
         return self._make_request('DELETE', '%s/%s/%s/%s' %
                                   (self.ROOT,
