@@ -63,7 +63,7 @@ class Record(object):
         if self.data:
             raise RecordException('record already loaded')
         realAnswers = self._getRealAnswers(answers)
-        
+
         def success(result):
             self.data = result
             self.answers = self.data['answers']
