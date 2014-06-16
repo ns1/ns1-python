@@ -31,7 +31,9 @@ class Record(object):
             self.data = result
             self.answers = self.data['answers']
             if callback:
-                callback(self.data)
+                return callback(self)
+            else:
+                return self
         return self._rest.retrieve(self.parentZone.zone,
                                    self.domain, self.type, callback=success)
 
@@ -43,6 +45,19 @@ class Record(object):
             realAnswers.append({'answer': [a]})
         return realAnswers
 
+    def delete(self, callback=None):
+        if not self.data:
+            raise RecordException('record not loaded')
+
+        def success(result):
+            if callback:
+                return callback(result)
+            else:
+                return result
+        return self._rest.delete(self.parentZone.zone,
+                                 self.domain, self.type,
+                                 callback=success)
+
     def update(self, answers, callback=None):
         if not self.data:
             raise RecordException('record not loaded')
@@ -52,7 +67,7 @@ class Record(object):
             self.data = result
             self.answers = self.data['answers']
             if callback:
-                callback(self)
+                return callback(self)
             else:
                 return self
         return self._rest.update(self.parentZone.zone,
@@ -68,7 +83,7 @@ class Record(object):
             self.data = result
             self.answers = self.data['answers']
             if callback:
-                callback(self)
+                return callback(self)
             else:
                 return self
         return self._rest.create(self.parentZone.zone,

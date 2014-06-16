@@ -33,10 +33,21 @@ class Zone(object):
         return self._rest.retrieve(self.zone, callback=success)
 
     def delete(self, callback=None):
-        def success(result):
-            if callback:
-                return callback(result)
         return self._rest.delete(self.zone, callback=callback)
+
+    def update(self, refresh=None, retry=None, expiry=None, nx_ttl=None,
+               callback=None):
+        if not self.data:
+            raise ZoneException('zone not loaded')
+
+        def success(result):
+            self.data = result
+            if callback:
+                return callback(self)
+            else:
+                return self
+        return self._rest.update(self.zone, refresh, retry,
+                                 expiry, nx_ttl, callback=success)
 
     def create(self, refresh=None, retry=None, expiry=None, nx_ttl=None,
                callback=None):
