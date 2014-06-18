@@ -16,13 +16,13 @@ class Zones(resource.BaseResource):
         body = {}
         body['zone'] = zone
         if refresh:
-            body['refresh'] = refresh
+            body['refresh'] = int(refresh)
         if retry:
-            body['retry'] = retry
+            body['retry'] = int(retry)
         if expiry:
-            body['expiry'] = expiry
+            body['expiry'] = int(expiry)
         if nx_ttl:
-            body['nx_ttl'] = nx_ttl
+            body['nx_ttl'] = int(nx_ttl)
         return self._make_request('PUT',
                                   '%s/%s' % (self.ROOT, zone),
                                   body=body,
@@ -34,13 +34,13 @@ class Zones(resource.BaseResource):
         body = {}
         body['zone'] = zone
         if refresh:
-            body['refresh'] = refresh
+            body['refresh'] = int(refresh)
         if retry:
-            body['retry'] = retry
+            body['retry'] = int(retry)
         if expiry:
-            body['expiry'] = expiry
+            body['expiry'] = int(expiry)
         if nx_ttl:
-            body['nx_ttl'] = nx_ttl
+            body['nx_ttl'] = int(nx_ttl)
         return self._make_request('POST',
                                   '%s/%s' % (self.ROOT, zone),
                                   body=body,
