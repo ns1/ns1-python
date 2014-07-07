@@ -40,7 +40,7 @@ class Record(object):
     def _getRealAnswers(self, answers):
         realAnswers = []
         if type(answers) is not list:
-            answers = list(answers)
+            answers = [answers]
         for a in answers:
             if type(a) is not list:
                 realAnswers.append({'answer': [a]})
