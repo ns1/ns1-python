@@ -79,6 +79,10 @@ class Zone(object):
         record = Record(self, domain, 'ALIAS')
         return record.create(answers, callback=callback)
 
+    def add_MX(self, domain, answers, callback=None):
+        record = Record(self, domain, 'MX')
+        return record.create(answers, callback=callback)
+
     def add_NS(self, domain, answers, callback=None):
         record = Record(self, domain, 'NS')
         return record.create(answers, callback=callback)

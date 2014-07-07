@@ -42,7 +42,10 @@ class Record(object):
         if type(answers) is not list:
             answers = list(answers)
         for a in answers:
-            realAnswers.append({'answer': [a]})
+            if type(a) is not list:
+                realAnswers.append({'answer': [a]})
+            else:
+                realAnswers.append({'answer': a})
         return realAnswers
 
     def delete(self, callback=None):
