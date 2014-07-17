@@ -10,16 +10,19 @@ class Records(resource.BaseResource):
 
     ROOT = 'zones'
 
-    def _buildBody(self, zone, domain, type, answers):
+    def _buildBody(self, zone, domain, type, answers, ttl=None):
         body = {}
         body['zone'] = zone
         body['domain'] = domain
         body['type'] = type
         body['answers'] = answers
+        if ttl:
+            body['ttl'] = int(ttl)
         return body
 
-    def create(self, zone, domain, type, answers, callback=None, errback=None):
-        body = self._buildBody(zone, domain, type, answers)
+    def create(self, zone, domain, type, answers, ttl=None, callback=None,
+               errback=None):
+        body = self._buildBody(zone, domain, type, answers, ttl)
         return self._make_request('PUT',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
@@ -29,10 +32,13 @@ class Records(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def update(self, zone, domain, type, answers, callback=None, errback=None):
+    def update(self, zone, domain, type, answers, ttl=None, callback=None,
+               errback=None):
         body = {
             'answers': answers
         }
+        if ttl:
+            body['ttl'] = ttl
         return self._make_request('POST',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,

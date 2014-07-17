@@ -49,7 +49,8 @@ class RequestsTransport(TransportBase):
             else:
                 raise ResourceException(resp.txt, resp)
         if callback:
-            callback(jsonOut)
-        return jsonOut
+            return callback(jsonOut)
+        else:
+            return jsonOut
 
 TransportBase.REGISTRY['requests'] = RequestsTransport

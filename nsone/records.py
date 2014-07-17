@@ -77,7 +77,7 @@ class Record(object):
                                  self.domain, self.type,
                                  realAnswers, callback=success)
 
-    def create(self, answers, callback=None):
+    def create(self, answers, ttl=None, callback=None):
         if self.data:
             raise RecordException('record already loaded')
         realAnswers = self._getRealAnswers(answers)
@@ -91,4 +91,4 @@ class Record(object):
                 return self
         return self._rest.create(self.parentZone.zone,
                                  self.domain, self.type,
-                                 realAnswers, callback=success)
+                                 realAnswers, ttl=ttl, callback=success)

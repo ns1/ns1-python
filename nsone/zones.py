@@ -63,26 +63,30 @@ class Zone(object):
         return self._rest.create(self.zone, refresh, retry,
                                  expiry, nx_ttl, callback=success)
 
-    def add_AAAA(self, domain, answers, callback=None):
+    def add_AAAA(self, domain, answers, ttl=None, callback=None):
         record = Record(self, domain, 'AAAA')
-        return record.create(answers, callback=callback)
+        return record.create(answers, ttl=ttl, callback=callback)
 
-    def add_A(self, domain, answers, callback=None):
+    def add_A(self, domain, answers, ttl=None, callback=None):
         record = Record(self, domain, 'A')
-        return record.create(answers, callback=callback)
+        return record.create(answers, ttl=ttl, callback=callback)
 
-    def add_CNAME(self, domain, answers, callback=None):
+    def add_CNAME(self, domain, answers, ttl=None, callback=None):
         record = Record(self, domain, 'CNAME')
-        return record.create(answers, callback=callback)
+        return record.create(answers, ttl=ttl, callback=callback)
 
-    def add_ALIAS(self, domain, answers, callback=None):
+    def add_ALIAS(self, domain, answers, ttl=None, callback=None):
         record = Record(self, domain, 'ALIAS')
-        return record.create(answers, callback=callback)
+        return record.create(answers, ttl=ttl, callback=callback)
 
-    def add_MX(self, domain, answers, callback=None):
+    def add_MX(self, domain, answers, ttl=None, callback=None):
         record = Record(self, domain, 'MX')
-        return record.create(answers, callback=callback)
+        return record.create(answers, ttl=ttl, callback=callback)
 
-    def add_NS(self, domain, answers, callback=None):
+    def add_NS(self, domain, answers, ttl=None, callback=None):
         record = Record(self, domain, 'NS')
-        return record.create(answers, callback=callback)
+        return record.create(answers, ttl=ttl, callback=callback)
+
+    def add_TXT(self, domain, answers, ttl=None, callback=None):
+        record = Record(self, domain, 'TXT')
+        return record.create(answers, ttl=ttl, callback=callback)
