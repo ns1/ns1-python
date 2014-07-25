@@ -16,7 +16,7 @@ class Records(resource.BaseResource):
         body['domain'] = domain
         body['type'] = type
         body['answers'] = answers
-        if ttl:
+        if ttl is not None:
             body['ttl'] = int(ttl)
         return body
 
