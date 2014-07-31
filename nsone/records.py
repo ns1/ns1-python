@@ -37,17 +37,6 @@ class Record(object):
         return self._rest.retrieve(self.parentZone.zone,
                                    self.domain, self.type, callback=success)
 
-    def _getRealAnswers(self, answers):
-        realAnswers = []
-        if type(answers) is not list:
-            answers = [answers]
-        for a in answers:
-            if type(a) is not list:
-                realAnswers.append({'answer': [a]})
-            else:
-                realAnswers.append({'answer': a})
-        return realAnswers
-
     def delete(self, callback=None):
         if not self.data:
             raise RecordException('record not loaded')
@@ -64,7 +53,7 @@ class Record(object):
     def update(self, answers, callback=None):
         if not self.data:
             raise RecordException('record not loaded')
-        realAnswers = self._getRealAnswers(answers)
+        realAnswers = self._rest.getAnswersForBody(answers)
 
         def success(result):
             self.data = result
@@ -80,7 +69,7 @@ class Record(object):
     def create(self, answers, ttl=None, callback=None):
         if self.data:
             raise RecordException('record already loaded')
-        realAnswers = self._getRealAnswers(answers)
+        realAnswers = self._rest.getAnswersForBody(answers)
 
         def success(result):
             self.data = result
