@@ -30,7 +30,7 @@ class Records(resource.BaseResource):
         body['answers'] = answers
         if ttl is not None:
             body['ttl'] = int(ttl)
-        if use_csubnet:
+        if use_csubnet is not None:
             body['use_client_subnet'] = bool(use_csubnet)
         return body
 
@@ -53,7 +53,7 @@ class Records(resource.BaseResource):
             body['answers'] = answers
         if ttl is not None:
             body['ttl'] = int(ttl)
-        if use_csubnet:
+        if use_csubnet is not None:
             body['use_client_subnet'] = bool(use_csubnet)
         return self._make_request('POST',
                                   '%s/%s/%s/%s' % (self.ROOT,
