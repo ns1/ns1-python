@@ -63,30 +63,16 @@ class Zone(object):
         return self._rest.create(self.zone, refresh, retry,
                                  expiry, nx_ttl, callback=success)
 
-    def add_AAAA(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'AAAA')
-        return record.create(answers, ttl=ttl, callback=callback)
+    def __getattr__(self, item):
+        if not item.startswith('add_'):
+            return None
+        # dynamic adding of various record types, e.g. add_A, add_CNAME, etc
+        (_, rtype) = item.split('_', 2)
 
-    def add_A(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'A')
-        return record.create(answers, ttl=ttl, callback=callback)
-
-    def add_CNAME(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'CNAME')
-        return record.create(answers, ttl=ttl, callback=callback)
-
-    def add_ALIAS(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'ALIAS')
-        return record.create(answers, ttl=ttl, callback=callback)
-
-    def add_MX(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'MX')
-        return record.create(answers, ttl=ttl, callback=callback)
-
-    def add_NS(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'NS')
-        return record.create(answers, ttl=ttl, callback=callback)
-
-    def add_TXT(self, domain, answers, ttl=None, callback=None):
-        record = Record(self, domain, 'TXT')
-        return record.create(answers, ttl=ttl, callback=callback)
+        def add_X(domain, answers, ttl=None, filters=None, callback=None):
+            record = Record(self, domain, rtype)
+            return record.create(answers,
+                                 filters=filters,
+                                 ttl=ttl,
+                                 callback=callback)
+        return add_X

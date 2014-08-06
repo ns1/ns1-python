@@ -50,10 +50,9 @@ class Record(object):
                                  self.domain, self.type,
                                  callback=success)
 
-    def update(self, answers, callback=None):
+    def update(self, answers, filters=None, ttl=None, callback=None):
         if not self.data:
             raise RecordException('record not loaded')
-        realAnswers = self._rest.getAnswersForBody(answers)
 
         def success(result):
             self.data = result
@@ -64,12 +63,12 @@ class Record(object):
                 return self
         return self._rest.update(self.parentZone.zone,
                                  self.domain, self.type,
-                                 realAnswers, callback=success)
+                                 answers, filters=filters,
+                                 ttl=ttl, callback=success)
 
-    def create(self, answers, ttl=None, callback=None):
+    def create(self, answers, filters=None, ttl=None, callback=None):
         if self.data:
             raise RecordException('record already loaded')
-        realAnswers = self._rest.getAnswersForBody(answers)
 
         def success(result):
             self.data = result
@@ -80,4 +79,5 @@ class Record(object):
                 return self
         return self._rest.create(self.parentZone.zone,
                                  self.domain, self.type,
-                                 realAnswers, ttl=ttl, callback=success)
+                                 answers, filters=filters, ttl=ttl,
+                                 callback=success)

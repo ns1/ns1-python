@@ -10,33 +10,71 @@ class Records(resource.BaseResource):
 
     ROOT = 'zones'
 
-    def getAnswersForBody(self, answers):
+    # answers must be:
+    #  1) a single string
+    #     we coerce to a single answer with no other fields e.g. meta
+    #  2) a list of single strings
+    #     we coerce to several answers with no other fields e.g. meta
+    #  3) a list of lists
+    #     we have as many answers as are in the outer list, and the
+    #     answers themselves are used verbatim from the inner list (e.g. may
+    #     have MX style [10, '1.1.1.1]), but no other fields e.g. meta
+    #     you must use this form for MX records, and if there is only one
+    #     answer it still must be wrapped in an outer list
+    #  4) a list of dicts
+    #     we assume the full rest model and pass it in unchanged. must use this
+    #     form for any advanced record config like meta data or data feeds
+    def _getAnswersForBody(self, answers):
         realAnswers = []
-        if type(answers) is not list:
+        # simplest: they specify a single string ip
+        if isinstance(answers, str):
             answers = [answers]
+        # otherwise, we need a list
+        elif not isinstance(answers, list):
+            raise Exception('invalid answers format (must be str or list)')
+        # at this point we have a list. loop through and build out the answer
+        # entries depending on contents
         for a in answers:
-            if type(a) is not list:
+            if isinstance(a, str):
                 realAnswers.append({'answer': [a]})
-            else:
+            elif isinstance(a, list):
                 realAnswers.append({'answer': a})
+            elif isinstance(a, dict):
+                realAnswers.append(a)
+            else:
+                raise Exception('invalid answers format: list must contain '
+                                'only str, list, or dict')
         return realAnswers
 
-    def _buildBody(self, zone, domain, type, answers, ttl=None,
-                   use_csubnet=None):
+    def _getFiltersForBody(self, filters):
+        realFilters = []
+        if type(filters) is not dict:
+            raise Exception('filter argument must be dict of filter '
+                            'name/config pairs')
+        for f in filters:
+            realFilters.append({'filter': f, 'config': filters[f]})
+        return realFilters
+
+    def _buildBody(self, zone, domain, type, answers=None, filters=None,
+                   ttl=None, use_csubnet=None):
         body = {}
         body['zone'] = zone
         body['domain'] = domain
         body['type'] = type
-        body['answers'] = answers
+        if filters:
+            body['filters'] = self._getFiltersForBody(filters)
+        if answers:
+            body['answers'] = self._getAnswersForBody(answers)
         if ttl is not None:
             body['ttl'] = int(ttl)
         if use_csubnet is not None:
             body['use_client_subnet'] = bool(use_csubnet)
         return body
 
-    def create(self, zone, domain, type, answers, ttl=None, use_csubnet=None,
-               callback=None, errback=None):
-        body = self._buildBody(zone, domain, type, answers, ttl, use_csubnet)
+    def create(self, zone, domain, type, answers, filters=None, ttl=None,
+               use_csubnet=None, callback=None, errback=None):
+        body = self._buildBody(zone, domain, type, answers, filters, ttl,
+                               use_csubnet)
         return self._make_request('PUT',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
@@ -46,15 +84,10 @@ class Records(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def update(self, zone, domain, type, answers=None, ttl=None,
+    def update(self, zone, domain, type, answers=None, filters=None, ttl=None,
                use_csubnet=None, callback=None, errback=None):
-        body = {}
-        if answers:
-            body['answers'] = answers
-        if ttl is not None:
-            body['ttl'] = int(ttl)
-        if use_csubnet is not None:
-            body['use_client_subnet'] = bool(use_csubnet)
+        body = self._buildBody(zone, domain, type, answers, filters, ttl,
+                               use_csubnet)
         return self._make_request('POST',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
