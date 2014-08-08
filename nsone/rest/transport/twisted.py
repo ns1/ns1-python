@@ -45,15 +45,16 @@ class TwistedTransport(TransportBase):
         self.agent = Agent(reactor)
         self.log = logging.getLogger(self.__module__)
 
-    def _callback(self, response, user_callback):
+    def _callback(self, response, user_callback, data):
         d = readBody(response)
-        d.addCallback(self._onBody, response, user_callback)
+        d.addCallback(self._onBody, response, user_callback, data)
         return d
 
-    def _onBody(self, body, response, user_callback):
-        self.log.debug("%s %s %s" % (response.request.method,
-                                     response.request.absoluteURI,
-                                     response.code))
+    def _onBody(self, body, response, user_callback, data):
+        self.log.debug("%s %s %s %s" % (response.request.method,
+                                        response.request.absoluteURI,
+                                        response.code,
+                                        data))
         if response.code != 200:
             raise ResourceException(body, response)
         try:
@@ -82,7 +83,7 @@ class TwistedTransport(TransportBase):
         if data:
             bProducer = StringProducer(data)
         d = self.agent.request(method, str(url), headers, bProducer)
-        d.addCallback(self._callback, callback)
+        d.addCallback(self._callback, callback, data)
         d.addErrback(self._errback, errback)
         return d
 

@@ -17,6 +17,10 @@ class BaseResource:
 
     DEFAULT_TRANSPORT = 'requests'
 
+    INT_FIELDS = []
+    BOOL_FIELDS = []
+    PASSTHRU_FIELDS = []
+
     def __init__(self, config):
         """
 
@@ -31,6 +35,17 @@ class BaseResource:
             raise ResourceException('requested transport was not found: %s'
                                     % transport)
         self._transport = TransportBase.REGISTRY[transport](self._config)
+
+    def _buildStdBody(self, body, fields):
+        for f in self.BOOL_FIELDS:
+            if f in fields:
+                body[f] = bool(fields[f])
+        for f in self.INT_FIELDS:
+            if f in fields:
+                body[f] = int(fields[f])
+        for f in self.PASSTHRU_FIELDS:
+            if f in fields:
+                body[f] = fields[f]
 
     def _make_url(self, path):
         return self._config.getEndpoint() + path

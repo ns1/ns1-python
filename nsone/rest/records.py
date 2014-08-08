@@ -10,6 +10,10 @@ class Records(resource.BaseResource):
 
     ROOT = 'zones'
 
+    INT_FIELDS = ['ttl']
+    BOOL_FIELDS = ['use_csubnet']
+    PASSTHRU_FIELDS = ['feed', 'networks', 'meta', 'regions']
+
     # answers must be:
     #  1) a single string
     #     we coerce to a single answer with no other fields e.g. meta
@@ -55,26 +59,21 @@ class Records(resource.BaseResource):
             realFilters.append({'filter': f, 'config': filters[f]})
         return realFilters
 
-    def _buildBody(self, zone, domain, type, answers=None, filters=None,
-                   ttl=None, use_csubnet=None):
+    def _buildBody(self, zone, domain, type, **kwargs):
         body = {}
         body['zone'] = zone
         body['domain'] = domain
         body['type'] = type
-        if filters:
-            body['filters'] = self._getFiltersForBody(filters)
-        if answers:
-            body['answers'] = self._getAnswersForBody(answers)
-        if ttl is not None:
-            body['ttl'] = int(ttl)
-        if use_csubnet is not None:
-            body['use_client_subnet'] = bool(use_csubnet)
+        if 'filters' in kwargs:
+            body['filters'] = self._getFiltersForBody(kwargs['filters'])
+        if 'answers' in kwargs:
+            body['answers'] = self._getAnswersForBody(kwargs['answers'])
+        self._buildStdBody(body, kwargs)
         return body
 
-    def create(self, zone, domain, type, answers, filters=None, ttl=None,
-               use_csubnet=None, callback=None, errback=None):
-        body = self._buildBody(zone, domain, type, answers, filters, ttl,
-                               use_csubnet)
+    def create(self, zone, domain, type,
+               callback=None, errback=None, **kwargs):
+        body = self._buildBody(zone, domain, type, **kwargs)
         return self._make_request('PUT',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
@@ -84,10 +83,9 @@ class Records(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def update(self, zone, domain, type, answers=None, filters=None, ttl=None,
-               use_csubnet=None, callback=None, errback=None):
-        body = self._buildBody(zone, domain, type, answers, filters, ttl,
-                               use_csubnet)
+    def update(self, zone, domain, type,
+               callback=None, errback=None, **kwargs):
+        body = self._buildBody(zone, domain, type, **kwargs)
         return self._make_request('POST',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,

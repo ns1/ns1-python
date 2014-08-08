@@ -11,36 +11,25 @@ class Zones(resource.BaseResource):
 
     ROOT = 'zones'
 
-    def create(self, zone, refresh=None, retry=None, expiry=None, nx_ttl=None,
-               callback=None, errback=None):
+    INT_FIELDS = ['retry', 'refresh', 'expiry', 'nx_ttl']
+    PASSTHRU_FIELDS = ['secondary', 'hostmaster', 'meta', 'networks']
+
+    def _buildBody(self, zone, **kwargs):
         body = {}
         body['zone'] = zone
-        if refresh:
-            body['refresh'] = int(refresh)
-        if retry:
-            body['retry'] = int(retry)
-        if expiry:
-            body['expiry'] = int(expiry)
-        if nx_ttl:
-            body['nx_ttl'] = int(nx_ttl)
+        self._buildStdBody(body, kwargs)
+        return body
+
+    def create(self, zone, callback=None, errback=None, **kwargs):
+        body = self._buildBody(zone, **kwargs)
         return self._make_request('PUT',
                                   '%s/%s' % (self.ROOT, zone),
                                   body=body,
                                   callback=callback,
                                   errback=errback)
 
-    def update(self, zone, refresh=None, retry=None, expiry=None, nx_ttl=None,
-               callback=None, errback=None):
-        body = {}
-        body['zone'] = zone
-        if refresh:
-            body['refresh'] = int(refresh)
-        if retry:
-            body['retry'] = int(retry)
-        if expiry:
-            body['expiry'] = int(expiry)
-        if nx_ttl:
-            body['nx_ttl'] = int(nx_ttl)
+    def update(self, zone, callback=None, errback=None, **kwargs):
+        body = self._buildBody(zone, **kwargs)
         return self._make_request('POST',
                                   '%s/%s' % (self.ROOT, zone),
                                   body=body,

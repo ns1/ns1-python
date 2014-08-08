@@ -20,7 +20,7 @@ class Zone(object):
         self.zone = zone
         self.data = None
 
-    def load(self, callback=None):
+    def load(self, callback=None, errback=None):
         if self.data:
             raise ZoneException('zone already loaded')
 
@@ -30,13 +30,14 @@ class Zone(object):
                 return callback(self)
             else:
                 return self
-        return self._rest.retrieve(self.zone, callback=success)
 
-    def delete(self, callback=None):
-        return self._rest.delete(self.zone, callback=callback)
+        return self._rest.retrieve(self.zone, callback=success,
+                                   errback=errback)
 
-    def update(self, refresh=None, retry=None, expiry=None, nx_ttl=None,
-               callback=None):
+    def delete(self, callback=None, errback=None):
+        return self._rest.delete(self.zone, callback=callback, errback=errback)
+
+    def update(self, callback=None, errback=None, **kwargs):
         if not self.data:
             raise ZoneException('zone not loaded')
 
@@ -46,11 +47,11 @@ class Zone(object):
                 return callback(self)
             else:
                 return self
-        return self._rest.update(self.zone, refresh, retry,
-                                 expiry, nx_ttl, callback=success)
 
-    def create(self, refresh=None, retry=None, expiry=None, nx_ttl=None,
-               callback=None):
+        return self._rest.update(self.zone, callback=success, errback=errback,
+                                 **kwargs)
+
+    def create(self, callback=None, errback=None, **kwargs):
         if self.data:
             raise ZoneException('zone already loaded')
 
@@ -60,19 +61,20 @@ class Zone(object):
                 return callback(self)
             else:
                 return self
-        return self._rest.create(self.zone, refresh, retry,
-                                 expiry, nx_ttl, callback=success)
+
+        return self._rest.create(self.zone, callback=success, errback=errback,
+                                 **kwargs)
 
     def __getattr__(self, item):
+
         if not item.startswith('add_'):
             return None
+
         # dynamic adding of various record types, e.g. add_A, add_CNAME, etc
         (_, rtype) = item.split('_', 2)
 
-        def add_X(domain, answers, ttl=None, filters=None, callback=None):
+        def add_X(domain, answers, callback=None, errback=None, **kwargs):
+            kwargs['answers'] = answers
             record = Record(self, domain, rtype)
-            return record.create(answers,
-                                 filters=filters,
-                                 ttl=ttl,
-                                 callback=callback)
+            return record.create(callback=callback, errback=errback, **kwargs)
         return add_X

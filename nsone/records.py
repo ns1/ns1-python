@@ -21,15 +21,18 @@ class Record(object):
         self.domain = domain
         self.type = type
         self.data = None
-        self.answers = None
+
+    def _parseModel(self, data):
+        self.data = data
+        self.answers = data['answers']
+        # XXX break out the rest? use getattr instead?
 
     def load(self, callback=None):
         if self.data:
             raise RecordException('record already loaded')
 
         def success(result):
-            self.data = result
-            self.answers = self.data['answers']
+            self._parseModel(result)
             if callback:
                 return callback(self)
             else:
@@ -46,38 +49,35 @@ class Record(object):
                 return callback(result)
             else:
                 return result
+
         return self._rest.delete(self.parentZone.zone,
                                  self.domain, self.type,
                                  callback=success)
 
-    def update(self, answers, filters=None, ttl=None, callback=None):
+    def update(self, callback=None, errback=None, **kwargs):
         if not self.data:
             raise RecordException('record not loaded')
 
         def success(result):
-            self.data = result
-            self.answers = self.data['answers']
+            self._parseModel(result)
             if callback:
                 return callback(self)
             else:
                 return self
-        return self._rest.update(self.parentZone.zone,
-                                 self.domain, self.type,
-                                 answers, filters=filters,
-                                 ttl=ttl, callback=success)
 
-    def create(self, answers, filters=None, ttl=None, callback=None):
+        return self._rest.update(self.parentZone.zone, self.domain, self.type,
+                                 callback=success, errback=errback, **kwargs)
+
+    def create(self, callback=None, errback=None, **kwargs):
         if self.data:
             raise RecordException('record already loaded')
 
         def success(result):
-            self.data = result
-            self.answers = self.data['answers']
+            self._parseModel(result)
             if callback:
                 return callback(self)
             else:
                 return self
-        return self._rest.create(self.parentZone.zone,
-                                 self.domain, self.type,
-                                 answers, filters=filters, ttl=ttl,
-                                 callback=success)
+
+        return self._rest.create(self.parentZone.zone, self.domain, self.type,
+                                 callback=success, errback=errback, **kwargs)
