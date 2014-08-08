@@ -50,13 +50,28 @@ class Records(resource.BaseResource):
                                 'only str, list, or dict')
         return realAnswers
 
+    # filters must be a list of dict which can have two forms:
+    # 1) simple: each item in list is a dict with a single key and value. the
+    #            key is the name of the filter, the value is a dict of config
+    #            values (which may be empty {})
+    # 2) full: each item in the list is a dict of the full rest model for
+    #          filters (documented elsewhere) which is passed through. use this
+    #          for enabled/disabled or future fields not supported otherwise
+    #
     def _getFiltersForBody(self, filters):
         realFilters = []
-        if type(filters) is not dict:
-            raise Exception('filter argument must be dict of filter '
-                            'name/config pairs')
+        if type(filters) is not list:
+            raise Exception('filter argument must be list of dict')
         for f in filters:
-            realFilters.append({'filter': f, 'config': filters[f]})
+            if type(f) is not dict:
+                raise Exception('filter items must be dict')
+            if 'filter' in f:
+                # full
+                realFilters.append(f)
+            else:
+                # simple, synthesize
+                (fname, fconfig) = f.popitem()
+                realFilters.append({'filter': fname, 'config': fconfig})
         return realFilters
 
     def _buildBody(self, zone, domain, type, **kwargs):
