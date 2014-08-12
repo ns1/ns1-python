@@ -78,7 +78,7 @@ class Records(resource.BaseResource):
         body = {}
         body['zone'] = zone
         body['domain'] = domain
-        body['type'] = type
+        body['type'] = type.upper()
         if 'filters' in kwargs:
             body['filters'] = self._getFiltersForBody(kwargs['filters'])
         if 'answers' in kwargs:
