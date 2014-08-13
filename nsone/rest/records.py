@@ -84,6 +84,10 @@ class Records(resource.BaseResource):
         if 'answers' in kwargs:
             body['answers'] = self._getAnswersForBody(kwargs['answers'])
         self._buildStdBody(body, kwargs)
+        if 'use_csubnet' in body:
+            # key mapping
+            body['use_client_subnet'] = body['use_csubnet']
+            del body['use_csubnet']
         return body
 
     def create(self, zone, domain, type,

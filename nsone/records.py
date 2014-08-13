@@ -27,7 +27,7 @@ class Record(object):
         self.answers = data['answers']
         # XXX break out the rest? use getattr instead?
 
-    def load(self, callback=None):
+    def load(self, callback=None, errback=None):
         if self.data:
             raise RecordException('record already loaded')
 
@@ -38,9 +38,10 @@ class Record(object):
             else:
                 return self
         return self._rest.retrieve(self.parentZone.zone,
-                                   self.domain, self.type, callback=success)
+                                   self.domain, self.type,
+                                   callback=success, errback=errback)
 
-    def delete(self, callback=None):
+    def delete(self, callback=None, errback=None):
         if not self.data:
             raise RecordException('record not loaded')
 
@@ -52,7 +53,7 @@ class Record(object):
 
         return self._rest.delete(self.parentZone.zone,
                                  self.domain, self.type,
-                                 callback=success)
+                                 callback=success, errback=errback)
 
     def update(self, callback=None, errback=None, **kwargs):
         if not self.data:

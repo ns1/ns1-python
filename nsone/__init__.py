@@ -37,6 +37,14 @@ class NSONE:
         import nsone.rest.stats
         return nsone.rest.stats.Stats(self.config)
 
+    def datasource(self):
+        import nsone.rest.data
+        return nsone.rest.data.Source(self.config)
+
+    def datafeed(self):
+        import nsone.rest.data
+        return nsone.rest.data.Feed(self.config)
+
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         import nsone.zones
