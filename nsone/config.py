@@ -57,7 +57,7 @@ class Config:
         Create a basic config from a single apikey
         :param apikey: NSONE API Key, as created in the NSONE portal
         :param maybeWrite: If True and DEFAULT_CONFIG_FILE doesn't exist,
-                           write out the resulting config there.
+        write out the resulting config there.
         """
         self._data = {
             'default_key': 'default',

@@ -1,20 +1,7 @@
-nsone package
-=============
+NSONE
+=====
 
-Submodules
-----------
-
-nsone.config module
--------------------
-
-.. automodule:: nsone.config
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-
-Module contents
----------------
+This top level object is used to initialize access to NSONE.
 
 .. automodule:: nsone
     :members:

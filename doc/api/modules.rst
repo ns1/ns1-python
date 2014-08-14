@@ -5,3 +5,7 @@ nsone
    :maxdepth: 4
 
    nsone
+   config
+   errors
+   zones
+   records
