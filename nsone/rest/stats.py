@@ -5,6 +5,7 @@
 #
 
 from . import resource
+import urllib
 
 
 class Stats(resource.BaseResource):
@@ -25,12 +26,20 @@ class Stats(resource.BaseResource):
 
     def usage(self, zone=None, domain=None, type=None,
               callback=None, errback=None, **kwargs):
+        url = ''
         if zone is None:
             url = '%s/%s' % (self.ROOT, 'usage'),
         elif type is not None and domain is not None and zone is not None:
             url = '%s/%s/%s/%s/%s' % (self.ROOT, 'usage', zone, domain, type)
         elif zone is not None:
             url = '%s/%s/%s' % (self.ROOT, 'usage', zone)
-        return self._make_request('GET', url,
+        args = {}
+        if 'period' in kwargs:
+            args['period'] = kwargs['period']
+        for f in ['expand', 'aggregate', 'by_tier']:
+            if f in kwargs:
+                args[f] = bool(kwargs[f])
+        return self._make_request('GET', '%s?%s' % (url,
+                                                    urllib.urlencode(args)),
                                   callback=callback,
                                   errback=errback)

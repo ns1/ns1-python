@@ -93,3 +93,8 @@ class Zone(object):
     def qps(self, callback=None, errback=None):
         stats = Stats(self.config)
         return stats.qps(zone=self.zone, callback=callback, errback=errback)
+
+    def usage(self, callback=None, errback=None, **kwargs):
+        stats = Stats(self.config)
+        return stats.usage(zone=self.zone, callback=callback, errback=errback,
+                           **kwargs)

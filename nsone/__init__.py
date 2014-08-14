@@ -56,7 +56,7 @@ class NSONE:
         zone = nsone.zones.Zone(self.config, zone)
         return zone.create(callback=callback, errback=errback, **kwargs)
 
-    def loadRecord(self, domain, type=None, zone=None, callback=None,
+    def loadRecord(self, domain, type, zone=None, callback=None,
                    errback=None, **kwargs):
         import nsone.records
         import nsone.zones

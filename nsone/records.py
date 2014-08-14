@@ -99,3 +99,14 @@ class Record(object):
                          type=self.type,
                          callback=callback,
                          errback=errback)
+
+    def usage(self, callback=None, errback=None, **kwargs):
+        if not self.data:
+            raise RecordException('record not loaded')
+        stats = Stats(self.parentZone.config)
+        return stats.usage(zone=self.parentZone.zone,
+                           domain=self.domain,
+                           type=self.type,
+                           callback=callback,
+                           errback=errback,
+                           **kwargs)
