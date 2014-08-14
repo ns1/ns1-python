@@ -5,6 +5,7 @@
 #
 
 from nsone.rest.records import Records
+from nsone.rest.stats import Stats
 
 
 class RecordException(Exception):
@@ -82,3 +83,13 @@ class Record(object):
 
         return self._rest.create(self.parentZone.zone, self.domain, self.type,
                                  callback=success, errback=errback, **kwargs)
+
+    def qps(self, callback=None, errback=None):
+        if not self.data:
+            raise RecordException('record not loaded')
+        stats = Stats(self.parentZone.config)
+        return stats.qps(zone=self.parentZone.zone,
+                         domain=self.domain,
+                         type=self.type,
+                         callback=callback,
+                         errback=errback)

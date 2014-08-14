@@ -6,6 +6,7 @@
 
 from nsone.rest.zones import Zones
 from nsone.records import Record
+from nsone.rest.stats import Stats
 
 
 class ZoneException(Exception):
@@ -78,3 +79,16 @@ class Zone(object):
             record = Record(self, domain, rtype)
             return record.create(callback=callback, errback=errback, **kwargs)
         return add_X
+
+    def loadRecord(self, domain, rtype, callback=None, errback=None):
+        if not self.data:
+            raise ZoneException('zone not loaded')
+
+        rec = Record(self, domain, rtype)
+        return rec.load(callback=callback, errback=errback)
+
+    def qps(self, callback=None, errback=None):
+        if not self.data:
+            raise ZoneException('zone not loaded')
+        stats = Stats(self.config)
+        return stats.qps(zone=self.zone, callback=callback, errback=errback)
