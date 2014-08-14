@@ -27,7 +27,7 @@ class Zone(object):
     def reload(self, callback=None, errback=None):
         return self.load(reload=True, callback=callback, errback=errback)
 
-    def load(self, callback=None, errback=None):
+    def load(self, callback=None, errback=None, reload=False):
         if not reload and self.data:
             raise ZoneException('zone already loaded')
 
