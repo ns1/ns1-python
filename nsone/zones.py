@@ -21,8 +21,14 @@ class Zone(object):
         self.zone = zone
         self.data = None
 
+    def __getitem__(self, item):
+        return self.data.get(item, None)
+
+    def reload(self, callback=None, errback=None):
+        return self.load(reload=True, callback=callback, errback=errback)
+
     def load(self, callback=None, errback=None):
-        if self.data:
+        if not reload and self.data:
             raise ZoneException('zone already loaded')
 
         def success(result):
@@ -81,14 +87,9 @@ class Zone(object):
         return add_X
 
     def loadRecord(self, domain, rtype, callback=None, errback=None):
-        if not self.data:
-            raise ZoneException('zone not loaded')
-
         rec = Record(self, domain, rtype)
         return rec.load(callback=callback, errback=errback)
 
     def qps(self, callback=None, errback=None):
-        if not self.data:
-            raise ZoneException('zone not loaded')
         stats = Stats(self.config)
         return stats.qps(zone=self.zone, callback=callback, errback=errback)

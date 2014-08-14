@@ -23,13 +23,19 @@ class Record(object):
         self.type = type
         self.data = None
 
+    def __getitem__(self, item):
+        return self.data.get(item, None)
+
     def _parseModel(self, data):
         self.data = data
         self.answers = data['answers']
         # XXX break out the rest? use getattr instead?
 
-    def load(self, callback=None, errback=None):
-        if self.data:
+    def reload(self, callback=None, errback=None):
+        return self.load(reload=True, callback=callback, errback=errback)
+
+    def load(self, callback=None, errback=None, reload=False):
+        if not reload and self.data:
             raise RecordException('record already loaded')
 
         def success(result):

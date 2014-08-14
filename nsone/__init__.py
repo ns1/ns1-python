@@ -55,3 +55,14 @@ class NSONE:
         import nsone.zones
         zone = nsone.zones.Zone(self.config, zone)
         return zone.create(callback=callback, errback=errback, **kwargs)
+
+    def loadRecord(self, domain, type=None, zone=None, callback=None,
+                   errback=None, **kwargs):
+        import nsone.records
+        import nsone.zones
+        if zone is None:
+            # extract from record string
+            zone = '.'.join(domain.split('.')[1:])
+        z = nsone.zones.Zone(self.config, zone)
+        return z.loadRecord(domain, type, callback=callback, errback=errback,
+                            **kwargs)
