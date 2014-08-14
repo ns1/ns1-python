@@ -23,4 +23,3 @@ print "current QPS for test.com: %s" % qps['qps']
 rec = zone.loadRecord('foo', 'A')
 rqps = rec.qps()
 print "current QPS for foo.test.com: %s" % rqps['qps']
-
