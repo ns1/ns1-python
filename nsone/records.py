@@ -110,3 +110,12 @@ class Record(object):
                            callback=callback,
                            errback=errback,
                            **kwargs)
+
+    def addAnswers(self, answers, callback=None, errback=None, **kwargs):
+        if not self.data:
+            raise RecordException('record not loaded')
+        orig_answers = self.data['answers']
+        new_answers = self._rest._getAnswersForBody(answers)
+        orig_answers.extend(new_answers)
+        return self.update(answers=orig_answers, callback=callback,
+                           errback=errback, **kwargs)
