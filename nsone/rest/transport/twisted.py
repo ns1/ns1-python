@@ -5,9 +5,10 @@
 from __future__ import absolute_import
 
 from nsone.rest.transport.base import TransportBase
-from nsone.rest.errors import ResourceException
+from nsone.rest.errors import ResourceException, RateLimitException
 import json
 import logging
+import copy
 
 try:
     from twisted.internet import reactor
@@ -45,25 +46,37 @@ class TwistedTransport(TransportBase):
         self.agent = Agent(reactor)
         self.log = logging.getLogger(self.__module__)
 
-    def _callback(self, response, user_callback, data):
+    def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
-        d.addCallback(self._onBody, response, user_callback, data)
+        d.addCallback(self._onBody, response, user_callback, data, headers)
         return d
 
-    def _onBody(self, body, response, user_callback, data):
+    def _onBody(self, body, response, user_callback, data, headers):
+        argcopy = copy.deepcopy(headers)
+        argcopy['X-NSONE-Key'] = 'XXX'
+        self.log.debug(argcopy)
         self.log.debug("%s %s %s %s" % (response.request.method,
                                         response.request.absoluteURI,
                                         response.code,
                                         data))
         if response.code != 200:
-            raise ResourceException(body, response)
+            if response.code == 429:
+                raise RateLimitException('rate limit exceeded',
+                                         response,
+                                         body)
+            else:
+                raise ResourceException('server error', response, body)
         try:
             jsonOut = json.loads(body)
         except:
-            raise ResourceException('invalid json in response: %s' % body,
-                                    response)
+            raise ResourceException('invalid json in response',
+                                    response,
+                                    body)
         if user_callback:
-            return user_callback(jsonOut)
+            # set these in case callback throws, so we have them for errback
+            self.response = response
+            self.body = body
+            return user_callback(jsonOut, body, response)
         else:
             return jsonOut
 
@@ -72,18 +85,21 @@ class TwistedTransport(TransportBase):
         if user_errback:
             return user_errback(failure)
         else:
+            if failure.check(ResourceException, RateLimitException):
+                raise failure.value
             raise ResourceException(failure.getErrorMessage())
 
     def send(self, method, url, headers=None, data=None,
              callback=None, errback=None):
+        theaders = None
         if headers:
-            headers = Headers({str(k): [str(v)]
-                               for (k, v) in headers.iteritems()})
+            theaders = Headers({str(k): [str(v)]
+                                for (k, v) in headers.iteritems()})
         bProducer = None
         if data:
             bProducer = StringProducer(data)
-        d = self.agent.request(method, str(url), headers, bProducer)
-        d.addCallback(self._callback, callback, data)
+        d = self.agent.request(method, str(url), theaders, bProducer)
+        d.addCallback(self._callback, callback, data, headers)
         d.addErrback(self._errback, errback)
         return d
 

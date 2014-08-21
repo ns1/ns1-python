@@ -5,7 +5,6 @@
 #
 
 import sys
-import copy
 import logging
 import json
 from nsone import version
@@ -63,7 +62,4 @@ class BaseResource:
         if 'body' in kwargs:
             kwargs['data'] = json.dumps(kwargs['body'])
             del kwargs['body']
-        argcopy = copy.deepcopy(kwargs)
-        argcopy['headers']['X-NSONE-Key'] = 'XXX'
-        self._log.debug(argcopy)
         return self._transport.send(type, self._make_url(path), **kwargs)

@@ -6,7 +6,9 @@
 from __future__ import absolute_import
 
 from nsone.rest.transport.base import TransportBase
-from nsone.rest.errors import ResourceException
+from nsone.rest.errors import ResourceException, RateLimitException
+import copy
+import logging
 
 try:
     import requests
@@ -27,10 +29,15 @@ class RequestsTransport(TransportBase):
             'DELETE': requests.delete,
             'PUT': requests.put
         }
+        self.log = logging.getLogger(self.__module__)
+
 
     def send(self, method, url, headers=None, data=None,
              callback=None, errback=None):
 
+        argcopy = copy.deepcopy(headers)
+        argcopy['X-NSONE-Key'] = 'XXX'
+        self.log.debug(argcopy)
         resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
                                     data=data)
         if resp.status_code != 200:
@@ -38,7 +45,14 @@ class RequestsTransport(TransportBase):
                 errback(resp)
                 return
             else:
-                raise ResourceException(resp.text, resp)
+                if resp.code == 429:
+                    raise RateLimitException('rate limit exceeded',
+                                             resp,
+                                             resp.text)
+                else:
+                    raise ResourceException('server error',
+                                            resp,
+                                            resp.text)
         # TODO make sure json is valid
         try:
             jsonOut = resp.json()
@@ -47,7 +61,9 @@ class RequestsTransport(TransportBase):
                 errback(resp)
                 return
             else:
-                raise ResourceException(resp.txt, resp)
+                raise ResourceException('invalid json in response',
+                                        resp,
+                                        resp.text)
         if callback:
             return callback(jsonOut)
         else:

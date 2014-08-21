@@ -31,7 +31,7 @@ class Zone(object):
         if not reload and self.data:
             raise ZoneException('zone already loaded')
 
-        def success(result):
+        def success(result, *args):
             self.data = result
             if callback:
                 return callback(self)
@@ -48,7 +48,7 @@ class Zone(object):
         if not self.data:
             raise ZoneException('zone not loaded')
 
-        def success(result):
+        def success(result, *args):
             self.data = result
             if callback:
                 return callback(self)
@@ -62,7 +62,7 @@ class Zone(object):
         if self.data:
             raise ZoneException('zone already loaded')
 
-        def success(result):
+        def success(result, *args):
             self.data = result
             if callback:
                 return callback(self)

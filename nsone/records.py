@@ -38,7 +38,7 @@ class Record(object):
         if not reload and self.data:
             raise RecordException('record already loaded')
 
-        def success(result):
+        def success(result, *args):
             self._parseModel(result)
             if callback:
                 return callback(self)
@@ -52,7 +52,7 @@ class Record(object):
         if not self.data:
             raise RecordException('record not loaded')
 
-        def success(result):
+        def success(result, *args):
             if callback:
                 return callback(result)
             else:
@@ -66,7 +66,7 @@ class Record(object):
         if not self.data:
             raise RecordException('record not loaded')
 
-        def success(result):
+        def success(result, *args):
             self._parseModel(result)
             if callback:
                 return callback(self)
@@ -80,7 +80,7 @@ class Record(object):
         if self.data:
             raise RecordException('record already loaded')
 
-        def success(result):
+        def success(result, *args):
             self._parseModel(result)
             if callback:
                 return callback(self)
