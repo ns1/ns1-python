@@ -30,6 +30,7 @@ class ResourceException(Exception):
         return '<ResourceException message=%s, response=%s, body=%s>' % \
                (m, r, b)
 
+
 class RateLimitException(ResourceException):
 
     def __init__(self, message, response=None, body=None):
@@ -42,4 +43,3 @@ class RateLimitException(ResourceException):
     def __str__(self):
         return '<RateLimitException by=%s limit=%s period=%s>' % \
                (self.by, self.limit, self.period)
-

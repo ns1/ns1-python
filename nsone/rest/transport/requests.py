@@ -31,7 +31,6 @@ class RequestsTransport(TransportBase):
         }
         self.log = logging.getLogger(self.__module__)
 
-
     def send(self, method, url, headers=None, data=None,
              callback=None, errback=None):
 
