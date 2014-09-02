@@ -26,7 +26,10 @@ class ResourceException(Exception):
     def __str__(self):
         m = self.message or 'empty message'
         r = self.response or 'empty response'
-        b = self.body or 'empty body'
+        if self.body and len(self.body) > 30:
+            b = '%s...' % self.body[0:30]
+        else:
+            b = self.body or 'empty body'
         return '<ResourceException message=%s, response=%s, body=%s>' % \
                (m, r, b)
 
