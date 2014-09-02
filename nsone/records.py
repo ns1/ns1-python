@@ -23,6 +23,9 @@ class Record(object):
         self.type = type
         self.data = None
 
+    def __repr__(self):
+        return '<Record domain=%s type=%s>' % (self.domain, self.type)
+
     def __getitem__(self, item):
         return self.data.get(item, None)
 

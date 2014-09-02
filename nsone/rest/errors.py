@@ -23,7 +23,7 @@ class ResourceException(Exception):
         self.response = response
         self.body = body
 
-    def __str__(self):
+    def __repr__(self):
         m = self.message or 'empty message'
         r = self.response or 'empty response'
         if self.body and len(self.body) > 30:
@@ -43,6 +43,6 @@ class RateLimitException(ResourceException):
         self.limit = hdrs['x-ratelimit-limit'][0]
         self.period = hdrs['x-ratelimit-period'][0]
 
-    def __str__(self):
+    def __repr__(self):
         return '<RateLimitException by=%s limit=%s period=%s>' % \
                (self.by, self.limit, self.period)

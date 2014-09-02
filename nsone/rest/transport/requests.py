@@ -44,7 +44,7 @@ class RequestsTransport(TransportBase):
                 errback(resp)
                 return
             else:
-                if resp.code == 429:
+                if resp.status_code == 429:
                     raise RateLimitException('rate limit exceeded',
                                              resp,
                                              resp.text)

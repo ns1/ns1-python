@@ -21,6 +21,9 @@ class Zone(object):
         self.zone = zone
         self.data = None
 
+    def __repr__(self):
+        return '<Zone zone=%s>' % self.zone
+
     def __getitem__(self, item):
         return self.data.get(item, None)
 
@@ -87,6 +90,7 @@ class Zone(object):
         return add_X
 
     def loadRecord(self, domain, rtype, callback=None, errback=None):
+        """ :type result: nsone.records.Record """
         rec = Record(self, domain, rtype)
         return rec.load(callback=callback, errback=errback)
 
