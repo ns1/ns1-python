@@ -167,7 +167,7 @@ class Config:
                                      port,
                                      self._data['api_version'])
 
-    def __str__(self):
+    def __repr__(self):
         return 'config file [%s]: %s' % (self._path,
                                          json.dumps(self._data, indent=True))
 

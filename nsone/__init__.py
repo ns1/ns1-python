@@ -11,18 +11,21 @@ version = "0.1"
 
 class NSONE:
 
-    def __init__(self, config=None, configFile=None, keyID=None):
+    def __init__(self, apiKey=None, config=None, configFile=None, keyID=None):
         self.config = config
         if self.config is None:
-            self._loadConfig(configFile)
+            self._loadConfig(apiKey, configFile)
         if keyID:
             self.config.useKeyID(keyID)
 
-    def _loadConfig(self, configFile):
+    def _loadConfig(self, apiKey, configFile):
         self.config = Config()
-        configFile = Config.DEFAULT_CONFIG_FILE \
-            if not configFile else configFile
-        self.config.loadFromFile(configFile)
+        if apiKey:
+            self.config.createFromAPIKey(apiKey)
+        else:
+            configFile = Config.DEFAULT_CONFIG_FILE \
+                if not configFile else configFile
+            self.config.loadFromFile(configFile)
 
     # REST INTERFACE
     def zones(self):

@@ -33,6 +33,17 @@ class ResourceException(Exception):
         return '<ResourceException message=%s, response=%s, body=%s>' % \
                (m, r, b)
 
+    def __str__(self):
+        return self.message
+
+class AuthException(ResourceException):
+
+    def __repr__(self):
+        return '<AuthException>'
+
+    def __str__(self):
+        return 'unauthorized'
+
 
 class RateLimitException(ResourceException):
 
