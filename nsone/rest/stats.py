@@ -5,7 +5,10 @@
 #
 
 from . import resource
-import urllib
+try:
+    from urllib.parse import urlencode
+except:
+    from urllib import urlencode
 
 
 class Stats(resource.BaseResource):
@@ -40,6 +43,6 @@ class Stats(resource.BaseResource):
             if f in kwargs:
                 args[f] = bool(kwargs[f])
         return self._make_request('GET', '%s?%s' % (url,
-                                                    urllib.urlencode(args)),
+                                                    urlencode(args)),
                                   callback=callback,
                                   errback=errback)

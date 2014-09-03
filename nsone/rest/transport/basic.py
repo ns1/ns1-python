@@ -8,7 +8,13 @@ from __future__ import absolute_import
 from nsone.rest.transport.base import TransportBase
 from nsone.rest.errors import ResourceException, RateLimitException, \
     AuthException
-import urllib2
+
+try:
+    from urllib.request import build_opener, Request, HTTPSHandler
+    from urllib.error import HTTPError
+except:
+    from urllib2 import build_opener, Request, HTTPSHandler
+    from urllib2 import HTTPError
 import json
 
 
@@ -21,8 +27,8 @@ class BasicTransport(TransportBase):
              callback=None, errback=None):
         self._logHeaders(headers)
         self._log.debug("%s %s %s" % (method, url, data))
-        opener = urllib2.build_opener(urllib2.HTTPHandler)
-        request = urllib2.Request(url, headers=headers, data=data)
+        opener = build_opener(HTTPSHandler)
+        request = Request(url, headers=headers, data=data)
         request.get_method = lambda: method
 
         def handleProblem(code, resp, msg):
@@ -41,7 +47,7 @@ class BasicTransport(TransportBase):
 
         try:
             resp = opener.open(request)
-        except urllib2.HTTPError as e:
+        except HTTPError as e:
             handleProblem(e.code, e, e.msg)
 
         body = resp.read()
