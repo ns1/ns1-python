@@ -5,6 +5,8 @@
 #
 
 # flake8: noqa
+from nsone.rest.transport.basic import *
+# flake8: noqa
 from nsone.rest.transport.requests import *
 # flake8: noqa
 from nsone.rest.transport.twisted import *

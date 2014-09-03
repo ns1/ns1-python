@@ -28,8 +28,16 @@ class BaseResource:
         self._config = config
         self._log = logging.getLogger(__name__)
         # TODO verify we have a default key
-        # get a transport
-        transport = self._config.get('transport', self.DEFAULT_TRANSPORT)
+        # get a transport. TODO make this static property?
+        transport = self._config.get('transport', None)
+        if transport is None:
+            # for default transport:
+            # if requests is available, use that. otherwise, basic
+            from nsone.rest.transport.requests import have_requests
+            if have_requests:
+                transport = 'requests'
+            else:
+                transport = 'basic'
         if transport not in TransportBase.REGISTRY:
             raise ResourceException('requested transport was not found: %s'
                                     % transport)

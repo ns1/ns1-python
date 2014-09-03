@@ -6,9 +6,8 @@
 from __future__ import absolute_import
 
 from nsone.rest.transport.base import TransportBase
-from nsone.rest.errors import ResourceException, RateLimitException
-import copy
-import logging
+from nsone.rest.errors import ResourceException, RateLimitException, \
+    AuthException
 
 try:
     import requests
@@ -21,22 +20,18 @@ class RequestsTransport(TransportBase):
 
     def __init__(self, config):
         if not have_requests:
-            raise ImportError('requests required for RequestsTransport')
-        TransportBase.__init__(self, config)
+            raise ImportError('requests module required for RequestsTransport')
+        TransportBase.__init__(self, config, self.__module__)
         self.REQ_MAP = {
             'GET': requests.get,
             'POST': requests.post,
             'DELETE': requests.delete,
             'PUT': requests.put
         }
-        self.log = logging.getLogger(self.__module__)
 
     def send(self, method, url, headers=None, data=None,
              callback=None, errback=None):
-
-        argcopy = copy.deepcopy(headers)
-        argcopy['X-NSONE-Key'] = 'XXX'
-        self.log.debug(argcopy)
+        self._logHeaders(headers)
         resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
                                     data=data)
         if resp.status_code != 200:
@@ -48,6 +43,10 @@ class RequestsTransport(TransportBase):
                     raise RateLimitException('rate limit exceeded',
                                              resp,
                                              resp.text)
+                elif resp.status_code == 401:
+                    raise AuthException('unauthorized',
+                                        resp,
+                                        resp.text)
                 else:
                     raise ResourceException('server error',
                                             resp,

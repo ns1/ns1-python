@@ -5,10 +5,9 @@
 from __future__ import absolute_import
 
 from nsone.rest.transport.base import TransportBase
-from nsone.rest.errors import ResourceException, RateLimitException
+from nsone.rest.errors import ResourceException, RateLimitException, \
+    AuthException
 import json
-import logging
-import copy
 
 try:
     from twisted.internet import reactor
@@ -42,9 +41,8 @@ class TwistedTransport(TransportBase):
     def __init__(self, config):
         if not have_twisted:
             raise ImportError('Twisted required for TwistedTransport')
-        TransportBase.__init__(self, config)
+        TransportBase.__init__(self, config, self.__module__)
         self.agent = Agent(reactor)
-        self.log = logging.getLogger(self.__module__)
 
     def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
@@ -52,18 +50,20 @@ class TwistedTransport(TransportBase):
         return d
 
     def _onBody(self, body, response, user_callback, data, headers):
-        argcopy = copy.deepcopy(headers)
-        argcopy['X-NSONE-Key'] = 'XXX'
-        self.log.debug(argcopy)
-        self.log.debug("%s %s %s %s" % (response.request.method,
-                                        response.request.absoluteURI,
-                                        response.code,
-                                        data))
+        self._logHeaders(headers)
+        self._log.debug("%s %s %s %s" % (response.request.method,
+                                         response.request.absoluteURI,
+                                         response.code,
+                                         data))
         if response.code != 200:
             if response.code == 429:
                 raise RateLimitException('rate limit exceeded',
                                          response,
                                          body)
+            elif response.code == 401:
+                raise AuthException('unauthorized',
+                                    response,
+                                    body)
             else:
                 raise ResourceException('server error', response, body)
         try:
