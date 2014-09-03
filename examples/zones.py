@@ -10,11 +10,10 @@ from nsone import NSONE
 nsone = NSONE()
 
 # to specify an apikey here instead, use:
+# nsone = NSONE(apiKey='qACMD09OJXBxT7XOuRs8')
 
-# from nsone import Config
-# config = Config()
-# config.createFromAPIKey('qACMD09OJXBxT7XOuRs8')
-# nsone = NSONE(config=config)
+# to load an alternate configuration file:
+# nsone = NSONE(configFile='/etc/nsone/api.json')
 
 ######################
 # LOAD / CREATE ZONE #

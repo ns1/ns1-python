@@ -93,6 +93,12 @@ class Records(resource.BaseResource):
     def create(self, zone, domain, type,
                callback=None, errback=None, **kwargs):
         body = self._buildBody(zone, domain, type, **kwargs)
+        return self.create_raw(zone, domain, type, body,
+                               callback=callback, errback=errback,
+                               **kwargs)
+
+    def create_raw(self, zone, domain, type, body,
+                   callback=None, errback=None, **kwargs):
         return self._make_request('PUT',
                                   '%s/%s/%s/%s' % (self.ROOT,
                                                    zone,
@@ -101,6 +107,7 @@ class Records(resource.BaseResource):
                                   body=body,
                                   callback=callback,
                                   errback=errback)
+
 
     def update(self, zone, domain, type,
                callback=None, errback=None, **kwargs):

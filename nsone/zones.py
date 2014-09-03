@@ -7,6 +7,7 @@
 from nsone.rest.zones import Zones
 from nsone.records import Record
 from nsone.rest.stats import Stats
+from nsone.rest.records import Records
 
 
 class ZoneException(Exception):
@@ -88,6 +89,32 @@ class Zone(object):
             record = Record(self, domain, rtype)
             return record.create(callback=callback, errback=errback, **kwargs)
         return add_X
+
+    def copyRecord(self, existing_domain, new_domain, rtype,
+                   callback=None, errback=None):
+
+        if not new_domain.endswith(self.zone):
+            new_domain = new_domain + '.' + self.zone
+
+        def onSaveNewRecord(new_data):
+            new_rec = Record(self, new_domain, rtype)
+            new_rec._parseModel(new_data)
+            if callback:
+                return callback(new_rec)
+            else:
+                return new_rec
+
+        def onLoadRecord(old_rec):
+            data = old_rec.data
+            data['domain'] = new_domain
+            restapi = Records(self.config)
+            return restapi.create_raw(self.zone, new_domain, rtype, data,
+                                      callback=onSaveNewRecord,
+                                      errback=errback)
+
+        return self.loadRecord(existing_domain, rtype,
+                               callback=onLoadRecord,
+                               errback=errback)
 
     def loadRecord(self, domain, rtype, callback=None, errback=None):
         """ :type result: nsone.records.Record """
