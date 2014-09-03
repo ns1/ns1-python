@@ -39,4 +39,3 @@ zone.add_A('complex',
 # copy it to another record: old domain, new domain, record type
 newrec = zone.copyRecord('complex', 'copy', 'A')
 print newrec
-

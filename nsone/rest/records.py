@@ -108,7 +108,6 @@ class Records(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-
     def update(self, zone, domain, type,
                callback=None, errback=None, **kwargs):
         body = self._buildBody(zone, domain, type, **kwargs)

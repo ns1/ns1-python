@@ -36,6 +36,7 @@ class ResourceException(Exception):
     def __str__(self):
         return self.message
 
+
 class AuthException(ResourceException):
 
     def __repr__(self):
