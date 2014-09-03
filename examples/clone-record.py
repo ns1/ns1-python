@@ -37,5 +37,10 @@ zone.add_A('complex',
                     {'select_first_n': {'N': 1}}])
 
 # copy it to another record: old domain, new domain, record type
-newrec = zone.copyRecord('complex', 'copy', 'A')
+newrec = zone.cloneRecord('complex', 'copy', 'A')
 print(newrec)
+
+# you can also copy it to a different zone
+newrec = zone.cloneRecord('complex', 'complex', 'A', zone='example.com')
+print(newrec)
+

@@ -90,14 +90,21 @@ class Zone(object):
             return record.create(callback=callback, errback=errback, **kwargs)
         return add_X
 
-    def copyRecord(self, existing_domain, new_domain, rtype,
-                   callback=None, errback=None):
+    def cloneRecord(self, existing_domain, new_domain, rtype,
+                    zone=None, callback=None, errback=None):
 
-        if not new_domain.endswith(self.zone):
-            new_domain = new_domain + '.' + self.zone
+        if zone is None:
+            zone = self.zone
+
+        if not new_domain.endswith(zone):
+            new_domain = new_domain + '.' + zone
 
         def onSaveNewRecord(new_data):
-            new_rec = Record(self, new_domain, rtype)
+            if zone != self.zone:
+                pZone = Zone(self.config, zone)
+            else:
+                pZone = self
+            new_rec = Record(pZone, new_domain, rtype)
             new_rec._parseModel(new_data)
             if callback:
                 return callback(new_rec)
@@ -106,9 +113,10 @@ class Zone(object):
 
         def onLoadRecord(old_rec):
             data = old_rec.data
+            data['zone'] = zone
             data['domain'] = new_domain
             restapi = Records(self.config)
-            return restapi.create_raw(self.zone, new_domain, rtype, data,
+            return restapi.create_raw(zone, new_domain, rtype, data,
                                       callback=onSaveNewRecord,
                                       errback=errback)
 
