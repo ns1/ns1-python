@@ -43,4 +43,3 @@ print(newrec)
 # you can also copy it to a different zone
 newrec = zone.cloneRecord('complex', 'complex', 'A', zone='example.com')
 print(newrec)
-
