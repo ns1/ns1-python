@@ -1,5 +1,6 @@
 import os
 import sys
+import nsone
 
 try:
     from setuptools import setup
@@ -13,14 +14,16 @@ setup(
     name='nsone',
     # flake8: noqa
     version=nsone.version,
-    description='NSONE python bindings',
+    description='Python SDK for the NSONE DNS platform',
     author='Shannon Weyrick',
     author_email='sweyrick@nsone.net',
-    url='https://nsone.net/',
-    packages=['nsone'],
+    url='https://github.com/nsone/nsone-python',
+    packages=['nsone', 'nsone.rest', 'nsone.rest.transport'],
+    keywords='dns development rest sdk nsone',
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
+        "Intended Audience :: Information Technology",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
@@ -29,4 +32,5 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.3",
         "Topic :: Software Development :: Libraries :: Python Modules",
+        "Topic :: Internet :: Name Service (DNS)"
     ])

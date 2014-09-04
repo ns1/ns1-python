@@ -6,6 +6,7 @@ script: nosetests -v
 install:
 - pip install -r requirements.txt
 - pip install flake8 --use-mirrors
+- python setup.py install
 before_script:
 - flake8 .
 notifications:
