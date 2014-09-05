@@ -37,6 +37,7 @@ def gotQPS(result):
     print("current QPS for test.com: %s" % result['qps'])
     reactor.stop()
 
+
 def handleError(failure):
     print(failure)
     reactor.stop()
