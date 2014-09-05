@@ -2,13 +2,17 @@ language: python
 python:
 - '2.7'
 - '3.3'
-script: nosetests -v
 install:
 - pip install -r requirements.txt
 - pip install flake8 --use-mirrors
-- python setup.py install
 before_script:
 - flake8 .
+script:
+- nosetests -v
+- python setup.py install
+- python setup.py bdist_wheel
+- cd doc
+- make html
 notifications:
   slack:
     secure: kXWHt2FwGzohgwmwDH262R3B359iRmsjPE/wF90ur6/TOfTvxuZicpPOVWsglgDgVP92zMklwgOs941IJmg4VVvqjuvDYeaMB+KLHvxb4Vl0pOg7mLpOXmIVt3NwL3+miSwoQ24XHJb6vGzubeHAjSXpD0N1tVxb792DvHztDTo=
