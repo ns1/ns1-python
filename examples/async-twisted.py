@@ -15,12 +15,13 @@ config = Config()
 # load default config
 config.loadFromFile(Config.DEFAULT_CONFIG_FILE)
 # to load directly from apikey instead, use
-#config.createFromAPIKey('qACMD09OJXBxT7XOuRs8')
+# config.createFromAPIKey('qACMD09OJXBxT7XOuRs8')
 
 # override default synchronous transport. note, this would normally go
 # in config file.
 config['transport'] = 'twisted'
 nsone = NSONE(config=config)
+
 
 @defer.inlineCallbacks
 def getQPS():
@@ -30,6 +31,7 @@ def getQPS():
     zone = yield nsone.loadZone('test.com')
     qps = yield zone.qps()
     defer.returnValue(qps)
+
 
 def gotQPS(result):
     print("current QPS for test.com: %s" % result['qps'])
