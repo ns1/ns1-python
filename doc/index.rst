@@ -25,7 +25,7 @@ Install with::
 Quick Start
 -----------
 
-You'll need an API Key. To create one, login to `the portal <https://my.nsone.net/>`_ and
+First, you'll need an API Key. To create one, login to `the portal <https://my.nsone.net/>`_ and
 click on the Account button in the top right. Select Settings & Users, then add a new
 API Key at the bottom.
 
@@ -51,6 +51,8 @@ Contents
    :maxdepth: 1
 
    features
+   configuration
+   usage
 
 
 Reference

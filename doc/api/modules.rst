@@ -6,7 +6,6 @@ nsone package
 
    nsone
    config
-   errors
    zones
    records
    rest
