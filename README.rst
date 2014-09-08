@@ -52,3 +52,9 @@ API Key at the bottom.
 
 * `Documentation at ReadTheDocs <http://nsone.readthedocs.org/en/latest/index.html>`_
 * `NSONE REST API Documentation <http://nsone.net/api/>`_
+
+Contributions
+=============
+
+We welcome contributions! Please fork on GitHub and submit a Pull Request.
+

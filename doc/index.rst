@@ -30,6 +30,8 @@ click on the Account button in the top right. Select Settings & Users, then add 
 API Key at the bottom.
 
 
+Simple example:
+
 .. code-block:: python
 
     from nsone import NSONE
@@ -43,6 +45,11 @@ API Key at the bottom.
 Note that all zone and record changes propagate in real time throughout the NSONE platform.
 
 There are more examples in the `examples directory <https://github.com/nsone/nsone-python/tree/develop/examples>`_.
+
+Contributions
+-------------
+
+We welcome contributions! Please `fork on GitHub <https://github.com/nsone/nsone-python/>`_ and submit a Pull Request.
 
 Contents
 --------

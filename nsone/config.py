@@ -30,7 +30,7 @@ class Config:
     def __init__(self, path=None):
         """
         :param str path: optional path. if given, try to load the given config
-                         file
+        file
         """
         self._path = None
         self._keyID = None
