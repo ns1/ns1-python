@@ -1,5 +1,5 @@
-NSONE
-=====
+nsone.NSONE
+===========
 
 This top level object is used to initialize access to NSONE.
 

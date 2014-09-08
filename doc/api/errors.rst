@@ -1,5 +1,5 @@
-Error Handling (nsone.error)
-============================
+nsone.error
+===========
 
 Error handling
 
@@ -7,6 +7,3 @@ Error handling
     :members:
     :undoc-members:
     :show-inheritance:
-
-
-

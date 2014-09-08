@@ -1,5 +1,5 @@
-Configuration (nsone.config)
-============================
+nsone.config
+============
 
 This object is used to configure the SDK and REST client.
 

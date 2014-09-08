@@ -1,5 +1,5 @@
-Zones (nsone.zones)
-===================
+nsone.zones
+===========
 
 Object representing a single DNS zone.
 

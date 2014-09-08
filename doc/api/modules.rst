@@ -1,5 +1,5 @@
-nsone
-=====
+nsone package
+=============
 
 .. toctree::
    :maxdepth: 4
@@ -9,3 +9,4 @@ nsone
    errors
    zones
    records
+   rest
