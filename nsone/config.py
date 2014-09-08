@@ -29,8 +29,8 @@ class Config:
 
     def __init__(self, path=None):
         """
-        :param str path: optional path. if given, try to load the given config
-        file
+        :param str path: optional path. if given, try to load the given config\
+            file
         """
         self._path = None
         self._keyID = None
@@ -54,10 +54,11 @@ class Config:
 
     def createFromAPIKey(self, apikey, maybeWriteDefault=False):
         """
-        Create a basic config from a single apikey
-        :param apikey: NSONE API Key, as created in the NSONE portal
-        :param maybeWrite: If True and DEFAULT_CONFIG_FILE doesn't exist,
-        write out the resulting config there.
+        Create a basic config from a single API key
+
+        :param str apikey: NSONE API Key, as created in the NSONE portal
+        :param bool maybeWriteDefault: If True and DEFAULT_CONFIG_FILE doesn't\
+            exist write out the resulting config there.
         """
         self._data = {
             'default_key': 'default',
@@ -77,7 +78,8 @@ class Config:
     def loadFromDict(self, d):
         """
         Load config data from the given dictionary
-        :param d: Python dictionary containing configuration items
+
+        :param dict d: Python dictionary containing configuration items
         """
         self._data = d
         self._doDefaults()
@@ -128,30 +130,64 @@ class Config:
         f.close()
 
     def useKeyID(self, keyID):
+        """
+        Use the given API key config specified by `keyID` during subsequent
+        API calls
+
+        :param str keyID: an index into the 'keys' maintained in this config
+        """
         if keyID not in self._data['keys']:
             raise ConfigException('keyID does not exist: %s' % keyID)
         self._keyID = keyID
 
     def getCurrentKeyID(self):
+        """
+        Retrieve the current keyID in use.
+
+        :return: current keyID in use
+        """
         return self._keyID
 
     def getKeyConfig(self, keyID=None):
+        """
+        Get key configuration specified by `keyID`, or current keyID.
+
+        :param str keyID: optional keyID to retrieve, or current if not passed
+        :return: a dict of the request (or current) key config
+        """
         k = keyID if keyID is not None else self._keyID
         if not k or k not in self._data['keys']:
             raise ConfigException('request key does not exist: %s' % k)
         return self._data['keys'][k]
 
     def isKeyWriteLocked(self, keyID=None):
+        """
+        Determine if a key config is write locked.
+
+        :param str keyID: optional keyID to retrieve, or current if not passed
+        :return: True if the given (or current) keyID is writeLocked
+        """
         kcfg = self.getKeyConfig(keyID)
         return 'writeLock' in kcfg and kcfg['writeLock'] is True
 
     def getAPIKey(self, keyID=None):
+        """
+        Retrieve the NSONE API Key for the given keyID
+
+        :param str keyID: optional keyID to retrieve, or current if not passed
+        :return: API Key for the given keyID
+        """
         kcfg = self.getKeyConfig(keyID)
         if 'key' not in kcfg:
             raise ConfigException('invalid config: missing api key')
         return kcfg['key']
 
     def getEndpoint(self):
+        """
+        Retrieve the NSONE API Endpoint URL that will be used for requests.
+
+        :return: URL of the NSONE API that will be used for requests
+        """
         port = ''
         endpoint = ''
         keyConfig = self.getKeyConfig()
@@ -178,4 +214,12 @@ class Config:
         self._data[key] = value
 
     def get(self, item, default=None):
+        """
+        Retrieve a value from the config object.
+
+        :param str item: Key to lookup
+        :param default: Default value to return if the requested item doesn't \
+            exist
+        :return: Requested value, or `default` if it didn't exist
+        """
         return self._data.get(item, default)
