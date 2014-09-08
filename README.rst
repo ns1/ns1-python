@@ -34,6 +34,8 @@ None, but supports different transport backends. Currently supported:
  * urllib (synchronous, the default if requests isn't available)
  * `twisted <https://twistedmatrix.com/>`_ (asynchronous)
 
+Other transports are easy to add, see `transport <https://github.com/nsone/nsone-python/tree/develop/nsone/rest/transport>`_
+
 Examples
 ========
 
@@ -41,6 +43,12 @@ See the `examples directory <https://github.com/nsone/nsone-python/tree/develop/
 
 Documentation
 =============
+
+If you don't yet have an NSONE account, `signup here (free) <https://nsone.net/signup/>`_
+
+You'll need an API Key. To create one, login to `the portal <https://my.nsone.net/>`_ and
+click on the Account button in the top right. Select Settings & Users, then add a new
+API Key at the bottom.
 
 * `Documentation at ReadTheDocs <http://nsone.readthedocs.org/en/latest/index.html>`_
 * `NSONE REST API Documentation <http://nsone.net/api/>`_
