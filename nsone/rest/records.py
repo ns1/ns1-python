@@ -12,7 +12,7 @@ class Records(resource.BaseResource):
 
     INT_FIELDS = ['ttl']
     BOOL_FIELDS = ['use_csubnet']
-    PASSTHRU_FIELDS = ['feed', 'networks', 'meta', 'regions']
+    PASSTHRU_FIELDS = ['feed', 'networks', 'meta', 'regions', 'link']
 
     # answers must be:
     #  1) a single string

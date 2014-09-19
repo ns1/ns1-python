@@ -90,6 +90,19 @@ class Zone(object):
             return record.create(callback=callback, errback=errback, **kwargs)
         return add_X
 
+    def linkRecord(self, existing_domain, new_domain, rtype,
+                   callback=None, errback=None, **kwargs):
+
+        if '.' not in existing_domain:
+            existing_domain = existing_domain + '.' + self.zone
+
+        record = Record(self, new_domain, rtype)
+        return record.create(answers=[],
+                             link=existing_domain,
+                             callback=callback,
+                             errback=errback,
+                             **kwargs)
+
     def cloneRecord(self, existing_domain, new_domain, rtype,
                     zone=None, callback=None, errback=None):
 
