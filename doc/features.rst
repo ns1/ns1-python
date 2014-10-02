@@ -1,8 +1,8 @@
 Features
 ========
 
- * Configuration with multiple API keys
- * High Level Interface
- * Low Level REST Wrapper
- * Synchronous and Asynchronous Transports
+ * Extensive config system with support for multiple API keys
+ * High level interface to Zones and Records
+ * Low level REST wrapper for all other functionality
+ * Extendable transport system with synchronous and asynchronous transports
 
