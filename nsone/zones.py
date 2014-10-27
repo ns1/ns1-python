@@ -113,7 +113,7 @@ class Zone(object):
     def __getattr__(self, item):
 
         if not item.startswith('add_'):
-            return None
+            raise AttributeError(item)
 
         # dynamic adding of various record types, e.g. add_A, add_CNAME, etc
         (_, rtype) = item.split('_', 2)
@@ -123,6 +123,19 @@ class Zone(object):
             record = Record(self, domain, rtype)
             return record.create(callback=callback, errback=errback, **kwargs)
         return add_X
+
+    def createLinkToSelf(self, new_zone, callback=None, errback=None,
+                         **kwargs):
+        """
+        Create a new linked zone, linking to ourselves. All records in this
+        zone will then be available as "linked records" in the new zone.
+
+        :param str new_zone: the new zone name to link to this one
+        :return: new Zone
+        """
+        zone = Zone(self.config, new_zone)
+        kwargs['link'] = self.data['zone']
+        return zone.create(callback=callback, errback=errback, **kwargs)
 
     def linkRecord(self, existing_domain, new_domain, rtype,
                    callback=None, errback=None, **kwargs):

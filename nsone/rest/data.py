@@ -40,7 +40,7 @@ class Source(resource.BaseResource):
         }
         self._buildStdBody(body, kwargs)
         return self._make_request('POST',
-                                  '%s/%s' % (self.ROOT, id),
+                                  '%s/%s' % (self.ROOT, sourceid),
                                   body=body,
                                   callback=callback,
                                   errback=errback)

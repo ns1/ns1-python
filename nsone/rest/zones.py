@@ -12,7 +12,7 @@ class Zones(resource.BaseResource):
     ROOT = 'zones'
 
     INT_FIELDS = ['retry', 'refresh', 'expiry', 'nx_ttl']
-    PASSTHRU_FIELDS = ['secondary', 'hostmaster', 'meta', 'networks']
+    PASSTHRU_FIELDS = ['secondary', 'hostmaster', 'meta', 'networks', 'link']
 
     def _buildBody(self, zone, **kwargs):
         body = {}

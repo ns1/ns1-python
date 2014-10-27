@@ -17,6 +17,7 @@ class Stats(resource.BaseResource):
 
     def qps(self, zone=None, domain=None, type=None,
             callback=None, errback=None):
+        url = ''
         if zone is None:
             url = '%s/%s' % (self.ROOT, 'qps'),
         elif type is not None and domain is not None and zone is not None:
