@@ -29,11 +29,11 @@ class RequestsTransport(TransportBase):
             'PUT': requests.put
         }
 
-    def send(self, method, url, headers=None, data=None,
+    def send(self, method, url, headers=None, data=None, files=None,
              callback=None, errback=None):
         self._logHeaders(headers)
         resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
-                                    data=data)
+                                    data=data, files=files)
         if resp.status_code != 200:
             if errback:
                 errback(resp)

@@ -97,13 +97,18 @@ class NSONE:
         zone = nsone.zones.Zone(self.config, zone)
         return zone.load(callback=callback, errback=errback)
 
-    def createZone(self, zone, callback=None, errback=None, **kwargs):
+    def createZone(self, zone, zoneFile=None, callback=None, errback=None,
+                   **kwargs):
         """
         Create a new zone, and return an associated high level Zone object.
         Several optional keyword arguments are available to configure the SOA
         record.
 
+        If zoneFile is specified, upload the specific zone definition file
+        to populate the zone with.
+
         :param str zone: zone name, like 'example.com'
+        :param str zoneFile: absolute path of a zone file
         :keyword int retry: retry time
         :keyword int refresh: refresh ttl
         :keyword int expiry: expiry ttl
@@ -113,7 +118,8 @@ class NSONE:
         """
         import nsone.zones
         zone = nsone.zones.Zone(self.config, zone)
-        return zone.create(callback=callback, errback=errback, **kwargs)
+        return zone.create(zoneFile=zoneFile, callback=callback,
+                           errback=errback, **kwargs)
 
     def loadRecord(self, domain, type, zone=None, callback=None,
                    errback=None, **kwargs):

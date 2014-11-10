@@ -26,6 +26,6 @@ class TransportBase(object):
             argcopy['X-NSONE-Key'] = '<redacted>'
             self._log.debug(argcopy)
 
-    def send(self, method, url, headers=None, data=None,
+    def send(self, method, url, headers=None, data=None, files=None,
              callback=None, errback=None):
         pass

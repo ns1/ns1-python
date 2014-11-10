@@ -90,12 +90,14 @@ class Zone(object):
         return self._rest.update(self.zone, callback=success, errback=errback,
                                  **kwargs)
 
-    def create(self, callback=None, errback=None, **kwargs):
+    def create(self, zoneFile=None, callback=None, errback=None, **kwargs):
         """
         Create a new zone. Pass a list of keywords and their values to
         configure. For the list of keywords available for zone configuration,
         see :attr:`nsone.rest.zones.Zones.INT_FIELDS` and
         :attr:`nsone.rest.zones.Zones.PASSTHRU_FIELDS`
+        If zoneFile is passed, it should be a zone text file on the local disk
+        that will be used to populate the created zone file.
         """
         if self.data:
             raise ZoneException('zone already loaded')
@@ -107,8 +109,13 @@ class Zone(object):
             else:
                 return self
 
-        return self._rest.create(self.zone, callback=success, errback=errback,
-                                 **kwargs)
+        if zoneFile:
+            return self._rest.import_file(self.zone, zoneFile,
+                                          callback=success, errback=errback,
+                                          **kwargs)
+        else:
+            return self._rest.create(self.zone, callback=success,
+                                     errback=errback, **kwargs)
 
     def __getattr__(self, item):
 

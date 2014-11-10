@@ -23,8 +23,11 @@ class BasicTransport(TransportBase):
     def __init__(self, config):
         TransportBase.__init__(self, config, self.__module__)
 
-    def send(self, method, url, headers=None, data=None,
+    def send(self, method, url, headers=None, data=None, files=None,
              callback=None, errback=None):
+        if files is not None:
+            # XXX
+            raise Exception('file uploads not supported in BasicTransport yet')
         self._logHeaders(headers)
         self._log.debug("%s %s %s" % (method, url, data))
         opener = build_opener(HTTPSHandler)

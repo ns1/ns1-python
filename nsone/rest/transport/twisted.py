@@ -8,15 +8,35 @@ from nsone.rest.transport.base import TransportBase
 from nsone.rest.errors import ResourceException, RateLimitException, \
     AuthException
 import json
+import random
+import StringIO
 
 try:
     from twisted.internet import reactor
-    from twisted.web.client import Agent, readBody
+    from twisted.web.client import Agent, readBody, FileBodyProducer
     from twisted.web.http_headers import Headers
     from twisted.internet.defer import succeed
     have_twisted = True
 except Exception as e:
     have_twisted = False
+
+
+def encodeForm(varname, f, ctype):
+    randomChars = [str(random.randrange(10)) for _ in xrange(28)]
+    boundary = "".join(randomChars)
+
+    lines = ['--' + boundary]
+
+    def add(name, content):
+        header = 'Content-Disposition: form-data; name="%s"; filename="%s"' % \
+                 (name, f.name)
+        header += ";\r\nContent-Type: %s" % ctype
+        lines.extend([header, "", content])
+
+    add(varname, f.read())
+
+    lines.extend(['--' + boundary + "--", ""])
+    return boundary, "\r\n".join(lines)
 
 
 class StringProducer(object):
@@ -89,15 +109,27 @@ class TwistedTransport(TransportBase):
                 raise failure.value
             raise ResourceException(failure.getErrorMessage())
 
-    def send(self, method, url, headers=None, data=None,
+    def send(self, method, url, headers=None, data=None, files=None,
              callback=None, errback=None):
+        bProducer = None
+        if data:
+            bProducer = StringProducer(data)
+        elif files:
+            if len(files) > 1:
+                raise Exception('twisted transport currently only accepts one'
+                                ' multipart file')
+            boundary, body = encodeForm(files[0][0],
+                                        files[0][1][1],
+                                        files[0][1][2])
+            if headers is None:
+                headers = {}
+            headers['Content-Type'] =\
+                "multipart/form-data; boundary={}".format(boundary)
+            bProducer = FileBodyProducer(StringIO.StringIO(body))
         theaders = None
         if headers:
             theaders = Headers({str(k): [str(v)]
                                 for (k, v) in headers.iteritems()})
-        bProducer = None
-        if data:
-            bProducer = StringProducer(data)
         d = self.agent.request(method, str(url), theaders, bProducer)
         d.addCallback(self._callback, callback, data, headers)
         d.addErrback(self._errback, errback)

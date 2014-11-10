@@ -20,6 +20,15 @@ class Zones(resource.BaseResource):
         self._buildStdBody(body, kwargs)
         return body
 
+    def import_file(self, zone, zoneFile, callback=None, errback=None,
+                    **kwargs):
+        files = [('zonefile', (zoneFile, open(zoneFile, 'rb'), 'text/plain'))]
+        return self._make_request('PUT',
+                                  'import/zonefile/%s' % (zone),
+                                  files=files,
+                                  callback=callback,
+                                  errback=errback)
+
     def create(self, zone, callback=None, errback=None, **kwargs):
         body = self._buildBody(zone, **kwargs)
         return self._make_request('PUT',
