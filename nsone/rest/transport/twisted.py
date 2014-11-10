@@ -22,7 +22,7 @@ except Exception as e:
 
 
 def encodeForm(varname, f, ctype):
-    randomChars = [str(random.randrange(10)) for _ in xrange(28)]
+    randomChars = [str(random.randrange(10)) for _ in range(28)]
     boundary = "".join(randomChars)
 
     lines = ['--' + boundary]
