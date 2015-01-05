@@ -4,6 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 
 from . import resource
+from six import string_types
 
 
 class Records(resource.BaseResource):
@@ -31,7 +32,7 @@ class Records(resource.BaseResource):
     def _getAnswersForBody(self, answers):
         realAnswers = []
         # simplest: they specify a single string ip
-        if isinstance(answers, basestring):
+        if isinstance(answers, string_types):
             answers = [answers]
         # otherwise, we need a list
         elif not isinstance(answers, list):
@@ -39,7 +40,7 @@ class Records(resource.BaseResource):
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
         for a in answers:
-            if isinstance(a, basestring):
+            if isinstance(a, string_types):
                 realAnswers.append({'answer': [a]})
             elif isinstance(a, list):
                 realAnswers.append({'answer': a})
