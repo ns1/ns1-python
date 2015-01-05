@@ -31,7 +31,7 @@ class Records(resource.BaseResource):
     def _getAnswersForBody(self, answers):
         realAnswers = []
         # simplest: they specify a single string ip
-        if isinstance(answers, str):
+        if isinstance(answers, basestring):
             answers = [answers]
         # otherwise, we need a list
         elif not isinstance(answers, list):
@@ -39,7 +39,7 @@ class Records(resource.BaseResource):
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
         for a in answers:
-            if isinstance(a, str):
+            if isinstance(a, basestring):
                 realAnswers.append({'answer': [a]})
             elif isinstance(a, list):
                 realAnswers.append({'answer': a})
