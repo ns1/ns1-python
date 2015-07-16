@@ -62,7 +62,7 @@ class Source(resource.BaseResource):
 class Feed(resource.BaseResource):
 
     ROOT = 'data/feeds'
-    PASSTHRU_FIELDS = ['name', 'config', 'destinations']
+    PASSTHRU_FIELDS = ['name', 'config']
 
     def list(self, sourceid, callback=None, errback=None):
         return self._make_request('GET',
