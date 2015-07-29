@@ -6,7 +6,7 @@
 
 from .config import Config
 
-version = "0.9.1"
+version = "0.9.2"
 
 
 class NSONE:
@@ -84,6 +84,15 @@ class NSONE:
         """
         import nsone.rest.data
         return nsone.rest.data.Feed(self.config)
+
+    def plan(self):
+        """
+        Return a new raw REST interface to account plan
+
+        :rtype: :py:class:`nsone.rest.account.Plan`
+        """
+        import nsone.rest.account
+        return nsone.rest.account.Plan(self.config)
 
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
