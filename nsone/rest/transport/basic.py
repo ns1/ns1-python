@@ -35,6 +35,10 @@ class BasicTransport(TransportBase):
         request.get_method = lambda: method
 
         def handleProblem(code, resp, msg):
+            if errback:
+                errback((resp, msg))
+                return
+
             if code == 429:
                 raise RateLimitException('rate limit exceeded',
                                          resp,
@@ -48,15 +52,16 @@ class BasicTransport(TransportBase):
                                         resp,
                                         msg)
 
+        # Handle error and responses the same so we can
+        # always pass the body to the handleProblem function
         try:
             resp = opener.open(request)
         except HTTPError as e:
-            handleProblem(e.code, e, e.msg)
-
-        body = resp.read()
-
-        if resp.code != 200:
-            handleProblem(resp.code, resp, body)
+            resp = e
+        finally:
+            body = resp.read()
+            if resp.code != 200:
+                handleProblem(resp.code, resp, body)
 
         # TODO make sure json is valid
         try:
