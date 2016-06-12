@@ -9,7 +9,11 @@ from nsone.rest.errors import ResourceException, RateLimitException, \
     AuthException
 import json
 import random
-import StringIO
+
+try:
+    import StringIO
+except ImportError:  # Python 3 +
+    from io import StringIO
 
 try:
     from twisted.internet import reactor
