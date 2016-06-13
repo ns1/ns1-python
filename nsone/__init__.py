@@ -86,14 +86,14 @@ class NSONE:
         import nsone.rest.data
         return nsone.rest.data.Feed(self.config)
 
-    def datajob(self):
+    def Monitorsjob(self):
         """
         Return a new raw REST interface to job resources
 
         :rtype: :py:class:`nsone.rest.data.Job`
         """
-        import nsone.rest.data
-        return nsone.rest.data.Job(self.config)
+        import nsone.rest.monitoring
+        return nsone.rest.monitoring.Monitors(self.config)
 
     def plan(self):
         """
