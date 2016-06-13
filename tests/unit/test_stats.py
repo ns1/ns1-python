@@ -27,18 +27,9 @@ def stats_config(config):
 
 @pytest.mark.parametrize(
     'value, expected', (
-            (
-                    {},
-                    'stats/qps'
-            ),
-            (
-                    {'zone': 'test.com', 'domain': 'foo', 'type': 'A'},
-                    'stats/qps/test.com/foo/A'
-            ),
-            (
-                    {'zone': 'test.com'},
-                    'stats/qps/test.com'
-            ),
+            ({}, 'stats/qps'),
+            ({'zone': 'test.com', 'domain': 'foo', 'type': 'A'}, 'stats/qps/test.com/foo/A'),
+            ({'zone': 'test.com'}, 'stats/qps/test.com'),
     ),
 )
 def test_qps(stats_config, value, expected):

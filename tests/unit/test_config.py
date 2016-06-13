@@ -38,7 +38,10 @@ def test_writeread(tmpdir, config):
 
     # Read new but identical config instance.
     cfg_read = Config(tmp_cfg_path)
-    assert cfg_read['default_key'] == config['default_key']
+    assert cfg_read is not config
+    assert cfg_read.getEndpoint() == config.getEndpoint()
+    assert cfg_read.getCurrentKeyID() == config.getCurrentKeyID()
+    assert cfg_read.isKeyWriteLocked() == config.isKeyWriteLocked()
 
 
 def test_str_repr(config):
@@ -65,14 +68,14 @@ def test_apikey_writelock(config):
             },
             'readwrite': {
                 'key': 'key-2',
-                'desc': 'test key number 1',
+                'desc': 'test key number 2',
                 'writeLock': False
             }
         }
     }
 
     config.loadFromString(json.dumps(key_cfg))
-    assert config['default_key'] == 'readonly'
+    assert config.getCurrentKeyID() == 'readonly'
     assert config.isKeyWriteLocked()
 
     config.useKeyID('readwrite')
@@ -85,6 +88,7 @@ def test_create_from_apikey(config):
     assert config.getAPIKey() == apikey
     assert config.getCurrentKeyID() == 'default'
     assert not config.isKeyWriteLocked()
+
 
 def test_load_from_str(config):
     key_cfg = {
@@ -99,7 +103,7 @@ def test_load_from_str(config):
     }
 
     config.loadFromString(json.dumps(key_cfg))
-    assert config['default_key'] == key_cfg['default_key']
+    assert config.getCurrentKeyID() == key_cfg['default_key']
     assert config['keys'] == key_cfg['keys']
     assert config.getAPIKey() == key_cfg['keys'][key_cfg['default_key']]['key']
     endpoint = 'https://%s/v1/' % defaults['endpoint']
