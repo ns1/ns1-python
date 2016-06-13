@@ -86,7 +86,7 @@ class NSONE:
         import nsone.rest.data
         return nsone.rest.data.Feed(self.config)
 
-    def Monitorsjob(self):
+    def monitorsjob(self):
         """
         Return a new raw REST interface to job resources
 
