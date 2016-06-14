@@ -5,6 +5,7 @@
 #
 from . import resource
 
+
 class Monitors(resource.BaseResource):
 
     ROOT = 'monitoring/jobs'

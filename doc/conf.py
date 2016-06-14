@@ -14,9 +14,9 @@
 
 import sys
 import os
+import nsone
 
 sys.path[0:0] = [os.path.abspath('..')]
-import nsone
 
 extensions = [
     'sphinx.ext.autodoc',
