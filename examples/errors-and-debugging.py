@@ -4,6 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
+import logging
 from nsone import NSONE, Config
 
 # to enable verbose logging, set 'verbosity' in the config and use
@@ -12,7 +13,6 @@ from nsone import NSONE, Config
 config = Config()
 config.createFromAPIKey('qACMD09OJXBxT7XOwv9v')
 config['verbosity'] = 5
-import logging
 logging.basicConfig(level=logging.DEBUG)
 print(config)
 nsone = NSONE(config=config)
