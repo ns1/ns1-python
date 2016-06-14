@@ -22,9 +22,10 @@ except Exception as e:
     have_twisted = False
 
 
-class WebClientContextFactory(ClientContextFactory):
-    def getContext(self, hostname, port):
-        return ClientContextFactory.getContext(self)
+if have_twisted:
+    class WebClientContextFactory(ClientContextFactory):
+        def getContext(self, hostname, port):
+            return ClientContextFactory.getContext(self)
 
 
 def encodeForm(varname, f, ctype):
