@@ -46,28 +46,9 @@ def test_rest_zone_retrieve(zones_config, zone, url):
                                             errback=None)
 
 
-@pytest.mark.parametrize(
-    'args, kwargs, body', (
-            (
-                [
-                    'test.zone'
-                ],
-                {
-                    'retry': '0',
-                    'refresh': 0,
-                    'expiry': 0.0,
-                    'nx_ttl': '0',
-                },
-                {
-                    'zone': 'test.zone',
-                    'retry': 0,
-                    'refresh': 0,
-                    'expiry': 0,
-                    'nx_ttl': 0,
-                }
-            ),
-    ),
-)
-def test_rest_zone_buildbody(zones_config, args, kwargs, body):
+def test_rest_zone_buildbody(zones_config):
     z = nsone.rest.zones.Zones(zones_config)
-    assert z._buildBody(*args, **kwargs) == body
+    zone = 'test.zone'
+    kwargs = {'retry': '0', 'refresh': 0, 'expiry': 0.0, 'nx_ttl': '0'}
+    body = {'zone': zone, 'retry': 0, 'refresh': 0, 'expiry': 0, 'nx_ttl': 0}
+    assert z._buildBody(zone, **kwargs) == body
