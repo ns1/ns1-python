@@ -19,7 +19,7 @@ class Stats(resource.BaseResource):
             callback=None, errback=None):
         url = ''
         if zone is None:
-            url = '%s/%s' % (self.ROOT, 'qps'),
+            url = '%s/%s' % (self.ROOT, 'qps')
         elif type is not None and domain is not None and zone is not None:
             url = '%s/%s/%s/%s/%s' % (self.ROOT, 'qps', zone, domain, type)
         elif zone is not None:

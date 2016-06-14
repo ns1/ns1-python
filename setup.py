@@ -10,6 +10,13 @@ except ImportError:
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
 
+tests_require = [
+    'pytest',
+    'pytest-pep8',
+    'pytest-cov',
+    'mock',
+]
+
 setup(
     name='nsone',
     # flake8: noqa
@@ -19,6 +26,8 @@ setup(
     author_email='sweyrick@nsone.net',
     url='https://github.com/nsone/nsone-python',
     packages=['nsone', 'nsone.rest', 'nsone.rest.transport'],
+    setup_requires=['pytest-runner'],
+    tests_require=tests_require,
     keywords='dns development rest sdk nsone',
     classifiers=[
         "Development Status :: 4 - Beta",
