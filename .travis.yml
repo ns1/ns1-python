@@ -5,6 +5,7 @@ python:
   - '3.3'
 install:
   - pip install tox-travis
+  - pip install Sphinx --use-mirrors
 script:
   - tox
   - python setup.py install
