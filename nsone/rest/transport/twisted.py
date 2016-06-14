@@ -16,16 +16,9 @@ try:
     from twisted.web.client import Agent, readBody, FileBodyProducer
     from twisted.web.http_headers import Headers
     from twisted.internet.defer import succeed
-    from twisted.internet.ssl import ClientContextFactory
     have_twisted = True
 except Exception as e:
     have_twisted = False
-
-
-if have_twisted:
-    class WebClientContextFactory(ClientContextFactory):
-        def getContext(self, hostname, port):
-            return ClientContextFactory.getContext(self)
 
 
 def encodeForm(varname, f, ctype):
@@ -69,8 +62,7 @@ class TwistedTransport(TransportBase):
         if not have_twisted:
             raise ImportError('Twisted required for TwistedTransport')
         TransportBase.__init__(self, config, self.__module__)
-        contextFactory = WebClientContextFactory()
-        self.agent = Agent(reactor, contextFactory)
+        self.agent = Agent(reactor)
 
     def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
