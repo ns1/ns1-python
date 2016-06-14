@@ -40,6 +40,7 @@ class NSONE:
             self.config.loadFromFile(configFile)
 
     # REST INTERFACE
+
     def zones(self):
         """
         Return a new raw REST interface to zone resources
@@ -84,6 +85,15 @@ class NSONE:
         """
         import nsone.rest.data
         return nsone.rest.data.Feed(self.config)
+
+    def monitors(self):
+        """
+        Return a new raw REST interface to monitors resources
+
+        :rtype: :py:class:`nsone.rest.monitoring.Monitors`
+        """
+        import nsone.rest.monitoring
+        return nsone.rest.monitoring.Monitors(self.config)
 
     def plan(self):
         """
