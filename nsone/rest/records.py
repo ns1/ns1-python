@@ -3,6 +3,8 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 
+import collections
+
 from . import resource
 
 
@@ -17,15 +19,15 @@ class Records(resource.BaseResource):
     # answers must be:
     #  1) a single string
     #     we coerce to a single answer with no other fields e.g. meta
-    #  2) a list of single strings
+    #  2) an iterable of single strings
     #     we coerce to several answers with no other fields e.g. meta
-    #  3) a list of lists
-    #     we have as many answers as are in the outer list, and the
-    #     answers themselves are used verbatim from the inner list (e.g. may
-    #     have MX style [10, '1.1.1.1]), but no other fields e.g. meta
+    #  3) an iterable of iterables
+    #     we have as many answers as are in the outer iterable, and the
+    #     answers themselves are used verbatim from the inner iterable (e.g. may
+    #     have MX style [10, '1.1.1.1']), but no other fields e.g. meta
     #     you must use this form for MX records, and if there is only one
-    #     answer it still must be wrapped in an outer list
-    #  4) a list of dicts
+    #     answer it still must be wrapped in an outer iterable
+    #  4) an iterable of dicts
     #     we assume the full rest model and pass it in unchanged. must use this
     #     form for any advanced record config like meta data or data feeds
     def _getAnswersForBody(self, answers):
@@ -33,15 +35,15 @@ class Records(resource.BaseResource):
         # simplest: they specify a single string ip
         if isinstance(answers, basestring):
             answers = [answers]
-        # otherwise, we need a list
-        elif not isinstance(answers, list):
-            raise Exception('invalid answers format (must be str or list)')
+        # otherwise, we need an iterable
+        elif not isinstance(answers, collections.Iterable):
+            raise Exception('invalid answers format (must be str or iterable)')
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
         for a in answers:
             if isinstance(a, basestring):
                 realAnswers.append({'answer': [a]})
-            elif isinstance(a, list):
+            elif isinstance(a, (list, tuple)):
                 realAnswers.append({'answer': a})
             elif isinstance(a, dict):
                 realAnswers.append(a)
@@ -60,11 +62,14 @@ class Records(resource.BaseResource):
     #
     def _getFiltersForBody(self, filters):
         realFilters = []
+
         if type(filters) is not list:
             raise Exception('filter argument must be list of dict')
+
         for f in filters:
             if type(f) is not dict:
                 raise Exception('filter items must be dict')
+
             if 'filter' in f:
                 # full
                 realFilters.append(f)
@@ -72,6 +77,7 @@ class Records(resource.BaseResource):
                 # simple, synthesize
                 (fname, fconfig) = f.popitem()
                 realFilters.append({'filter': fname, 'config': fconfig})
+
         return realFilters
 
     def _buildBody(self, zone, domain, type, **kwargs):
@@ -79,15 +85,20 @@ class Records(resource.BaseResource):
         body['zone'] = zone
         body['domain'] = domain
         body['type'] = type.upper()
+
         if 'filters' in kwargs:
             body['filters'] = self._getFiltersForBody(kwargs['filters'])
+
         if 'answers' in kwargs:
             body['answers'] = self._getAnswersForBody(kwargs['answers'])
+
         self._buildStdBody(body, kwargs)
+
         if 'use_csubnet' in body:
             # key mapping
             body['use_client_subnet'] = body['use_csubnet']
             del body['use_csubnet']
+
         return body
 
     def create(self, zone, domain, type,
