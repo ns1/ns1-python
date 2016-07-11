@@ -6,7 +6,7 @@
 
 from .config import Config
 
-version = "0.9.3"
+version = "0.9.4"
 
 
 class NSONE:
