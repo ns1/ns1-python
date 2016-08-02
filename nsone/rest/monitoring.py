@@ -16,6 +16,19 @@ class Monitors(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
+    def update(self, jobid, body, callback=None, errback=None, **kwargs):
+        self._buildStdBody(body, kwargs)
+        return self._make_request('POST',
+                                  '%s/%s' % (self.ROOT, jobid),
+                                  body=body,
+                                  callback=callback,
+                                 errback=errback)
+
+    def create(self,body, callback=None, errback=None):
+        return self._make_request('PUT', '%s' % (self.ROOT), body=body,
+                                  callback=callback,
+                                  errback=errback)
+
     def retrieve(self, jobid, callback=None, errback=None):
         return self._make_request('GET', '%s/%s' % (self.ROOT, jobid),
                                   callback=callback,
