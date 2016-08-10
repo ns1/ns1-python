@@ -100,8 +100,8 @@ class Feed(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def delete(self, feedid, callback=None, errback=None):
+    def delete(self, sourceid, feedid, callback=None, errback=None):
         return self._make_request('DELETE',
-                                  '%s/%s' % (self.ROOT, feedid),
+                                  '%s/%s/%s' % (self.ROOT, sourceid, feedid),
                                   callback=callback,
                                   errback=errback)
