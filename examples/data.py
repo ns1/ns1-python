@@ -66,3 +66,6 @@ sourceAPI.publish(sourceID, {
 
 # NSONE will instantly notify DNS servers at the edges, causing traffic to be
 # sent to server1, and ceasing traffic to server2
+
+# Disconnect feed1 from datasource.
+# feedAPI.delete(sourceID, feed1['id'])
