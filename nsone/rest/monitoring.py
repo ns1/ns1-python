@@ -22,7 +22,7 @@ class Monitors(resource.BaseResource):
                                   '%s/%s' % (self.ROOT, jobid),
                                   body=body,
                                   callback=callback,
-                                 errback=errback)
+                                  errback=errback)
 
     def create(self,body, callback=None, errback=None):
         return self._make_request('PUT', '%s' % (self.ROOT), body=body,
@@ -31,5 +31,10 @@ class Monitors(resource.BaseResource):
 
     def retrieve(self, jobid, callback=None, errback=None):
         return self._make_request('GET', '%s/%s' % (self.ROOT, jobid),
+                                  callback=callback,
+                                  errback=errback)
+
+    def delete(self, jobid, callback=None, errback=None):
+        return self._make_request('DELETE', '%s/%s' % (self.ROOT, jobid),
                                   callback=callback,
                                   errback=errback)
