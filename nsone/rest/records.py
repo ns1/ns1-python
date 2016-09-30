@@ -3,9 +3,13 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 
+import sys
 import collections
 
 from . import resource
+
+
+py_str = str if sys.version_info[0] == 3 else basestring
 
 
 class Records(resource.BaseResource):
@@ -33,7 +37,7 @@ class Records(resource.BaseResource):
     def _getAnswersForBody(self, answers):
         realAnswers = []
         # simplest: they specify a single string ip
-        if isinstance(answers, basestring):
+        if isinstance(answers, py_str):
             answers = [answers]
         # otherwise, we need an iterable
         elif not isinstance(answers, collections.Iterable):
@@ -41,7 +45,7 @@ class Records(resource.BaseResource):
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
         for a in answers:
-            if isinstance(a, basestring):
+            if isinstance(a, py_str):
                 realAnswers.append({'answer': [a]})
             elif isinstance(a, (list, tuple)):
                 realAnswers.append({'answer': a})
