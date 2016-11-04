@@ -1,6 +1,6 @@
 import pytest
 
-import nsone.rest.zones
+import ns1.rest.zones
 import json
 
 try:  # Python 3.3 +
@@ -26,7 +26,7 @@ def zones_config(config):
 
 
 def test_rest_zone_list(zones_config):
-    z = nsone.rest.zones.Zones(zones_config)
+    z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
     z.list()
     z._make_request.assert_called_once_with('GET',
@@ -37,7 +37,7 @@ def test_rest_zone_list(zones_config):
 
 @pytest.mark.parametrize('zone, url', [('test.zone', 'zones/test.zone')])
 def test_rest_zone_retrieve(zones_config, zone, url):
-    z = nsone.rest.zones.Zones(zones_config)
+    z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
     z.retrieve(zone)
     z._make_request.assert_called_once_with('GET',
@@ -47,7 +47,7 @@ def test_rest_zone_retrieve(zones_config, zone, url):
 
 
 def test_rest_zone_buildbody(zones_config):
-    z = nsone.rest.zones.Zones(zones_config)
+    z = ns1.rest.zones.Zones(zones_config)
     zone = 'test.zone'
     kwargs = {'retry': '0', 'refresh': 0, 'expiry': 0.0, 'nx_ttl': '0'}
     body = {'zone': zone, 'retry': 0, 'refresh': 0, 'expiry': 0, 'nx_ttl': 0}

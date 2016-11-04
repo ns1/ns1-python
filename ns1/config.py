@@ -15,7 +15,7 @@ class ConfigException(Exception):
 class Config:
 
     """A simple object for accessing and manipulating config files. These
-    contains options and credentials for accessing the NSONE REST API.
+    contains options and credentials for accessing the NS1 REST API.
     Config files are simple JSON text files.
     To set or retrieve vales, use the object like a dict.
     """
@@ -56,7 +56,7 @@ class Config:
         """
         Create a basic config from a single API key
 
-        :param str apikey: NSONE API Key, as created in the NSONE portal
+        :param str apikey: NS1 API Key, as created in the NS1 portal
         :param bool maybeWriteDefault: If True and DEFAULT_CONFIG_FILE doesn't\
             exist write out the resulting config there.
         """
@@ -172,7 +172,7 @@ class Config:
 
     def getAPIKey(self, keyID=None):
         """
-        Retrieve the NSONE API Key for the given keyID
+        Retrieve the NS1 API Key for the given keyID
 
         :param str keyID: optional keyID to retrieve, or current if not passed
         :return: API Key for the given keyID
@@ -184,9 +184,9 @@ class Config:
 
     def getEndpoint(self):
         """
-        Retrieve the NSONE API Endpoint URL that will be used for requests.
+        Retrieve the NS1 API Endpoint URL that will be used for requests.
 
-        :return: URL of the NSONE API that will be used for requests
+        :return: URL of the NS1 API that will be used for requests
         """
         port = ''
         endpoint = ''

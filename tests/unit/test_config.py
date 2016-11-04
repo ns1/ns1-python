@@ -3,7 +3,7 @@ import os.path
 
 import pytest
 
-from nsone.config import Config, ConfigException
+from ns1.config import Config, ConfigException
 
 
 defaults = {

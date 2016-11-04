@@ -9,15 +9,15 @@ from .config import Config
 version = "0.9.7"
 
 
-class NSONE:
+class NS1:
 
     def __init__(self, apiKey=None, config=None, configFile=None, keyID=None):
         """
-        Create a new top level NSONE API object
+        Create a new top level NS1 API object
 
         :param str apiKey: if given, initialize config with this API key \
-            (obtainable via creation in NSONE portal)
-        :param nsone.config.Config config: if given, uses a separately \
+            (obtainable via creation in NS1 portal)
+        :param ns1.config.Config config: if given, uses a separately \
             constructed and configured Config object
         :param str configFile: if given, load configuration from the given \
             json configuration file
@@ -45,64 +45,64 @@ class NSONE:
         """
         Return a new raw REST interface to zone resources
 
-        :rtype: :py:class:`nsone.rest.zones.Zones`
+        :rtype: :py:class:`ns1.rest.zones.Zones`
         """
-        import nsone.rest.zones
-        return nsone.rest.zones.Zones(self.config)
+        import ns1.rest.zones
+        return ns1.rest.zones.Zones(self.config)
 
     def records(self):
         """
         Return a new raw REST interface to record resources
 
-        :rtype: :py:class:`nsone.rest.records.Records`
+        :rtype: :py:class:`ns1.rest.records.Records`
         """
-        import nsone.rest.records
-        return nsone.rest.records.Records(self.config)
+        import ns1.rest.records
+        return ns1.rest.records.Records(self.config)
 
     def stats(self):
         """
         Return a new raw REST interface to stats resources
 
-        :rtype: :py:class:`nsone.rest.stats.Stats`
+        :rtype: :py:class:`ns1.rest.stats.Stats`
         """
-        import nsone.rest.stats
-        return nsone.rest.stats.Stats(self.config)
+        import ns1.rest.stats
+        return ns1.rest.stats.Stats(self.config)
 
     def datasource(self):
         """
         Return a new raw REST interface to datasource resources
 
-        :rtype: :py:class:`nsone.rest.data.Source`
+        :rtype: :py:class:`ns1.rest.data.Source`
         """
-        import nsone.rest.data
-        return nsone.rest.data.Source(self.config)
+        import ns1.rest.data
+        return ns1.rest.data.Source(self.config)
 
     def datafeed(self):
         """
         Return a new raw REST interface to feed resources
 
-        :rtype: :py:class:`nsone.rest.data.Feed`
+        :rtype: :py:class:`ns1.rest.data.Feed`
         """
-        import nsone.rest.data
-        return nsone.rest.data.Feed(self.config)
+        import ns1.rest.data
+        return ns1.rest.data.Feed(self.config)
 
     def monitors(self):
         """
         Return a new raw REST interface to monitors resources
 
-        :rtype: :py:class:`nsone.rest.monitoring.Monitors`
+        :rtype: :py:class:`ns1.rest.monitoring.Monitors`
         """
-        import nsone.rest.monitoring
-        return nsone.rest.monitoring.Monitors(self.config)
+        import ns1.rest.monitoring
+        return ns1.rest.monitoring.Monitors(self.config)
 
     def plan(self):
         """
         Return a new raw REST interface to account plan
 
-        :rtype: :py:class:`nsone.rest.account.Plan`
+        :rtype: :py:class:`ns1.rest.account.Plan`
         """
-        import nsone.rest.account
-        return nsone.rest.account.Plan(self.config)
+        import ns1.rest.account
+        return ns1.rest.account.Plan(self.config)
 
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
@@ -110,10 +110,10 @@ class NSONE:
         Load an existing zone into a high level Zone object.
 
         :param str zone: zone name, like 'example.com'
-        :rtype: :py:class:`nsone.zones.Zone`
+        :rtype: :py:class:`ns1.zones.Zone`
         """
-        import nsone.zones
-        zone = nsone.zones.Zone(self.config, zone)
+        import ns1.zones
+        zone = ns1.zones.Zone(self.config, zone)
         return zone.load(callback=callback, errback=errback)
 
     def createZone(self, zone, zoneFile=None, callback=None, errback=None,
@@ -133,10 +133,10 @@ class NSONE:
         :keyword int expiry: expiry ttl
         :keyword int nx_ttl: nxdomain TTL
 
-        :rtype: :py:class:`nsone.zones.Zone`
+        :rtype: :py:class:`ns1.zones.Zone`
         """
-        import nsone.zones
-        zone = nsone.zones.Zone(self.config, zone)
+        import ns1.zones
+        zone = ns1.zones.Zone(self.config, zone)
         return zone.create(zoneFile=zoneFile, callback=callback,
                            errback=errback, **kwargs)
 
@@ -150,12 +150,12 @@ class NSONE:
             specified in the zone parameter
         :param str type: record type, such as 'A', 'MX', 'AAAA', etc.
         :param str zone: zone name, like 'example.com'
-        :rtype: :py:class:`nsone.records`
+        :rtype: :py:class:`ns1.records`
         """
-        import nsone.zones
+        import ns1.zones
         if zone is None:
             # extract from record string
             zone = '.'.join(domain.split('.')[1:])
-        z = nsone.zones.Zone(self.config, zone)
+        z = ns1.zones.Zone(self.config, zone)
         return z.loadRecord(domain, type, callback=callback, errback=errback,
                             **kwargs)

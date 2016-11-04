@@ -4,8 +4,8 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 from __future__ import absolute_import
 
-from nsone.rest.transport.base import TransportBase
-from nsone.rest.errors import ResourceException, RateLimitException, \
+from ns1.rest.transport.base import TransportBase
+from ns1.rest.errors import ResourceException, RateLimitException, \
     AuthException
 import json
 import random

@@ -4,8 +4,8 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from nsone.rest.records import Records
-from nsone.rest.stats import Stats
+from ns1.rest.records import Records
+from ns1.rest.stats import Stats
 
 
 class RecordException(Exception):
@@ -22,7 +22,7 @@ class Record(object):
         """
         Create a new high level Record
 
-        :param nsone.zones.Zone parentZone: the high level Zone parent object
+        :param ns1.zones.Zone parentZone: the high level Zone parent object
         :param str domain: full domain name this record represents. if the \
           domain does not end with the zone name, it is appended.
         :param str type: The DNS record type (A, MX, etc)
@@ -91,9 +91,9 @@ class Record(object):
         """
         Update record configuration. Pass list of keywords and their values to
         update. For the list of keywords available for zone configuration, see
-        :attr:`nsone.rest.records.Records.INT_FIELDS`,
-        :attr:`nsone.rest.records.Records.PASSTHRU_FIELDS`,
-        :attr:`nsone.rest.records.Records.BOOL_FIELDS`
+        :attr:`ns1.rest.records.Records.INT_FIELDS`,
+        :attr:`ns1.rest.records.Records.PASSTHRU_FIELDS`,
+        :attr:`ns1.rest.records.Records.BOOL_FIELDS`
         """
         if not self.data:
             raise RecordException('record not loaded')
@@ -112,9 +112,9 @@ class Record(object):
         """
         Create new record. Pass a list of keywords and their values to
         config. For the list of keywords available for zone configuration, see
-        :attr:`nsone.rest.records.Records.INT_FIELDS`,
-        :attr:`nsone.rest.records.Records.PASSTHRU_FIELDS`,
-        :attr:`nsone.rest.records.Records.BOOL_FIELDS`
+        :attr:`ns1.rest.records.Records.INT_FIELDS`,
+        :attr:`ns1.rest.records.Records.PASSTHRU_FIELDS`,
+        :attr:`ns1.rest.records.Records.BOOL_FIELDS`
         """
         if self.data:
             raise RecordException('record already loaded')

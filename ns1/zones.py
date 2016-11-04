@@ -4,10 +4,10 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from nsone.rest.zones import Zones
-from nsone.records import Record
-from nsone.rest.stats import Stats
-from nsone.rest.records import Records
+from ns1.rest.zones import Zones
+from ns1.records import Record
+from ns1.rest.stats import Stats
+from ns1.rest.records import Records
 
 
 class ZoneException(Exception):
@@ -27,7 +27,7 @@ class Zone(object):
         """
         Create a new high level Zone object
 
-        :param nsone.config.Config config: config object
+        :param ns1.config.Config config: config object
         :param str zone: zone name
         """
         self._rest = Zones(config)
@@ -74,8 +74,8 @@ class Zone(object):
         """
         Update zone configuration. Pass a list of keywords and their values to
         update. For the list of keywords available for zone configuration, see
-        :attr:`nsone.rest.zones.Zones.INT_FIELDS` and
-        :attr:`nsone.rest.zones.Zones.PASSTHRU_FIELDS`
+        :attr:`ns1.rest.zones.Zones.INT_FIELDS` and
+        :attr:`ns1.rest.zones.Zones.PASSTHRU_FIELDS`
         """
         if not self.data:
             raise ZoneException('zone not loaded')
@@ -94,8 +94,8 @@ class Zone(object):
         """
         Create a new zone. Pass a list of keywords and their values to
         configure. For the list of keywords available for zone configuration,
-        see :attr:`nsone.rest.zones.Zones.INT_FIELDS` and
-        :attr:`nsone.rest.zones.Zones.PASSTHRU_FIELDS`
+        see :attr:`ns1.rest.zones.Zones.INT_FIELDS` and
+        :attr:`ns1.rest.zones.Zones.PASSTHRU_FIELDS`
         If zoneFile is passed, it should be a zone text file on the local disk
         that will be used to populate the created zone file.
         """
@@ -150,14 +150,14 @@ class Zone(object):
         """
         Create a new linked record in this zone. These records use the
         configuration (answers, ttl, filters, etc) from an existing record
-        in the NSONE platform.
+        in the NS1 platform.
 
         :param str existing_domain: FQDN of the target record whose config \
             should be used. Does not have to be in the same zone.
         :param str new_domain: Name of the new (linked) record. Zone name is\
             appended automatically.
         :param str rtype: DNS record type, which must match the target record.
-        :rtype: nsone.records.Record
+        :rtype: ns1.records.Record
         :return: new Record
         """
 
@@ -182,7 +182,7 @@ class Zone(object):
         :param str rtype: DNS record type
         :param str zone: Optional zone name, if the new record should exist in\
             a different zone than the original record.
-        :rtype: nsone.records.Record
+        :rtype: ns1.records.Record
         :return: new Record
         """
         if zone is None:
@@ -222,7 +222,7 @@ class Zone(object):
 
         :param str domain: The name of the record to load
         :param str rtype: The DNS record type
-        :rtype: nsone.records.Record
+        :rtype: ns1.records.Record
         :return: new Record
         """
         rec = Record(self, domain, rtype)

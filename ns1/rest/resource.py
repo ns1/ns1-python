@@ -7,9 +7,9 @@
 import sys
 import logging
 import json
-from nsone import version
-from nsone.rest.transport.base import TransportBase
-from nsone.rest.errors import ResourceException
+from ns1 import version
+from ns1.rest.transport.base import TransportBase
+from ns1.rest.errors import ResourceException
 
 
 class BaseResource:
@@ -23,7 +23,7 @@ class BaseResource:
     def __init__(self, config):
         """
 
-        :param nsone.config.Config config: config object used to build requests
+        :param ns1.config.Config config: config object used to build requests
         """
         self._config = config
         self._log = logging.getLogger(__name__)
@@ -33,7 +33,7 @@ class BaseResource:
         if transport is None:
             # for default transport:
             # if requests is available, use that. otherwise, basic
-            from nsone.rest.transport.requests import have_requests
+            from ns1.rest.transport.requests import have_requests
             if have_requests:
                 transport = 'requests'
             else:
@@ -63,7 +63,7 @@ class BaseResource:
             raise Exception('invalid request method')
         # TODO don't assume this doesn't exist in kwargs
         kwargs['headers'] = {
-            'User-Agent': 'nsone-python %s python 0x%s %s'
+            'User-Agent': 'ns1-python %s python 0x%s %s'
                           % (version, sys.hexversion, sys.platform),
             'X-NSONE-Key': self._config.getAPIKey()
         }

@@ -1,6 +1,6 @@
 import pytest
 
-import nsone.rest.stats
+import ns1.rest.stats
 import json
 
 try:  # Python 3.3 +
@@ -42,7 +42,7 @@ def stats_config(config):
     ),
 )
 def test_qps(stats_config, value, expected):
-    s = nsone.rest.stats.Stats(stats_config)
+    s = ns1.rest.stats.Stats(stats_config)
     s._make_request = mock.MagicMock()
     s.qps(**value)
     s._make_request.assert_called_once_with('GET',
