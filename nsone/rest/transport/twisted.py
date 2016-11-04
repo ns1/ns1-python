@@ -17,10 +17,16 @@ except ImportError:  # Python 3 +
 
 try:
     from twisted.internet import reactor
-    from twisted.web.client import Agent, readBody, FileBodyProducer
+    from twisted.web.client import Agent, readBody, FileBodyProducer, \
+        BrowserLikePolicyForHTTPS
     from twisted.web.http_headers import Headers
     from twisted.internet.defer import succeed
+    from twisted.internet.ssl import CertificateOptions
+    from twisted.internet._sslverify import ClientTLSOptions
+    from twisted.web.iweb import IPolicyForHTTPS
+    from zope.interface import implementer
     have_twisted = True
+
 except Exception as e:
     have_twisted = False
 
@@ -60,13 +66,34 @@ class StringProducer(object):
         pass
 
 
+if have_twisted:
+    class IgnoreHostnameClientTLSOptions(ClientTLSOptions):
+        def _identityVerifyingInfoCallback(self, connection, where, ret):
+            # override hostname validation
+            return
+
+    @implementer(IPolicyForHTTPS)
+    class NoValidationPolicy(object):
+        def creatorForNetloc(self, hostname, port):
+            options = CertificateOptions(trustRoot=None)
+            ascii_hostname = hostname.decode("ascii")
+            context = options.getContext()
+            return IgnoreHostnameClientTLSOptions(ascii_hostname, context)
+
+
 class TwistedTransport(TransportBase):
 
     def __init__(self, config):
         if not have_twisted:
             raise ImportError('Twisted required for TwistedTransport')
         TransportBase.__init__(self, config, self.__module__)
-        self.agent = Agent(reactor)
+
+        if config.get("ignore-ssl-errors"):
+            policy = NoValidationPolicy()
+        else:
+            policy = BrowserLikePolicyForHTTPS()
+
+        self.agent = Agent(reactor, policy)
 
     def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
