@@ -4,30 +4,30 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from nsone import NSONE
+from ns1 import NS1
 
-# NSONE will use config in ~/.nsone by default
-nsone = NSONE()
+# NS1 will use config in ~/.nsone by default
+api = NS1()
 
 # to specify an apikey here instead, use:
 
-# from nsone import Config
+# from ns1 import Config
 # config = Config()
 # config.createFromAPIKey('qACMD09OJXBxT7XOuRs8')
-# nsone = NSONE(config=config)
+# api = NS1(config=config)
 
 # create a zone to play in
-zone = nsone.createZone('testzone.com')
+zone = api.createZone('testzone.com')
 
-# create an NSONE API data source
-sourceAPI = nsone.datasource()
+# create an NS1 API data source
+sourceAPI = api.datasource()
 s = sourceAPI.create('my api source', 'nsone_v1')
 sourceID = s['id']
 
 # create feeds which will drive the meta data for each answer
 # we'll use the id of these feeds when we connect the feeds to the
 # answer meta below
-feedAPI = nsone.datafeed()
+feedAPI = api.datafeed()
 feed1 = feedAPI.create(sourceID,
                        'feed to server1',
                        config={'label': 'server1'})
@@ -64,7 +64,7 @@ sourceAPI.publish(sourceID, {
         'up': False
     }})
 
-# NSONE will instantly notify DNS servers at the edges, causing traffic to be
+# NS1 will instantly notify DNS servers at the edges, causing traffic to be
 # sent to server1, and ceasing traffic to server2
 
 # Disconnect feed1 from datasource.

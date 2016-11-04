@@ -4,18 +4,18 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from nsone import NSONE
+from ns1 import NS1
 
-# NSONE will use config in ~/.nsone by default
-nsone = NSONE()
+# NS1 will use config in ~/.nsone by default
+api = NS1()
 
 # to specify an apikey here instead, use:
-# nsone = NSONE(apiKey='qACMD09OJXBxT7XOuRs8')
+# api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
 
 # to load an alternate configuration file:
-# nsone = NSONE(configFile='/etc/nsone/api.json')
+# api = NS1(configFile='/etc/ns1/api.json')
 
-zone = nsone.loadZone('test.com')
+zone = api.loadZone('test.com')
 qps = zone.qps()
 print("current QPS for test.com: %s" % qps['qps'])
 usage = zone.usage()

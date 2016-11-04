@@ -1,5 +1,5 @@
-nsone.zones
-===========
+ns1.zones
+=========
 
 Object representing a single DNS zone.
 
@@ -34,7 +34,7 @@ Object representing a single DNS zone.
                                    filters=[{'up': {}}])
 
 
-.. automodule:: nsone.zones
+.. automodule:: ns1.zones
     :members:
     :undoc-members:
     :show-inheritance:

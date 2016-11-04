@@ -4,19 +4,19 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from nsone import NSONE
+from ns1 import NS1
 
-# NSONE will use config in ~/.nsone by default
-nsone = NSONE()
+# NS1 will use config in ~/.nsone by default
+api = NS1()
 
 # to specify an apikey here instead, use:
-# nsone = NSONE(apiKey='qACMD09OJXBxT7XOuRs8')
+# api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
 
 # to load an alternate configuration file:
-# nsone = NSONE(configFile='/etc/nsone/api.json')
+# api = NS1(configFile='/etc/ns1/api.json')
 
 # import a zone from the included example zone definition
-zone = nsone.createZone('example2.com', zoneFile='./importzone.db')
+zone = api.createZone('example2.com', zoneFile='./importzone.db')
 print(zone)
 
 # delete a whole zone, including all records, data feeds, etc. this is

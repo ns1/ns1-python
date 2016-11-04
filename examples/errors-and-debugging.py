@@ -5,7 +5,7 @@
 #
 
 import logging
-from nsone import NSONE, Config
+from ns1 import NS1, Config
 
 # to enable verbose logging, set 'verbosity' in the config and use
 # the standard python logging system
@@ -15,13 +15,13 @@ config.createFromAPIKey('qACMD09OJXBxT7XOwv9v')
 config['verbosity'] = 5
 logging.basicConfig(level=logging.DEBUG)
 print(config)
-nsone = NSONE(config=config)
+api = NS1(config=config)
 
 # now all requests will show up in the logging system
 
 # exception handling:
 # the follow exceptions may be thrown
-# from nsone.rest.errors import ResourceException, \
+# from ns1.rest.errors import ResourceException, \
 #     RateLimitException, AuthException
 
 # ResourceException is the base exception (Auth and RateLimit extend it)

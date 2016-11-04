@@ -4,27 +4,27 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from nsone import NSONE
+from ns1 import NS1
 
-# NSONE will use config in ~/.nsone by default
-nsone = NSONE()
+# NS1 will use config in ~/.nsone by default
+api = NS1()
 
 # to specify an apikey here instead, use:
-# nsone = NSONE(apiKey='qACMD09OJXBxT7XOuRs8')
+# api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
 
 # to load an alternate configuration file:
-# nsone = NSONE(configFile='/etc/nsone/api.json')
+# api = NS1(configFile='/etc/ns1/api.json')
 
 ######################
 # LOAD / CREATE ZONE #
 ######################
 
 # to load an existing zone, get a Zone object back
-test_zone = nsone.loadZone('test.com')
+test_zone = api.loadZone('test.com')
 
 # or create a new zone, get a Zone object back
 # you can specify options like retry, refresh, expiry, nx_ttl, etc
-zone = nsone.createZone('example.com', nx_ttl=3600)
+zone = api.createZone('example.com', nx_ttl=3600)
 print(zone)
 
 # once you have a Zone, you can access all the zone information via the
@@ -85,8 +85,8 @@ print(zone.qps())
 ###########################
 
 # if you don't have a Record object yet, you can load it in one of two ways:
-# 1) directly from the top level NSONE object by specifying name and type
-rec = nsone.loadRecord('honey.example.com', 'A')
+# 1) directly from the top level NS1 object by specifying name and type
+rec = api.loadRecord('honey.example.com', 'A')
 print(rec)
 # 2) if you have a Zone object already, you can load it from that
 rec = zone.loadRecord('honey', 'A')

@@ -1,17 +1,17 @@
-Python SDK for NSONE DNS Platform
-=======================================
+Python SDK for NS1 DNS Platform
+===============================
 
 .. image:: _static/NSONE-500x500.png
     :height: 250px
     :width: 250px
-    :target: https://nsone.net/
+    :target: https://ns1.com/
 
 
 About
 -----
 
-This package provides an SDK for accessing the NSONE DNS platform
-and includes both a simple NSONE REST API wrapper as well as a higher level
+This package provides an SDK for accessing the NS1 DNS platform
+and includes both a simple NS1 REST API wrapper as well as a higher level
 interface for managing zones, records, data feeds, and more.
 It supports synchronous and asynchronous transports.
 
@@ -19,7 +19,7 @@ Both python 2.7 and 3.3 are supported.
 
 Install with::
 
-  $ pip install nsone
+  $ pip install ns1
 
 
 Quick Start
@@ -34,22 +34,22 @@ Simple example:
 
 .. code-block:: python
 
-    from nsone import NSONE
+    from ns1 import NS1
 
-    nsone = NSONE(apiKey='qACMD09OJXBxT7XOuRs8')
-    zone = nsone.createZone('example.com', nx_ttl=3600)
+    api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
+    zone = api.createZone('example.com', nx_ttl=3600)
     print(zone)
     record = zone.add_A('honey', ['1.2.3.4', '5.6.7.8'])
     print(record)
 
-Note that all zone and record changes propagate in real time throughout the NSONE platform.
+Note that all zone and record changes propagate in real time throughout the NS1 platform.
 
-There are more examples in the `examples directory <https://github.com/nsone/nsone-python/tree/develop/examples>`_.
+There are more examples in the `examples directory <https://github.com/ns1/ns1-python/tree/develop/examples>`_.
 
 Contributions
 -------------
 
-We welcome contributions! Please `fork on GitHub <https://github.com/nsone/nsone-python/>`_ and submit a Pull Request.
+We welcome contributions! Please `fork on GitHub <https://github.com/ns1/ns1-python/>`_ and submit a Pull Request.
 
 Contents
 --------

@@ -8,7 +8,7 @@
 # TWISTED #
 ###########
 
-from nsone import NSONE, Config
+from ns1 import NS1, Config
 from twisted.internet import defer, reactor
 
 config = Config()
@@ -20,15 +20,15 @@ config.loadFromFile(Config.DEFAULT_CONFIG_FILE)
 # override default synchronous transport. note, this would normally go
 # in config file.
 config['transport'] = 'twisted'
-nsone = NSONE(config=config)
+api = NS1(config=config)
 
 
 @defer.inlineCallbacks
 def getQPS():
-    # when twisted transport is in use, all of the NSONE methods return
+    # when twisted transport is in use, all of the NS1 methods return
     # Deferred. yield them to gather the results, or add callbacks/errbacks
     # to be run when results are available
-    zone = yield nsone.loadZone('test.com')
+    zone = yield api.loadZone('test.com')
     qps = yield zone.qps()
     defer.returnValue(qps)
 

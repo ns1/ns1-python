@@ -1,5 +1,5 @@
-nsone.records
-=============
+ns1.records
+===========
 
 Object representing a single DNS record in a zone of a specific type.
 
@@ -33,7 +33,7 @@ Object representing a single DNS record in a zone of a specific type.
                                      }],
                                    filters=[{'up': {}}])
 
-.. automodule:: nsone.records
+.. automodule:: ns1.records
     :members:
     :undoc-members:
     :show-inheritance:

@@ -2,7 +2,7 @@ Configuration
 =============
 
 Configuring the SDK can be done programmatically and/or via loading (and saving) simple
-JSON text configuration files. At a minimum, the NSONE API key to access the REST API must
+JSON text configuration files. At a minimum, the NS1 API key to access the REST API must
 be specified.
 
 
@@ -15,7 +15,7 @@ By default, configuration is loaded from the file ``~/.nsone``; that is, a file 
 .. code-block:: python
 
     # to load an explicit configuration file:
-    nsone = NSONE(configFile='/etc/nsone/api.json')
+    api = NS1(configFile='/etc/ns1/api.json')
 
 From an API Key
 ---------------
@@ -23,12 +23,12 @@ From an API Key
 .. code-block:: python
 
     # to generate a configuration based on an api key
-    nsone = NSONE(apiKey='qACMD09OJXBxT7XOuRs8')
+    api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
 
 JSON File Format
 ----------------
 
-This example shows two different API keys. Which to use can be selected at runtime, see :mod:`nsone.config`
+This example shows two different API keys. Which to use can be selected at runtime, see :mod:`ns1.config`
 
 .. code-block:: json
 
@@ -55,6 +55,6 @@ This example shows two different API keys. Which to use can be selected at runti
 More
 ----
 
-There are more examples in the `config.py example <https://github.com/nsone/nsone-python/tree/develop/examples/config.py>`_.
-For the full Config object reference API, see :mod:`nsone.config`
+There are more examples in the `config.py example <https://github.com/ns1/ns1-python/tree/develop/examples/config.py>`_.
+For the full Config object reference API, see :mod:`ns1.config`
 

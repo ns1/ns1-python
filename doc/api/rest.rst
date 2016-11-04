@@ -1,34 +1,34 @@
-nsone.rest
-==========
+ns1.rest
+========
 
-A thin layer over the NSONE REST API
+A thin layer over the NS1 REST API
 
-.. automodule:: nsone.rest.errors
+.. automodule:: ns1.rest.errors
         :members:
         :undoc-members:
         :show-inheritance:
 
-.. automodule:: nsone.rest.resource
+.. automodule:: ns1.rest.resource
         :members:
         :undoc-members:
         :show-inheritance:
 
-.. automodule:: nsone.rest.data
+.. automodule:: ns1.rest.data
         :members:
         :undoc-members:
         :show-inheritance:
 
-.. automodule:: nsone.rest.stats
+.. automodule:: ns1.rest.stats
         :members:
         :undoc-members:
         :show-inheritance:
 
-.. automodule:: nsone.rest.records
+.. automodule:: ns1.rest.records
         :members:
         :undoc-members:
         :show-inheritance:
 
-.. automodule:: nsone.rest.zones
+.. automodule:: ns1.rest.zones
     :members:
     :undoc-members:
     :show-inheritance:

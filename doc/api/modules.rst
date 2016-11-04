@@ -1,10 +1,10 @@
-nsone package
-=============
+ns1 package
+===========
 
 .. toctree::
    :maxdepth: 4
 
-   nsone
+   ns1
    config
    zones
    records

@@ -1,5 +1,5 @@
-nsone.config
-============
+ns1.config
+==========
 
 This object is used to configure the SDK and REST client. It handles multiple
 API keys via a simple selection mechanism (keyID).
@@ -28,7 +28,7 @@ Sample:
        }
     }
 
-.. automodule:: nsone.config
+.. automodule:: ns1.config
     :members:
     :undoc-members:
     :show-inheritance:

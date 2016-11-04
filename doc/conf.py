@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# NSONE Python SDK documentation build configuration file, created by
+# NS1 Python SDK documentation build configuration file, created by
 # sphinx-quickstart on Thu Apr 24 17:58:26 2014.
 #
 # This file is execfile()d with the current directory set to its
@@ -14,7 +14,7 @@
 
 import sys
 import os
-import nsone
+import ns1
 
 sys.path[0:0] = [os.path.abspath('..')]
 
@@ -36,7 +36,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'NSONE Python SDK'
+project = u'NS1 Python SDK'
 copyright = u'2014, NSONE, Inc.'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -44,9 +44,9 @@ copyright = u'2014, NSONE, Inc.'
 # built documents.
 #
 # The short X.Y version.
-version = nsone.version
+version = ns1.version
 # The full version, including alpha/beta/rc tags.
-release = nsone.version
+release = ns1.version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -68,7 +68,7 @@ html_theme = 'default'
 html_static_path = ['_static']
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'NSONEPythonSDKdoc'
+htmlhelp_basename = 'NS1PythonSDKdoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -80,7 +80,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'NSONEPythonSDK.tex', u'NSONE Python SDK Documentation',
+    ('index', 'NS1PythonSDK.tex', u'NS1 Python SDK Documentation',
      u'NSONE, Inc.', 'manual'),
 ]
 
@@ -89,7 +89,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'nsonepythonsdk', u'NSONE Python SDK Documentation',
+    ('index', 'ns1pythonsdk', u'NS1 Python SDK Documentation',
      [u'NSONE, Inc.'], 1)
 ]
 
@@ -100,8 +100,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'NSONEPythonSDK', u'NSONE Python SDK Documentation',
-     u'NSONE, Inc.', 'NSONEPythonSDK', 'One line description of project.',
+    ('index', 'NS1PythonSDK', u'NS1 Python SDK Documentation',
+     u'NSONE, Inc.', 'NS1PythonSDK', 'One line description of project.',
      'Miscellaneous'),
 ]
 
