@@ -1,34 +1,44 @@
-import os
-import sys
-import nsone
+from setuptools import setup, find_packages
 
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from codecs import open
+from os import path
+import ns1
 
-path, script = os.path.split(sys.argv[0])
-os.chdir(os.path.abspath(path))
+cwd = path.abspath(path.dirname(__file__))
 
-tests_require = [
-    'pytest',
-    'pytest-pep8',
-    'pytest-cov',
-    'mock',
-]
+with open(path.join(cwd, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
-    name='nsone',
+    name='ns1',
+
     # flake8: noqa
-    version=nsone.version,
-    description='Python SDK for the NSONE DNS platform',
-    author='Shannon Weyrick',
-    author_email='sweyrick@nsone.net',
-    url='https://github.com/nsone/nsone-python',
-    packages=['nsone', 'nsone.rest', 'nsone.rest.transport'],
-    setup_requires=['pytest-runner'],
-    tests_require=tests_require,
-    keywords='dns development rest sdk nsone',
+    version=ns1.version,
+
+    description='Python SDK for the NS1 DNS platform',
+    long_description=long_description,
+
+    license='MIT',
+
+    # contact information
+    author='NS1 Developers',
+    author_email='devteam@ns1.com',
+    url='https://github.com/ns1/ns1-python',
+
+    packages=find_packages(exclude=['tests', 'examples']),
+
+    setup_requires=[
+        'pytest-runner',
+    ],
+
+    tests_require=[
+        'pytest',
+        'pytest-pep8',
+        'pytest-cov',
+        'mock',
+    ],
+
+    keywords='dns development rest sdk ns1 nsone',
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -42,4 +52,5 @@ setup(
         "Programming Language :: Python :: 3.3",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: Name Service (DNS)"
-    ])
+    ],
+)
