@@ -9,7 +9,6 @@ from nsone.rest.errors import ResourceException, RateLimitException, \
     AuthException
 import json
 import random
-from zope.interface import implementer
 
 try:
     import StringIO
@@ -25,6 +24,7 @@ try:
     from twisted.internet.ssl import CertificateOptions
     from twisted.internet._sslverify import ClientTLSOptions
     from twisted.web.iweb import IPolicyForHTTPS
+    from zope.interface import implementer
     have_twisted = True
 
 except Exception as e:
@@ -66,18 +66,19 @@ class StringProducer(object):
         pass
 
 
-class IgnoreHostnameClientTLSOptions(ClientTLSOptions):
-    def _identityVerifyingInfoCallback(self, connection, where, ret):
-        # override hostname validation
-        return
+if have_twisted:
+    class IgnoreHostnameClientTLSOptions(ClientTLSOptions):
+        def _identityVerifyingInfoCallback(self, connection, where, ret):
+            # override hostname validation
+            return
 
-
-@implementer(IPolicyForHTTPS)
-class NoValidationPolicy(object):
-    def creatorForNetloc(self, hostname, port):
-        options = CertificateOptions(trustRoot=None)
-        ctx = options.getContext()
-        return IgnoreHostnameClientTLSOptions(hostname.decode("ascii"), ctx)
+    @implementer(IPolicyForHTTPS)
+    class NoValidationPolicy(object):
+        def creatorForNetloc(self, hostname, port):
+            options = CertificateOptions(trustRoot=None)
+            ascii_hostname = hostname.decode("ascii")
+            context = options.getContext()
+            return IgnoreHostnameClientTLSOptions(ascii_hostname, context)
 
 
 class TwistedTransport(TransportBase):
