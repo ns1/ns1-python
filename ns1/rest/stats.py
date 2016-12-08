@@ -32,7 +32,7 @@ class Stats(resource.BaseResource):
               callback=None, errback=None, **kwargs):
         url = ''
         if zone is None:
-            url = '%s/%s' % (self.ROOT, 'usage'),
+            url = '%s/%s' % (self.ROOT, 'usage')
         elif type is not None and domain is not None and zone is not None:
             url = '%s/%s/%s/%s/%s' % (self.ROOT, 'usage', zone, domain, type)
         elif zone is not None:
