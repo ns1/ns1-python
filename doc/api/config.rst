@@ -21,7 +21,7 @@ Sample:
                 "key": "qACMD09OJXBxT7XOwv9v",
                 "desc": "account number 2",
                 "writeLock": false
-            },
+            }
        },
        "cli": {
            "output_format": "text"
