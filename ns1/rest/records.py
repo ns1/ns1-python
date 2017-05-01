@@ -17,7 +17,7 @@ class Records(resource.BaseResource):
     ROOT = 'zones'
 
     INT_FIELDS = ['ttl']
-    BOOL_FIELDS = ['use_csubnet']
+    BOOL_FIELDS = ['use_csubnet', 'override_ttl']
     PASSTHRU_FIELDS = ['networks', 'meta', 'regions', 'link']
 
     # answers must be:
