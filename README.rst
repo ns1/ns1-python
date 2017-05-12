@@ -33,12 +33,12 @@ None, but supports different transport backends. Currently supported:
  * urllib (synchronous, the default if requests isn't available)
  * `twisted <https://twistedmatrix.com/>`_ (asynchronous)
 
-Other transports are easy to add, see `transport <https://github.com/ns1/ns1-python/tree/develop/ns1/rest/transport>`_
+Other transports are easy to add, see `transport <https://github.com/ns1/ns1-python/tree/master/ns1/rest/transport>`_
 
 Examples
 ========
 
-See the `examples directory <https://github.com/ns1/ns1-python/tree/develop/examples>`_
+See the `examples directory <https://github.com/ns1/ns1-python/tree/master/examples>`_
 
 Documentation
 =============
