@@ -12,19 +12,23 @@ from ns1.rest.errors import ResourceException, RateLimitException, \
 try:
     from urllib.request import build_opener, Request, HTTPSHandler
     from urllib.error import HTTPError
-except:
+except ImportError:
     from urllib2 import build_opener, Request, HTTPSHandler
     from urllib2 import HTTPError
 import json
+import socket
 
 
 class BasicTransport(TransportBase):
 
     def __init__(self, config):
         TransportBase.__init__(self, config, self.__module__)
+        self._timeout = self._config.get('timeout', socket._GLOBAL_DEFAULT_TIMEOUT)
 
     def send(self, method, url, headers=None, data=None, files=None,
              callback=None, errback=None):
+        if headers is None:
+            headers = {}
         if files is not None:
             # XXX
             raise Exception('file uploads not supported in BasicTransport yet')
@@ -55,7 +59,7 @@ class BasicTransport(TransportBase):
         # Handle error and responses the same so we can
         # always pass the body to the handleProblem function
         try:
-            resp = opener.open(request)
+            resp = opener.open(request, timeout=self._timeout)
         except HTTPError as e:
             resp = e
         finally:

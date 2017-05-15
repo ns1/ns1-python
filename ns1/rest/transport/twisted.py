@@ -87,13 +87,14 @@ class TwistedTransport(TransportBase):
         if not have_twisted:
             raise ImportError('Twisted required for TwistedTransport')
         TransportBase.__init__(self, config, self.__module__)
+        self._timeout = self._config.get('timeout', None)
 
         if config.get("ignore-ssl-errors"):
             policy = NoValidationPolicy()
         else:
             policy = BrowserLikePolicyForHTTPS()
 
-        self.agent = Agent(reactor, policy)
+        self.agent = Agent(reactor, policy, connectTimeout=self._timeout)
 
     def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
