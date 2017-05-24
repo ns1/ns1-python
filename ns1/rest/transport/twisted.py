@@ -161,7 +161,7 @@ class TwistedTransport(TransportBase):
         theaders = None
         if headers:
             theaders = Headers({str(k): [str(v)]
-                                for (k, v) in headers.iteritems()})
+                                for (k, v) in headers.items()})
         d = self.agent.request(method, str(url), theaders, bProducer)
         d.addCallback(self._callback, callback, data, headers)
         d.addErrback(self._errback, errback)
