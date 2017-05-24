@@ -62,8 +62,11 @@ class BasicTransport(TransportBase):
             resp = opener.open(request, timeout=self._timeout)
         except HTTPError as e:
             resp = e
-        finally:
             body = resp.read()
+        except Exception as e:
+            body = '"Service Unavailable"'
+            resp = HTTPError(url, 503, body, headers, None)
+        finally:
             if resp.code != 200:
                 handleProblem(resp.code, resp, body)
 
@@ -77,7 +80,7 @@ class BasicTransport(TransportBase):
             else:
                 raise ResourceException('invalid json in response',
                                         resp,
-                                        resp.text)
+                                        body)
         if callback:
             return callback(jsonOut)
         else:
