@@ -62,11 +62,11 @@ class BasicTransport(TransportBase):
             resp = opener.open(request, timeout=self._timeout)
         except HTTPError as e:
             resp = e
-            body = resp.read()
         except Exception as e:
             body = '"Service Unavailable"'
             resp = HTTPError(url, 503, body, headers, None)
         finally:
+            body = resp.read()
             if resp.code != 200:
                 handleProblem(resp.code, resp, body)
 
