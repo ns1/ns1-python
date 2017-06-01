@@ -63,6 +63,7 @@ class BasicTransport(TransportBase):
             body = resp.read()
         except HTTPError as e:
             resp = e
+            body = resp.read()
         except Exception as e:
             body = '"Service Unavailable"'
             resp = HTTPError(url, 503, body, headers, None)
