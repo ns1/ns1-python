@@ -109,9 +109,13 @@ class TwistedTransport(TransportBase):
                                          data))
         if response.code != 200:
             if response.code == 429:
-                raise RateLimitException('rate limit exceeded',
-                                         response,
-                                         body)
+                raise RateLimitException(
+                    'rate limit exceeded', response, body,
+                    by=response.headers.getRawHeaders('x-ratelimit-by', ['customer'])[0],
+                    limit=response.headers.getRawHeaders('x-ratelimit-limit', [10])[0],
+                    period=response.headers.getRawHeaders('x-ratelimit-period', [1])[0],
+                    remaining=response.headers.getRawHeaders('x-ratelimit-remaining', [100])[0]
+                )
             elif response.code == 401:
                 raise AuthException('unauthorized',
                                     response,

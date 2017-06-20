@@ -17,6 +17,7 @@ except ImportError:
     from urllib2 import HTTPError
 import json
 import socket
+import ssl
 
 
 class BasicTransport(TransportBase):
@@ -34,7 +35,13 @@ class BasicTransport(TransportBase):
             raise Exception('file uploads not supported in BasicTransport yet')
         self._logHeaders(headers)
         self._log.debug("%s %s %s" % (method, url, data))
-        opener = build_opener(HTTPSHandler)
+
+        context = ssl.create_default_context()
+        if not self._verify:
+            context.check_hostname = False
+            context.verify_mode = ssl.CERT_NONE
+
+        opener = build_opener(HTTPSHandler(context=context))
         request = Request(url, headers=headers, data=data)
         request.get_method = lambda: method
 
@@ -44,9 +51,14 @@ class BasicTransport(TransportBase):
                 return
 
             if code == 429:
-                raise RateLimitException('rate limit exceeded',
-                                         resp,
-                                         msg)
+                hdrs = resp.hdrs.dict
+                raise RateLimitException(
+                    'rate limit exceeded', resp, msg,
+                    by=hdrs.get('x-ratelimit-by', 'customer'),
+                    limit=hdrs.get('x-ratelimit-limit', 10),
+                    period=hdrs.get('x-ratelimit-period', 1),
+                    remaining=hdrs.get('x-ratelimit-remaining', 100)
+                )
             elif code == 401:
                 raise AuthException('unauthorized',
                                     resp,

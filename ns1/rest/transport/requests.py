@@ -43,9 +43,13 @@ class RequestsTransport(TransportBase):
                 return
             else:
                 if resp.status_code == 429:
-                    raise RateLimitException('rate limit exceeded',
-                                             resp,
-                                             resp.text)
+                    raise RateLimitException(
+                        'rate limit exceeded', resp, resp.text, 
+                        by=resp.headers.get('X-RateLimit-By', 'customer'), 
+                        limit=resp.headers.get('X-RateLimit-Limit', 10),
+                        period=resp.headers.get('X-RateLimit-Period', 1), 
+                        remaining=resp.headers.get('X-RateLimit-Remaining', 100)
+                    )
                 elif resp.status_code == 401:
                     raise AuthException('unauthorized',
                                         resp,
