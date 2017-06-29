@@ -155,7 +155,11 @@ class NS1:
         import ns1.zones
         if zone is None:
             # extract from record string
-            zone = '.'.join(domain.split('.')[1:])
+            parts = domain.split('.')
+            if len(parts) <= 2:
+                zone = '.'.join(parts)
+            else:
+                zone = '.'.join(domain.split('.')[1:])
         z = ns1.zones.Zone(self.config, zone)
         return z.loadRecord(domain, type, callback=callback, errback=errback,
                             **kwargs)
