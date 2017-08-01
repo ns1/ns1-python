@@ -44,7 +44,7 @@ Simple example:
 
 Note that all zone and record changes propagate in real time throughout the NS1 platform.
 
-There are more examples in the `examples directory <https://github.com/ns1/ns1-python/tree/develop/examples>`_.
+There are more examples in the `examples directory <https://github.com/ns1/ns1-python/tree/master/examples>`_.
 
 Contributions
 -------------

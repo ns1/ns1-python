@@ -87,13 +87,14 @@ class TwistedTransport(TransportBase):
         if not have_twisted:
             raise ImportError('Twisted required for TwistedTransport')
         TransportBase.__init__(self, config, self.__module__)
+        self._timeout = self._config.get('timeout', None)
 
         if config.get("ignore-ssl-errors"):
             policy = NoValidationPolicy()
         else:
             policy = BrowserLikePolicyForHTTPS()
 
-        self.agent = Agent(reactor, policy)
+        self.agent = Agent(reactor, policy, connectTimeout=self._timeout)
 
     def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
@@ -108,9 +109,13 @@ class TwistedTransport(TransportBase):
                                          data))
         if response.code != 200:
             if response.code == 429:
-                raise RateLimitException('rate limit exceeded',
-                                         response,
-                                         body)
+                raise RateLimitException(
+                    'rate limit exceeded', response, body,
+                    by=response.headers.getRawHeaders('x-ratelimit-by', ['customer'])[0],
+                    limit=response.headers.getRawHeaders('x-ratelimit-limit', [10])[0],
+                    period=response.headers.getRawHeaders('x-ratelimit-period', [1])[0],
+                    remaining=response.headers.getRawHeaders('x-ratelimit-remaining', [100])[0]
+                )
             elif response.code == 401:
                 raise AuthException('unauthorized',
                                     response,
@@ -160,7 +165,7 @@ class TwistedTransport(TransportBase):
         theaders = None
         if headers:
             theaders = Headers({str(k): [str(v)]
-                                for (k, v) in headers.iteritems()})
+                                for (k, v) in headers.items()})
         d = self.agent.request(method, str(url), theaders, bProducer)
         d.addCallback(self._callback, callback, data, headers)
         d.addErrback(self._errback, errback)

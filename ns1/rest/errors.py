@@ -48,13 +48,14 @@ class AuthException(ResourceException):
 
 class RateLimitException(ResourceException):
 
-    def __init__(self, message, response=None, body=None):
+    def __init__(self, message, response=None, body=None, 
+                 by=None, limit=None, remaining=None, period=None):
         ResourceException.__init__(self, message, response, body)
-        hdrs = response.headers._rawHeaders
-        self.by = hdrs['x-ratelimit-by'][0]
-        self.limit = hdrs['x-ratelimit-limit'][0]
-        self.period = hdrs['x-ratelimit-period'][0]
+        self.by = by
+        self.limit = limit
+        self.period = period
+        self.remaining = remaining
 
     def __repr__(self):
-        return '<RateLimitException by=%s limit=%s period=%s>' % \
-               (self.by, self.limit, self.period)
+        return '<RateLimitException by=%s limit=%s period=%s remaining=%s>' % \
+               (self.by, self.limit, self.period, self.remaining)

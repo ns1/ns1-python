@@ -6,7 +6,7 @@
 
 from .config import Config
 
-version = "0.9.7"
+version = "0.9.16"
 
 
 class NS1:
@@ -155,7 +155,11 @@ class NS1:
         import ns1.zones
         if zone is None:
             # extract from record string
-            zone = '.'.join(domain.split('.')[1:])
+            parts = domain.split('.')
+            if len(parts) <= 2:
+                zone = '.'.join(parts)
+            else:
+                zone = '.'.join(parts[1:])
         z = ns1.zones.Zone(self.config, zone)
         return z.loadRecord(domain, type, callback=callback, errback=errback,
                             **kwargs)
