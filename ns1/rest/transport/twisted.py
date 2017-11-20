@@ -7,6 +7,7 @@ from __future__ import absolute_import
 from ns1.rest.transport.base import TransportBase
 from ns1.rest.errors import ResourceException, RateLimitException, \
     AuthException
+from urllib import urlencode
 import json
 import random
 
@@ -146,6 +147,7 @@ class TwistedTransport(TransportBase):
             raise ResourceException(failure.getErrorMessage())
 
     def send(self, method, url, headers=None, data=None, files=None,
+             params=None,
              callback=None, errback=None):
         bProducer = None
         if data:
@@ -163,6 +165,9 @@ class TwistedTransport(TransportBase):
                 "multipart/form-data; boundary={}".format(boundary)
             bProducer = FileBodyProducer(StringIO.StringIO(body))
         theaders = None
+        if params is not None:
+            qstr = urlencode(params)
+            url = '?'.join(url, qstr)
         if headers:
             theaders = Headers({str(k): [str(v)]
                                 for (k, v) in headers.items()})
