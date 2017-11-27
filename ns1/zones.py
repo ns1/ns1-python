@@ -64,6 +64,22 @@ class Zone(object):
         return self._rest.retrieve(self.zone, callback=success,
                                    errback=errback)
 
+    def search(self, q=None, has_geo=False, callback=None, errback=None):
+        """
+        Search within a zone for specific metadata. Zone must already be loaded.
+        """
+        if not self.data:
+            raise ZoneException('zone not loaded')
+
+        def success(result, *args):
+            self.data = result
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.search(self.data, q, has_geo, callback, errback)
+
     def delete(self, callback=None, errback=None):
         """
         Delete the zone and ALL records it contains.
