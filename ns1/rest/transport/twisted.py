@@ -167,7 +167,7 @@ class TwistedTransport(TransportBase):
         theaders = None
         if params is not None:
             qstr = urlencode(params)
-            url = '?'.join(url, qstr)
+            url = '?'.join((url, qstr))
         if headers:
             theaders = Headers({str(k): [str(v)]
                                 for (k, v) in headers.items()})
