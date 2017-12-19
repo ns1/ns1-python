@@ -95,6 +95,15 @@ class NS1:
         import ns1.rest.monitoring
         return ns1.rest.monitoring.Monitors(self.config)
 
+    def notifylists(self):
+        """
+        Return a new raw REST interface to notify list resources
+
+        :rtype: :py:class:`ns1.rest.monitoring.NotifyLists`
+        """
+        import ns1.rest.monitoring
+        return ns1.rest.monitoring.NotifyLists(self.config)
+
     def plan(self):
         """
         Return a new raw REST interface to account plan

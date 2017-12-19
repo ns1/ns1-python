@@ -24,7 +24,7 @@ class Monitors(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def create(self,body, callback=None, errback=None):
+    def create(self, body, callback=None, errback=None):
         return self._make_request('PUT', '%s' % (self.ROOT), body=body,
                                   callback=callback,
                                   errback=errback)
@@ -36,5 +36,39 @@ class Monitors(resource.BaseResource):
 
     def delete(self, jobid, callback=None, errback=None):
         return self._make_request('DELETE', '%s/%s' % (self.ROOT, jobid),
+                                  callback=callback,
+                                  errback=errback)
+
+
+class NotifyLists(resource.BaseResource):
+
+    ROOT = 'lists'
+    PASSTHRU_FIELDS = []
+
+    def list(self, callback=None, errback=None):
+        return self._make_request('GET', '%s' % (self.ROOT),
+                                  callback=callback,
+                                  errback=errback)
+
+    def update(self, nlid, body, callback=None, errback=None, **kwargs):
+        self._buildStdBody(body, kwargs)
+        return self._make_request('POST',
+                                  '%s/%s' % (self.ROOT, nlid),
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
+
+    def create(self, body, callback=None, errback=None):
+        return self._make_request('PUT', '%s' % (self.ROOT), body=body,
+                                  callback=callback,
+                                  errback=errback)
+
+    def retrieve(self, nlid, callback=None, errback=None):
+        return self._make_request('GET', '%s/%s' % (self.ROOT, nlid),
+                                  callback=callback,
+                                  errback=errback)
+
+    def delete(self, nlid, callback=None, errback=None):
+        return self._make_request('DELETE', '%s/%s' % (self.ROOT, nlid),
                                   callback=callback,
                                   errback=errback)
