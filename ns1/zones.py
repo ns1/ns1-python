@@ -77,8 +77,7 @@ class Zone(object):
                 return callback(self)
             else:
                 return self
-
-        return self._rest.search(self.data, q, has_geo, callback, errback)
+        return self._rest.search(self.zone, q, has_geo, callback, errback)
 
     def delete(self, callback=None, errback=None):
         """

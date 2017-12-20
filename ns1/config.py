@@ -19,10 +19,11 @@ class Config:
     Config files are simple JSON text files.
     To set or retrieve vales, use the object like a dict.
     """
-    ENDPOINT = 'api.nsone.net'
+    #ENDPOINT = 'api-prod0.nsone.net'
+    ENDPOINT = 'api.dev.nsone.co'
 
-    PORT = 443
-
+    #PORT = 443
+    PORT = 80
     API_VERSION = 'v1'
 
     DEFAULT_CONFIG_FILE = '~/.nsone'
