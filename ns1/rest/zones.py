@@ -10,6 +10,7 @@ from . import resource
 class Zones(resource.BaseResource):
 
     ROOT = 'zones'
+    SEARCH_ROOT = 'search'
 
     INT_FIELDS = ['ttl', 'retry', 'refresh', 'expiry', 'nx_ttl']
     PASSTHRU_FIELDS = ['secondary', 'hostmaster', 'meta', 'networks', 'link']
@@ -58,5 +59,16 @@ class Zones(resource.BaseResource):
 
     def retrieve(self, zone, callback=None, errback=None):
         return self._make_request('GET', '%s/%s' % (self.ROOT, zone),
+                                  callback=callback,
+                                  errback=errback)
+
+    def search(self, zone, q=None, has_geo=False, callback=None, errback=None):
+        params = {}
+        if q is not None:
+            params['q'] = q
+        if has_geo:
+            params['geo'] = has_geo
+        return self._make_request('GET', '%s/zone/%s' % (self.SEARCH_ROOT, zone),
+                                  params=params,
                                   callback=callback,
                                   errback=errback)

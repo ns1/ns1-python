@@ -32,11 +32,11 @@ class RequestsTransport(TransportBase):
         if isinstance(self._timeout, list) and len(self._timeout) == 2:
             self._timeout = tuple(self._timeout)
 
-    def send(self, method, url, headers=None, data=None, files=None,
+    def send(self, method, url, headers=None, data=None, params=None, files=None,
              callback=None, errback=None):
         self._logHeaders(headers)
         resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
-                                    data=data, files=files, timeout=self._timeout)
+                                    data=data, files=files, params=params, timeout=self._timeout)
         if resp.status_code != 200:
             if errback:
                 errback(resp)
@@ -44,10 +44,10 @@ class RequestsTransport(TransportBase):
             else:
                 if resp.status_code == 429:
                     raise RateLimitException(
-                        'rate limit exceeded', resp, resp.text, 
-                        by=resp.headers.get('X-RateLimit-By', 'customer'), 
+                        'rate limit exceeded', resp, resp.text,
+                        by=resp.headers.get('X-RateLimit-By', 'customer'),
                         limit=resp.headers.get('X-RateLimit-Limit', 10),
-                        period=resp.headers.get('X-RateLimit-Period', 1), 
+                        period=resp.headers.get('X-RateLimit-Period', 1),
                         remaining=resp.headers.get('X-RateLimit-Remaining', 100)
                     )
                 elif resp.status_code == 401:
