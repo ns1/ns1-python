@@ -10,7 +10,7 @@ with open(path.join(cwd, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
 setup(
-    name='ns1',
+    name='ns1-python',
 
     # flake8: noqa
     version=ns1.version,
@@ -49,7 +49,7 @@ setup(
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.6",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: Name Service (DNS)"
     ],
