@@ -7,7 +7,8 @@ NS1 Python SDK
 .. image:: https://travis-ci.org/ns1/ns1-python.svg?branch=master
         :target: https://travis-ci.org/ns1/ns1-python
 
-.. image:: https://readthedocs.org/projects/ns1/badge/?version=latest
+.. image:: https://readthedocs.org/projects/ns1-python/badge/?version=latest
+        :target: https://ns1-python.readthedocs.io/en/latest/
 
 About
 =====
