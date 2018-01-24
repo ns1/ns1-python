@@ -7,14 +7,16 @@ from __future__ import absolute_import
 from ns1.rest.transport.base import TransportBase
 from ns1.rest.errors import ResourceException, RateLimitException, \
     AuthException
-from urllib import urlencode
 import json
 import random
+import sys
 
-try:
-    import StringIO
-except ImportError:  # Python 3 +
+if sys.version_info[0] == 3:
     from io import StringIO
+    from urllib.parse import urlencode
+else:
+    import StringIO
+    from urllib import urlencode
 
 try:
     from twisted.internet import reactor
