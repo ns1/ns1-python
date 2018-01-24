@@ -1,9 +1,7 @@
 Python SDK for NS1 DNS Platform
 ===============================
 
-.. image:: _static/NSONE-500x500.png
-    :height: 250px
-    :width: 250px
+.. image:: _static/ns1.png
     :target: https://ns1.com/
 
 
