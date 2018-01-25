@@ -50,8 +50,8 @@ You'll need an API Key. To create one, login to `the portal <https://my.nsone.ne
 click on the Account button in the top right. Select Settings & Users, then add a new
 API Key at the bottom.
 
-* `Documentation at ReadTheDocs <http://ns1.readthedocs.org/en/latest/index.html>`_
-* `NS1 REST API Documentation <http://ns1.com/api/>`_
+* `Documentation at ReadTheDocs <https://ns1-python.readthedocs.org/en/latest/>`_
+* `NS1 REST API Documentation <https://ns1.com/api/>`_
 
 Contributions
 =============
