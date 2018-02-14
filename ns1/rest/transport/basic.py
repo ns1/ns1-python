@@ -70,7 +70,8 @@ class BasicTransport(TransportBase):
                                     resp,
                                     msg)
             else:
-                raise ResourceException('server error',
+		err_txt = "server error, status code: " + str(code)
+                raise ResourceException(err_txt,
                                         resp,
                                         msg)
 
