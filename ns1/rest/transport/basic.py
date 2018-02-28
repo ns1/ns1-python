@@ -70,9 +70,9 @@ class BasicTransport(TransportBase):
                                     resp,
                                     msg)
             else:
-                raise ResourceException('server error',
-                                        resp,
-                                        msg)
+                raise ResourceException('server error, status code: %s' % code,
+                                        response=resp,
+                                        body=msg)
 
         # Handle error and responses the same so we can
         # always pass the body to the handleProblem function
