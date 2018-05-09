@@ -182,3 +182,20 @@ class NS1:
         z = ns1.zones.Zone(self.config, zone)
         return z.loadRecord(domain, type, callback=callback, errback=errback,
                             **kwargs)
+
+    def loadMonitors(self, callback=None, errback=None, **kwargs):
+        """
+        Load all monitors
+        """
+        import ns1.monitoring
+        monitors_list = self.monitors().list(callback, errback)
+
+        return [ns1.monitoring.Monitor(self.config, m) for m in monitors_list]
+
+    def createMonitor(self, callback=None, errback=None, **kwargs):
+        """
+        Create a monitor
+        """
+        import ns1.monitoring
+        monitor = ns1.monitoring.Monitor(self.config)
+        return monitor.create(callback=callback, errback=errback, **kwargs)
