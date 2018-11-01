@@ -9,7 +9,12 @@ from . import resource
 class Monitors(resource.BaseResource):
 
     ROOT = 'monitoring/jobs'
-    PASSTHRU_FIELDS = ['name', 'config']
+    PASSTHRU_FIELDS = [
+      'name', 'config', 'region_scope', 'regions', 'job_type', 
+      'policy', 'notes', 'rules', 'notify_delay', 'notify_list'
+    ]
+    INT_FIELDS = ['frequency']
+    BOOL_FIELDS = ['active', 'rapid_recheck', 'notify_regional']
 
     def list(self, callback=None, errback=None):
         return self._make_request('GET', '%s' % (self.ROOT),
@@ -24,7 +29,8 @@ class Monitors(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def create(self, body, callback=None, errback=None):
+    def create(self, body, callback=None, errback=None, **kwargs):
+        self._buildStdBody(body, kwargs)
         return self._make_request('PUT', '%s' % (self.ROOT), body=body,
                                   callback=callback,
                                   errback=errback)
