@@ -48,6 +48,8 @@ class BasicTransport(TransportBase):
         else:
             opener = build_opener(HTTPSHandler)
 
+        if sys.version_info.major >= 3 and isinstance(data, str):
+            data = data.encode('utf-8')
         request = Request(url, headers=headers, data=data)
         request.get_method = lambda: method
 
