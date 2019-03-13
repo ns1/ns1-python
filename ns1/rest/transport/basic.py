@@ -82,8 +82,8 @@ class BasicTransport(TransportBase):
         except HTTPError as e:
             resp = e
             body = resp.read()
-        if resp.code != 200:
-            handleProblem(resp.code, resp, body)
+            if not 200 <= resp.code < 300:
+                handleProblem(resp.code, resp, body)
 
         # TODO make sure json is valid
         try:
