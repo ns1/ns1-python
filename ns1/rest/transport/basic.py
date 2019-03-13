@@ -82,11 +82,7 @@ class BasicTransport(TransportBase):
         except HTTPError as e:
             resp = e
             body = resp.read()
-        except Exception as e:
-            body = '"Service Unavailable"'
-            resp = HTTPError(url, 503, body, headers, None)
-        finally:
-            if resp.code != 200:
+            if not 200 <= resp.code < 300:
                 handleProblem(resp.code, resp, body)
 
         # TODO make sure json is valid
