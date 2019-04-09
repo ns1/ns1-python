@@ -14,9 +14,9 @@
 
 import sys
 import os
-import ns1
 
 sys.path[0:0] = [os.path.abspath('..')]
+import ns1
 
 extensions = [
     'sphinx.ext.autodoc',

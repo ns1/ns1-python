@@ -59,6 +59,33 @@ class NS1:
         import ns1.rest.records
         return ns1.rest.records.Records(self.config)
 
+    def addresses(self):
+        """
+        Return a new raw REST interface to address resources
+
+        :rtype: :py:class:`ns1.rest.ipam.Adresses`
+        """
+        import ns1.rest.ipam
+        return ns1.rest.ipam.Addresses(self.config)
+
+    def networks(self):
+        """
+        Return a new raw REST interface to network resources
+
+        :rtype: :py:class:`ns1.rest.ipam.Networks`
+        """
+        import ns1.rest.ipam
+        return ns1.rest.ipam.Networks(self.config)
+
+    def scope_groups(self):
+        """
+        Return a new raw REST interface to scope_group resources
+
+        :rtype: :py:class:`ns1.rest.ipam.Scopegroups`
+        """
+        import ns1.rest.ipam
+        return ns1.rest.ipam.Scopegroups(self.config)
+
     def stats(self):
         """
         Return a new raw REST interface to stats resources
@@ -199,3 +226,133 @@ class NS1:
         import ns1.monitoring
         monitor = ns1.monitoring.Monitor(self.config)
         return monitor.create(callback=callback, errback=errback, **kwargs)
+
+    def loadNetworkbyID(self, id, callback=None, errback=None):
+        """
+        Load an existing Network by ID into a high level Network object
+
+        :param int id: id of an existing Network
+        """
+        import ns1.ipam
+        network = ns1.ipam.Network(self.config, id=id)
+        return network.load(callback=callback, errback=errback)
+
+    def loadNetworkbyName(self, name, callback=None, errback=None):
+        """
+        Load an existing Network by name into a high level Network object
+
+        :param str name: Name of an existing Network
+        """
+        import ns1.ipam
+        network = ns1.ipam.Network(self.config, name=name)
+        return network.load(callback=callback, errback=errback)
+
+    def createNetwork(self, name, scope_group_id=None, callback=None, errback=None, **kwargs):
+        """
+        Create a new Network
+        For the list of keywords available, see :attr:`ns1.rest.ipam.Networks.INT_FIELDS` and :attr:`ns1.rest.ipam.Networks.PASSTHRU_FIELDS`
+
+        :param str name: Name of the Network to be created
+        :param int scope_group: (Optional) id of an existing scope group to associate with
+        """
+        import ns1.ipam
+        if scope_group_id is not None:
+            scope_group = ns1.ipam.Scopegroup(self.config, id=scope_group_id).update()
+            kwargs['scope_group'] = scope_group
+        network = ns1.ipam.Network(self.config, name=name)
+        return network.create(callback=callback, errback=errback, **kwargs)
+
+    def loadAddressbyID(self, id, callback=None, errback=None):
+        """
+        Load an existing address by ID into a high level Address object
+
+        :param int id: id of an existing Address
+        """
+        import ns1.ipam
+        address = ns1.ipam.Address(self.config, id=id)
+        return address.load(callback=callback, errback=errback)
+
+    def loadAddressbyPrefix(self, prefix, type, network_id, callback=None, errback=None):
+        """
+        Load an existing address by prefix, type and network into a high level Address object
+
+        :param str prefix: CIDR prefix of an existing Address
+        :param str type: Type of address assignement (planned, assignment or host)
+        :param int network_id: network_id associated with the address
+        """
+        import ns1.ipam
+        network = ns1.ipam.Network(self.config, id=network_id).load()
+        address = ns1.ipam.Address(self.config, prefix=prefix, type=type, network=network)
+        return address.load(callback=callback, errback=errback)
+
+    def createAddress(self, prefix, type, network_id, callback=None, errback=None, **kwargs):
+        """
+        Create a new Address
+        For the list of keywords available, see :attr:`ns1.rest.ipam.Addresses.INT_FIELDS` and :attr:`ns1.rest.ipam.Addresses.PASSTHRU_FIELDS`
+
+        :param str prefix: CIDR prefix of the address to be created
+        :param str type: Type of address assignement (planned, assignment or host)
+        :param int network_id: network_id associated with the address
+        """
+        import ns1.ipam
+        network = ns1.ipam.Network(self.config, id=network_id).load()
+        address = ns1.ipam.Address(self.config, prefix=prefix, type=type, network=network)
+        return address.create(callback=callback, errback=errback, **kwargs)
+
+    def loadScopeGroupbyID(self, id, callback=None, errback=None):
+        """
+        Load an existing Scope Group by ID into a high level Scope Group object
+
+        :param int id: id of an existing ScopeGroup
+        """
+        import ns1.ipam
+        scope_group = ns1.ipam.Scopegroup(self.config, id=id)
+        return scope_group.load(callback=callback, errback=errback)
+
+    def loadScopeGroupbyName(self, name, service_group_id, callback=None, errback=None):
+        """
+        Load an existing Scope Group by name and service group id into a high level Scope Group object
+
+        :param str name: Name of an existing Scope Group
+        :param int service_group_id: id of the service group the Scope group is associated with
+        """
+        import ns1.ipam
+        scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_group_id=service_group_id)
+        return scope_group.load(callback=callback, errback=errback)
+
+    def createScopeGroup(self, name, service_group_id, dhcp4, dhcp6, callback=None, errback=None):
+        """
+        Create a new Scope Group
+        For the list of keywords available, see :attr:`ns1.rest.ipam.ScopeGroups.INT_FIELDS` and :attr:`ns1.rest.ipam.ScopeGroups.PASSTHRU_FIELDS`
+
+        :param str name: Name of the Scope Group to be created
+        :param int service_group_id: id of the service group the Scope group is associated with
+        :param ns1.ipam.DHCPIOptions dhcp4: DHCPOptions object that contains the options for dhcpv4
+        :param ns1.ipam.DHCPIOptions dhcp6: DHCPOptions object that contains the options for dhcpv6
+        """
+        import ns1.ipam
+        scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_group_id=service_group_id)
+        return scope_group.create(dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback)
+
+    def generateDHCPOptionsTemplate(self, address_family):
+        """
+        Generate boilerplate dictionary to hold dhcp options
+
+        :param str address_family: dhcpv4 or dhcpv6
+        :return: dict containing valid option set for address family
+        """
+        from ns1.ipam import DHCPOptions
+        options = {}
+        for option in DHCPOptions.OPTIONS[address_family]:
+            options[option] = ""
+        return options
+
+    def loadDHCPOptions(self, address_family, options):
+        """
+        Create a high level DHCPOptions object
+
+        :param str address_family: Address family of the options. Can be either dhcpv4 or dhcpv6
+        :param dict options: Dictionary containing the option set to apply for this address family. Note: only those specified will be applied. Allowed options can be found in :attr:`ns1.ipam.DHCPOptions.OPTIONS`
+        """
+        import ns1.ipam
+        return ns1.ipam.DHCPOptions(address_family, options)

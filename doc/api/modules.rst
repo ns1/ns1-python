@@ -2,10 +2,11 @@ ns1 package
 ===========
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    ns1
    config
    zones
    records
+   ipam
    rest
