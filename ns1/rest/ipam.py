@@ -172,7 +172,7 @@ class Networks(resource.BaseResource):
 class Scopegroups(resource.BaseResource):
     ROOT = 'ipam/scope_group'
     INT_FIELDS = ['scope_group_id', 'valid_lifetime_secs', 'renew_timer_secs', 'rebind_timer_secs', 'service_group_id']
-    PASSTHRU_FIELDS = ['dhcp_option', 'dhcp4', 'dhcp6', 'name']
+    PASSTHRU_FIELDS = ['dhcp_option', 'dhcpv4', 'dhcpv6', 'name']
     BOOL_FIELDS = ['enabled', 'echo_client_id']
 
     def _buildBody(self, **kwargs):
