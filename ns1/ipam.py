@@ -338,10 +338,9 @@ class Scopegroup(object):
         def success(result, *args):
             self.data = result
             self.id = result['id']
-            self.dhcp4 = result['dhcp4']
-            self.dhcp6 = result['dhcp6']
+            self.dhcp4 = result['dhcpv4']
+            self.dhcp6 = result['dhcpv6']
             self.name = result['name']
-            self.service_group_id = result['service_group_id']
             if callback:
                 return callback(self)
             else:
@@ -377,10 +376,9 @@ class Scopegroup(object):
         def success(result, *args):
             self.data = result
             self.id = result['id']
-            self.dhcp4 = result['dhcp4']
-            self.dhcp6 = result['dhcp6']
+            self.dhcp4 = result['dhcpv4']
+            self.dhcp6 = result['dhcpv6']
             self.name = result['name']
-            self.service_group_id = result['service_group_id']
             if callback:
                 return callback(self)
             else:
@@ -402,16 +400,15 @@ class Scopegroup(object):
         def success(result, *args):
             self.data = result
             self.id = result['id']
-            self.dhcp4 = result['dhcp4']
-            self.dhcp6 = result['dhcp6']
+            self.dhcp4 = result['dhcpv4']
+            self.dhcp6 = result['dhcpv6']
             self.name = result['name']
-            self.service_group_id = result['service_group_id']
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(dhcp4=dhcp4.option_list, dhcp6=dhcp6.option_list, name=self.name, service_group_id=self.service_group_id,
+        return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, service_group_id=self.service_group_id,
                                  callback=success, errback=errback)
 
 
@@ -439,7 +436,7 @@ class DHCPOptions:
         self.validate(address_family, options)
         self.address_family = address_family
         self.__dict__.update(options)
-        self.option_list = [{"name": key, "value": "%s/%s" % (address_family, value)} for key, value in options.items()]
+        self.option_list = {"options": [{"name": "%s/%s" % (address_family, key), "value": value} for key, value in options.items()]}
 
     def validate(self, address_family, options):
         if address_family not in self.AF:
