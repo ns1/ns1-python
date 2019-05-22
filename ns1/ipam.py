@@ -259,6 +259,15 @@ class Address(object):
         return self._rest.update(self.id, callback=success, errback=errback, parent=parent,
                                  **kwargs)
 
+    def reserve(self, scopegroup, callback=None, errback=None):
+        """
+        Reserve
+        :param scopegroup:
+        :param callback:
+        :param errback:
+        :return:
+        """
+
     def create(self, callback=None, errback=None, parent=True, **kwargs):
         """
         Create a new Address. Pass a list of keywords and their values to
