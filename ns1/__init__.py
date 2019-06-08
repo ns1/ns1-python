@@ -299,25 +299,14 @@ class NS1:
         address = ns1.ipam.Address(self.config, prefix=prefix, type=type, network=network)
         return address.create(callback=callback, errback=errback, **kwargs)
 
-    def loadScopeGroupbyID(self, id, callback=None, errback=None):
+    def loadScopeGroup(self, id, callback=None, errback=None):
         """
-        Load an existing Scope Group by ID into a high level Scope Group object
+        Load an existing Scope Group into a high level Scope Group object
 
         :param int id: id of an existing ScopeGroup
         """
         import ns1.ipam
         scope_group = ns1.ipam.Scopegroup(self.config, id=id)
-        return scope_group.load(callback=callback, errback=errback)
-
-    def loadScopeGroupbyName(self, name, service_group_id, callback=None, errback=None):
-        """
-        Load an existing Scope Group by name and service group id into a high level Scope Group object
-
-        :param str name: Name of an existing Scope Group
-        :param int service_group_id: id of the service group the Scope group is associated with
-        """
-        import ns1.ipam
-        scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_group_id=service_group_id)
         return scope_group.load(callback=callback, errback=errback)
 
     def createScopeGroup(self, name, service_group_id, dhcp4, dhcp6, callback=None, errback=None):
@@ -333,6 +322,26 @@ class NS1:
         import ns1.ipam
         scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_group_id=service_group_id)
         return scope_group.create(dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback)
+
+    def createReservation(self, scopegroup_id, address_id, mac, callback=None, errback=None):
+        import ns1.ipam
+        reservation = ns1.ipam.Reservation(self.config, scopegroup_id, address_id, mac)
+        return reservation.create(callback=callback, errback=errback)
+
+    def loadReservation(self, scopegroup_id, address_id, callback=None, errback=None):
+        import ns1.ipam
+        reservation = ns1.ipam.Reservation(self.config, scopegroup_id, address_id)
+        return reservation.load(callback=callback, errback=errback)
+
+    def createScope(self, scopegroup_id, address_id, callback=None, errback=None):
+        import ns1.ipam
+        scope = ns1.ipam.Scope(self.config, scopegroup_id, address_id)
+        return scope.create(callback=callback, errback=errback)
+
+    def loadScope(self, scopegroup_id, address_id, callback=None, errback=None):
+        import ns1.ipam
+        scope = ns1.ipam.Scope(self.config, scopegroup_id, address_id)
+        return scope.load(callback=callback, errback=errback)
 
     def generateDHCPOptionsTemplate(self, address_family):
         """

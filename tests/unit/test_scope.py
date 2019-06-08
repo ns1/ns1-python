@@ -44,6 +44,20 @@ def test_rest_scope_list(scope_config):
 @pytest.mark.parametrize('scopegroup_id, address_id, url',
                          [(1, 2,
                            'dhcp/scopegroup/1/scopes')])
+def test_rest_scope_retrieve(scope_config, scopegroup_id,
+                             address_id, url):
+    z = ns1.rest.ipam.Scopes(scope_config)
+    z._make_request = mock.MagicMock()
+    z.retrieve(scopegroup_id, address_id)
+    z._make_request.assert_called_once_with('GET',
+                                            url,
+                                            callback=None,
+                                            errback=None)
+
+
+@pytest.mark.parametrize('scopegroup_id, address_id, url',
+                         [(1, 2,
+                           'dhcp/scopegroup/1/scopes')])
 def test_rest_scope_create(scope_config, scopegroup_id,
                            address_id, url):
     z = ns1.rest.ipam.Scopes(scope_config)

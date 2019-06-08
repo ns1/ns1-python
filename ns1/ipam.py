@@ -424,13 +424,24 @@ class Scopegroup(object):
 
     def reserve(self, address_id, mac, callback=None, errback=None):
         """
-        Add scope group reservation. Pass a single Address object and a MAC address as a string
+        Add scope group reservation. Pass a single Address ID and a MAC address as a string
         """
         if not self.data:
             raise ScopegroupException('Scope Group not loaded')
 
         reservation = Reservation(self.config, self.id, address_id, mac)
         return reservation.create(callback=callback, errback=errback)
+
+    def create_scope(self, address_id, callback=None, errback=None):
+        """
+        Add scope group scope. Pass a single Address ID
+        """
+        if not self.data:
+            raise ScopegroupException('Scope Group not loaded')
+
+        scope = Scope(self.config, self.id, address_id)
+        return scope.create(callback=callback, errback=errback)
+
 
     @property
     def reservations(self, callback=None, errback=None):
@@ -439,6 +450,14 @@ class Scopegroup(object):
 
         reservations_config = Reservations(self.config)
         return reservations_config.list(self.id, callback=callback, errback=errback)
+
+    @property
+    def scopes(self, callback=None, errback=None):
+        if not self.data:
+            raise ScopegroupException('Scope Group not loaded')
+
+        scopes_config = Scopes(self.config)
+        return scopes_config.list(self.id, callback=callback, errback=errback)
 
 
 class Reservation(object):
@@ -521,6 +540,84 @@ class Reservation(object):
                 return self
 
         return self._rest.create(self.scopegroup_id, self.address_id, mac=self.mac, callback=success, errback=errback, **kwargs)
+
+
+class Scope(object):
+
+    def __init__(self, config, scopegroup_id, address_id):
+        """
+        Create a new high level Scope object
+
+        :param ns1.config.Config config: config object
+        :param int scopegroup_id: id of the scope group
+        :param int address_id: id of the address the reservation is associated with
+        """
+        self._rest = Scopes(config)
+        self.config = config
+        self.scopegroup_id = scopegroup_id
+        self.address_id = address_id
+        self.data = None
+
+    def __repr__(self):
+        return '<Scope scopegroup=%s, address=%s>' % (self.scopegroup_id, self.address_id)
+
+    def __getitem__(self, item):
+        if item == "scopegroup_id":
+            return self.scopegroup_id
+        if item == "address_id":
+            return self.address_id
+        return self.data.get(item, None)
+
+    def reload(self, callback=None, errback=None):
+        """
+        Reload Scope data from the API.
+        """
+        return self.load(reload=True, callback=callback, errback=errback)
+
+    def load(self, callback=None, errback=None, reload=False):
+        """
+        Load Reservation data from the API.
+        """
+        if not reload and self.data:
+            raise ScopeException('Scope already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.address_id = result['address_id']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        if self.scopegroup_id is None or self.address_id is None:
+            raise ReservationException('Must specify a scopegroup_id and an address_id')
+
+        return self._rest.retrieve(self.scopegroup_id, self.address_id, callback=success,
+                                   errback=errback)
+
+    def delete(self, callback=None, errback=None):
+        """
+        Delete the Scope
+        """
+        return self._rest.delete(self.scopegroup_id, self.address_id, callback=callback, errback=errback)
+
+    def create(self, callback=None, errback=None, **kwargs):
+        """
+        Create a new Scope. Pass a list of keywords and their values to
+        configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scope.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservations.PASSTHRU_FIELDS`
+        """
+        if self.data:
+            raise ScopeException('Scope already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.address_id = result['address_id']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.create(self.scopegroup_id, self.address_id, callback=success, errback=errback, **kwargs)
 
 
 
