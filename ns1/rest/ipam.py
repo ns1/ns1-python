@@ -69,22 +69,21 @@ class Addresses(resource.BaseResource):
                                   errback=errback)
 
     def retrieve_dhcp_option(self, address_id, callback=None, errback=None):
-        params = {'address_id': address_id}
         return self._make_request('GET', '%s/%s/options' % (self.ROOT, address_id),
-                                  params=params,
                                   callback=callback,
                                   errback=errback)
 
-    def create_dhcp_option(self, address_id, dhcp_option, callback=None, errback=None):
-        body = {"dhcp_option": dhcp_option}
+    def create_dhcp_option(self, address_id, option_name, option_value, callback=None, errback=None):
+        body = {"name": option_name,
+                "value": option_value}
         return self._make_request('POST',
                                   '%s/%s/options' % (self.ROOT, address_id),
                                   body=body,
                                   callback=callback,
                                   errback=errback)
 
-    def delete_dhcp_option(self, address_id, callback=None, errback=None):
-        params = {'address_id': address_id}
+    def delete_dhcp_option(self, address_id, option_name, callback=None, errback=None):
+        params = {"name": option_name}
         return self._make_request('DELETE', '%s/%s/options' % (self.ROOT, address_id),
                                   params=params,
                                   callback=callback,

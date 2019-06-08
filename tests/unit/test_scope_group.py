@@ -64,7 +64,7 @@ def test_rest_scope_group_update(scope_group_config,
                                  scope_group_id, scope_group_name, url):
     z = ns1.rest.ipam.Scopegroups(scope_group_config)
     z._make_request = mock.MagicMock()
-    z.update(1, name=scope_group_name)
+    z.update(scope_group_id, name=scope_group_name)
     z._make_request.assert_called_once_with('POST',
                                             url,
                                             callback=None,
