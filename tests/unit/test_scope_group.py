@@ -29,12 +29,12 @@ def test_rest_scope_group_list(scope_group_config):
     z._make_request = mock.MagicMock()
     z.list()
     z._make_request.assert_called_once_with('GET',
-                                            'ipam/scope_group',
+                                            'dhcp/scopegroup',
                                             callback=None,
                                             errback=None)
 
 
-@pytest.mark.parametrize('scope_group_id, url', [('1', 'ipam/scope_group/1')])
+@pytest.mark.parametrize('scope_group_id, url', [('1', 'dhcp/scopegroup/1')])
 def test_rest_scope_group_retrieve(scope_group_config, scope_group_id, url):
     z = ns1.rest.ipam.Scopegroups(scope_group_config)
     z._make_request = mock.MagicMock()
@@ -46,7 +46,7 @@ def test_rest_scope_group_retrieve(scope_group_config, scope_group_id, url):
 
 
 @pytest.mark.parametrize('scope_group_name, url',
-                         [('test_scope_group', 'ipam/scope_group')])
+                         [('test_scope_group', 'dhcp/scopegroup')])
 def test_rest_scope_group_create(scope_group_config, scope_group_name, url):
     z = ns1.rest.ipam.Scopegroups(scope_group_config)
     z._make_request = mock.MagicMock()
@@ -59,7 +59,7 @@ def test_rest_scope_group_create(scope_group_config, scope_group_name, url):
 
 
 @pytest.mark.parametrize('scope_group_id, scope_group_name, url',
-                         [('1', 'awesome scope_group', 'ipam/scope_group/1')])
+                         [('1', 'awesome scope_group', 'dhcp/scopegroup/1')])
 def test_rest_scope_group_update(scope_group_config,
                                  scope_group_id, scope_group_name, url):
     z = ns1.rest.ipam.Scopegroups(scope_group_config)
@@ -72,7 +72,7 @@ def test_rest_scope_group_update(scope_group_config,
                                             body={"name": scope_group_name})
 
 
-@pytest.mark.parametrize('scope_group_id, url', [('1', 'ipam/scope_group/1')])
+@pytest.mark.parametrize('scope_group_id, url', [('1', 'dhcp/scopegroup/1')])
 def test_rest_scope_group_delete(scope_group_config, scope_group_id, url):
     z = ns1.rest.ipam.Scopegroups(scope_group_config)
     z._make_request = mock.MagicMock()

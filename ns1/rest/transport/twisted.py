@@ -110,7 +110,7 @@ class TwistedTransport(TransportBase):
                                          response.request.absoluteURI,
                                          response.code,
                                          data))
-        if response.code != 200:
+        if response.code < 200 or response.code >= 300:
             if response.code == 429:
                 raise RateLimitException(
                     'rate limit exceeded', response, body,
@@ -125,12 +125,16 @@ class TwistedTransport(TransportBase):
                                     body)
             else:
                 raise ResourceException('server error', response, body)
-        try:
-            jsonOut = json.loads(body)
-        except:
-            raise ResourceException('invalid json in response',
-                                    response,
-                                    body)
+
+        if body:
+            try:
+                jsonOut = json.loads(body)
+            except:
+                raise ResourceException('invalid json in response',
+                                        response,
+                                        body)
+        else:
+            jsonOut = None
         if user_callback:
             # set these in case callback throws, so we have them for errback
             self.response = response

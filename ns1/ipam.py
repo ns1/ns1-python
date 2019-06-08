@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from ns1.rest.ipam import Networks, Addresses, Scopegroups
+from ns1.rest.ipam import Networks, Addresses, Scopegroups, Reservations, Scopes
 from ns1.rest.errors import ResourceException
 
 
@@ -17,6 +17,14 @@ class AddressException(Exception):
 
 
 class ScopegroupException(Exception):
+    pass
+
+
+class ReservationException(Exception):
+    pass
+
+
+class ScopeException(Exception):
     pass
 
 
@@ -259,6 +267,16 @@ class Address(object):
         return self._rest.update(self.id, callback=success, errback=errback, parent=parent,
                                  **kwargs)
 
+    def reserve(self, scopegroup_id, mac, callback=None, errback=None):
+        """
+        Add scope group reservation. Pass a single Address object and a MAC address as a string
+        """
+        if not self.data:
+            raise ScopegroupException('Scope Group not loaded')
+
+        reservation = Reservation(self.config, scopegroup_id, self.id, mac)
+        return reservation.create(callback=callback, errback=errback)
+
     def create(self, callback=None, errback=None, parent=True, **kwargs):
         """
         Create a new Address. Pass a list of keywords and their values to
@@ -347,14 +365,7 @@ class Scopegroup(object):
                 return self
 
         if self.id is None:
-            if self.dhcp4 is None or self.dhcp6 is None or self.name is None or self.service_group_id is None:
-                raise AddressException('Must at least specify an id or name and service_group_id')
-            else:
-                try:
-                    self.id = [scope_group for scope_group in self._rest.list() if scope_group['name'] == self.name and
-                               scope_group['service_group_id'] == self.service_group_id][0]['id']
-                except IndexError:
-                    raise AddressException("Could not find Scope Group by name and service_group_id. It may not exist")
+            raise AddressException('Must at least specify an ID')
 
         return self._rest.retrieve(self.id, callback=success,
                                    errback=errback)
@@ -410,6 +421,107 @@ class Scopegroup(object):
 
         return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, service_group_id=self.service_group_id,
                                  callback=success, errback=errback)
+
+    def reserve(self, address_id, mac, callback=None, errback=None):
+        """
+        Add scope group reservation. Pass a single Address object and a MAC address as a string
+        """
+        if not self.data:
+            raise ScopegroupException('Scope Group not loaded')
+
+        reservation = Reservation(self.config, self.id, address_id, mac)
+        return reservation.create(callback=callback, errback=errback)
+
+    @property
+    def reservations(self, callback=None, errback=None):
+        if not self.data:
+            raise ScopegroupException('Scope Group not loaded')
+
+        reservations_config = Reservations(self.config)
+        return reservations_config.list(self.id, callback=callback, errback=errback)
+
+
+class Reservation(object):
+
+    def __init__(self, config, scopegroup_id, address_id, mac=None):
+        """
+        Create a new high level Reservation object
+
+        :param ns1.config.Config config: config object
+        :param int scopegroup_id: id of the scope group
+        :param int address_id: id of the address the reservation is associated with
+        :param str mac: mac address of the reservation
+        """
+        self._rest = Reservations(config)
+        self.config = config
+        self.scopegroup_id = scopegroup_id
+        self.address_id = address_id
+        self.mac = mac
+        self.data = None
+
+    def __repr__(self):
+        return '<Reservation scopegroup=%s, address=%s, mac=%s>' % (self.scopegroup_id, self.address_id, self.mac)
+
+    def __getitem__(self, item):
+        if item == "scopegroup_id":
+            return self.scopegroup_id
+        if item == "address_id":
+            return self.address_id
+        return self.data.get(item, None)
+
+    def reload(self, callback=None, errback=None):
+        """
+        Reload Reservation data from the API.
+        """
+        return self.load(reload=True, callback=callback, errback=errback)
+
+    def load(self, callback=None, errback=None, reload=False):
+        """
+        Load Reservation data from the API.
+        """
+        if not reload and self.data:
+            raise ReservationException('Reservation already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.address_id = result['address_id']
+            self.mac = result['mac']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        if self.scopegroup_id is None or self.address_id is None:
+            raise ReservationException('Must specify a scopegroup_id and an address_id')
+
+        return self._rest.retrieve(self.scopegroup_id, self.address_id, callback=success,
+                                   errback=errback)
+
+    def delete(self, callback=None, errback=None):
+        """
+        Delete the Reservation
+        """
+        return self._rest.delete(self.scopegroup_id, self.address_id, callback=callback, errback=errback)
+
+    def create(self, callback=None, errback=None, **kwargs):
+        """
+        Create a new Reservation. Pass a list of keywords and their values to
+        configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Reservations.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservations.PASSTHRU_FIELDS`
+        """
+        if self.data:
+            raise ReservationException('Reservation already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.address_id = result['address_id']
+            self.mac = result['mac']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.create(self.scopegroup_id, self.address_id, mac=self.mac, callback=success, errback=errback, **kwargs)
+
 
 
 class DHCPOptions:

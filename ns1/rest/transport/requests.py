@@ -37,7 +37,8 @@ class RequestsTransport(TransportBase):
         self._logHeaders(headers)
         resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
                                     data=data, files=files, params=params, timeout=self._timeout)
-        if resp.status_code != 200:
+
+        if resp.status_code < 200 or resp.status_code >= 300:
             if errback:
                 errback(resp)
                 return
@@ -58,17 +59,22 @@ class RequestsTransport(TransportBase):
                     raise ResourceException('server error',
                                             resp,
                                             resp.text)
-        # TODO make sure json is valid
-        try:
-            jsonOut = resp.json()
-        except ValueError:
-            if errback:
-                errback(resp)
-                return
-            else:
-                raise ResourceException('invalid json in response',
-                                        resp,
-                                        resp.text)
+
+        # TODO make sure json is valid if a body is returned
+        if resp.text:
+            try:
+                jsonOut = resp.json()
+            except ValueError:
+                if errback:
+                    errback(resp)
+                    return
+                else:
+                    raise ResourceException('invalid json in response',
+                                            resp,
+                                            resp.text)
+        else:
+            jsonOut = None
+
         if callback:
             return callback(jsonOut)
         else:
