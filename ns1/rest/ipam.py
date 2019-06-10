@@ -10,7 +10,7 @@ from . import resource
 class Addresses(resource.BaseResource):
     ROOT = 'ipam/address'
     INT_FIELDS = ['network_id', 'address_id', 'root_address_id', ' merged_address_id', 'scope_group_id']
-    PASSTHRU_FIELDS = ['prefix', 'type', 'desc', 'kvps', 'tags', 'reserve', 'dhcp_options']
+    PASSTHRU_FIELDS = ['prefix', 'type', 'desc', 'kvps', 'tags', 'reserve', 'dhcp_option']
     BOOL_FIELDS = ['parent']
 
     def _buildBody(self, **kwargs):
@@ -67,6 +67,28 @@ class Addresses(resource.BaseResource):
         return self._make_request('GET', '%s/%s/report' % (self.ROOT, address_id),
                                   callback=callback,
                                   errback=errback)
+
+    def retrieve_dhcp_option(self, address_id, callback=None, errback=None):
+        return self._make_request('GET', '%s/%s/options' % (self.ROOT, address_id),
+                                  callback=callback,
+                                  errback=errback)
+
+    def create_dhcp_option(self, address_id, option_name, option_value, callback=None, errback=None):
+        body = {"name": option_name,
+                "value": option_value}
+        return self._make_request('POST',
+                                  '%s/%s/options' % (self.ROOT, address_id),
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
+
+    def delete_dhcp_option(self, address_id, option_name, callback=None, errback=None):
+        params = {"name": option_name}
+        return self._make_request('DELETE', '%s/%s/options' % (self.ROOT, address_id),
+                                  params=params,
+                                  callback=callback,
+                                  errback=errback)
+
 
     # NYI in API
     # def retrieve_next(self, address_id, callback=None, errback=None):
@@ -170,7 +192,7 @@ class Networks(resource.BaseResource):
 
 
 class Scopegroups(resource.BaseResource):
-    ROOT = 'ipam/scope_group'
+    ROOT = 'dhcp/scopegroup'
     INT_FIELDS = ['scope_group_id', 'valid_lifetime_secs', 'renew_timer_secs', 'rebind_timer_secs', 'service_group_id']
     PASSTHRU_FIELDS = ['dhcp_option', 'dhcpv4', 'dhcpv6', 'name']
     BOOL_FIELDS = ['enabled', 'echo_client_id']
@@ -210,3 +232,100 @@ class Scopegroups(resource.BaseResource):
         return self._make_request('GET', '%s/%s' % (self.ROOT, scope_group_id),
                                   callback=callback,
                                   errback=errback)
+
+
+class Scopes(resource.BaseResource):
+    ROOT = 'dhcp/scopegroup'
+
+    @classmethod
+    def select_from_list(cls, result, address_id):
+        for item in result:
+            if item.get('address_id') == int(address_id):
+                return item
+        return None
+
+    def create(self, scopegroup_id, address_id, callback=None, errback=None):
+        body = {"address_id": address_id}
+
+        def success(result, *args):
+            return self.retrieve(scopegroup_id, address_id, callback=callback, errback=errback)
+
+        return self._make_request('POST', '%s/%s/scopes' % (self.ROOT, scopegroup_id),
+                                  body=body,
+                                  callback=success,
+                                  errback=errback)
+
+    def list(self, scopegroup_id, callback=None, errback=None):
+        return self._make_request('GET', '%s/%s/scopes' % (self.ROOT, scopegroup_id),
+                                  callback=callback,
+                                  errback=errback)
+
+    def delete(self, scopegroup_id, address_id, callback=None, errback=None):
+        params = {'address_id': address_id}
+        return self._make_request('DELETE', '%s/%s/scopes' % (self.ROOT, scopegroup_id),
+                                  params=params,
+                                  callback=callback,
+                                  errback=errback)
+
+    def retrieve(self, scopegroup_id, address_id, callback=None, errback=None):
+        result = self.list(scopegroup_id, errback=errback)
+        scope = Scopes.select_from_list(result, address_id)
+
+        if callback is not None:
+            return callback(scope)
+        else:
+            return scope
+
+
+class Reservations(resource.BaseResource):
+    ROOT = 'dhcp/scopegroup'
+    INT_FIELDS = ['scopegroup_id', 'address_id']
+    PASSTHRU_FIELDS = ['mac']
+    BOOL_FIELDS = []
+
+    def _buildBody(self, **kwargs):
+        body = {}
+        self._buildStdBody(body, kwargs)
+        return body
+
+    @classmethod
+    def select_from_list(cls, result, address_id):
+        for item in result:
+            if item.get('address_id') == int(address_id):
+                return item
+        return None
+
+    def create(self, scopegroup_id, address_id, callback=None, errback=None, **kwargs):
+        kwargs['address_id'] = address_id
+        body = self._buildBody(**kwargs)
+
+        def success(result, *args):
+            return self.retrieve(scopegroup_id, address_id, callback=callback, errback=errback)
+
+        reservation = self._make_request('POST',
+                                         '%s/%s/reservations' % (self.ROOT, scopegroup_id),
+                                         body=body,
+                                         callback=success,
+                                         errback=errback)
+        return reservation
+
+    def delete(self, scopegroup_id, address_id, callback=None, errback=None):
+        return self._make_request('DELETE',
+                                  '%s/%s/reservations?address_id=%s' % (self.ROOT, scopegroup_id, address_id),
+                                  callback=callback,
+                                  errback=errback)
+
+    def list(self, scopegroup_id, callback=None, errback=None):
+        return self._make_request('GET',
+                                  '%s/%s/reservations' % (self.ROOT, scopegroup_id),
+                                  callback=callback,
+                                  errback=errback)
+
+    def retrieve(self, scopegroup_id, address_id, callback=None, errback=None):
+        result = self.list(scopegroup_id, errback=errback)
+        reservation = Reservations.select_from_list(result, address_id)
+
+        if callback is not None:
+            return callback(reservation)
+        else:
+            return reservation

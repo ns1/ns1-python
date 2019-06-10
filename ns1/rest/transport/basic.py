@@ -26,7 +26,7 @@ class BasicTransport(TransportBase):
         TransportBase.__init__(self, config, self.__module__)
         self._timeout = self._config.get('timeout', socket._GLOBAL_DEFAULT_TIMEOUT)
 
-    def send(self, method, url, headers=None, data=None, files=None,
+    def send(self, method, url, headers=None, data=None, files=None, params=None,
              callback=None, errback=None):
         if headers is None:
             headers = {}
@@ -87,17 +87,21 @@ class BasicTransport(TransportBase):
             if not 200 <= resp.code < 300:
                 handleProblem(resp.code, resp, body)
 
-        # TODO make sure json is valid
-        try:
-            jsonOut = json.loads(body)
-        except ValueError:
-            if errback:
-                errback(resp)
-                return
-            else:
-                raise ResourceException('invalid json in response',
-                                        resp,
-                                        body)
+        # TODO make sure json is valid if there is a body
+        if body:
+            try:
+                jsonOut = json.loads(body)
+            except ValueError:
+                if errback:
+                    errback(resp)
+                    return
+                else:
+                    raise ResourceException('invalid json in response',
+                                            resp,
+                                            body)
+        else:
+            jsonOut = None
+
         if callback:
             return callback(jsonOut)
         else:
