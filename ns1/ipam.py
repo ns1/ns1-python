@@ -487,7 +487,7 @@ class Reservation(object):
         self.data = None
         if options is None:
             options = DHCPOptions('dhcpv4', {})
-        self.options = options.option_list
+        self.options = options.option_list['options']
 
     def __repr__(self):
         return '<Reservation scopegroup=%s, address=%s, mac=%s>' % (self.scopegroup_id, self.address_id, self.mac)
@@ -573,7 +573,7 @@ class Scope(object):
 
         if options is None:
             options = DHCPOptions('dhcpv4', {})
-        self.options = options.option_list
+        self.options = options.option_list['options']
 
         self.data = None
 
