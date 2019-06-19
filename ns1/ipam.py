@@ -422,7 +422,7 @@ class Scopegroup(object):
         return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, service_group_id=self.service_group_id,
                                  callback=success, errback=errback)
 
-    def reserve(self, address_id, options, mac, callback=None, errback=None):
+    def reserve(self, address_id, mac, options=None, callback=None, errback=None):
         """
         :param int address_id: id of the Address to reserve
         :param DHCPOptions options: DHCPOptions object that contains the settings for the address
@@ -432,6 +432,9 @@ class Scopegroup(object):
         """
         if not self.data:
             raise ScopegroupException('Scope Group not loaded')
+
+        if options is None:
+            options = DHCPOptions('dhcpv4', {})
 
         reservation = Reservation(self.config, self.id, address_id, options, mac)
         return reservation.create(callback=callback, errback=errback)
@@ -466,7 +469,7 @@ class Scopegroup(object):
 
 class Reservation(object):
 
-    def __init__(self, config, scopegroup_id, address_id, options, mac=None):
+    def __init__(self, config, scopegroup_id, address_id, options=None, mac=None):
         """
         Create a new high level Reservation object
 
@@ -482,6 +485,8 @@ class Reservation(object):
         self.address_id = address_id
         self.mac = mac
         self.data = None
+        if options is None:
+            options = DHCPOptions('dhcpv4', {})
         self.options = options.option_list
 
     def __repr__(self):
@@ -552,7 +557,7 @@ class Reservation(object):
 
 class Scope(object):
 
-    def __init__(self, config, scopegroup_id, address_id, options):
+    def __init__(self, config, scopegroup_id, address_id, options=None):
         """
         Create a new high level Scope object
 
@@ -565,7 +570,11 @@ class Scope(object):
         self.config = config
         self.scopegroup_id = scopegroup_id
         self.address_id = address_id
+
+        if options is None:
+            options = DHCPOptions('dhcpv4', {})
         self.options = options.option_list
+
         self.data = None
 
     def __repr__(self):
@@ -629,7 +638,7 @@ class Scope(object):
             else:
                 return self
 
-        return self._rest.create(self.scopegroup_id, self.address_id, self.options, callback=success, errback=errback, **kwargs)
+        return self._rest.create(self.scopegroup_id, self.address_id, self.options, callback=success, errback=errback)
 
 
 
