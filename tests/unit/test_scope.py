@@ -55,20 +55,22 @@ def test_rest_scope_retrieve(scope_config, scopegroup_id,
                                             errback=None)
 
 
-@pytest.mark.parametrize('scopegroup_id, address_id, url',
-                         [(1, 2,
+@pytest.mark.parametrize('scopegroup_id, address_id, options, url',
+                         [(1, 2, [{"name": "dhcpv4/bootfile-name", "value": "boot.iso"}],
                            'dhcp/scopegroup/1/scopes')])
 def test_rest_scope_create(scope_config, scopegroup_id,
-                           address_id, url):
+                           address_id, options, url):
     z = ns1.rest.ipam.Scopes(scope_config)
     z._make_request = mock.MagicMock()
 
-    z.create(scopegroup_id, address_id)
+    z.create(scopegroup_id, address_id, options)
     z._make_request.assert_called_once_with('POST',
                                             url,
                                             callback=Any(),
                                             errback=None,
-                                            body={"address_id": address_id})
+                                            body={"address_id": address_id,
+                                                  "options": options
+                                                  })
 
 
 @pytest.mark.parametrize('scopegroup_id, address_id, url',
