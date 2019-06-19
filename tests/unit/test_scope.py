@@ -12,6 +12,7 @@ def Any():
     class Any():
         def __eq__(self, other):
             return True
+
     return Any()
 
 
@@ -56,7 +57,13 @@ def test_rest_scope_retrieve(scope_config, scopegroup_id,
 
 
 @pytest.mark.parametrize('scopegroup_id, address_id, options, url',
-                         [(1, 2, [{"name": "dhcpv4/bootfile-name", "value": "boot.iso"}],
+                         [(1, 2,
+                           [
+                               {
+                                   "name": "dhcpv4/bootfile-name",
+                                   "value": "boot.iso"
+                               }
+                           ],
                            'dhcp/scopegroup/1/scopes')])
 def test_rest_scope_create(scope_config, scopegroup_id,
                            address_id, options, url):

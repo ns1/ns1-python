@@ -12,6 +12,7 @@ def Any():
     class Any():
         def __eq__(self, other):
             return True
+
     return Any()
 
 
@@ -56,7 +57,13 @@ def test_rest_reservation_retrieve(reservation_config, scopegroup_id,
 
 
 @pytest.mark.parametrize('scopegroup_id, address_id, mac, options, url',
-                         [(1, 2, '12:34:56:78:90:ab', [{"name": "dhcpv4/bootfile-name", "value": "boot.iso"}],
+                         [(1, 2, '12:34:56:78:90:ab',
+                           [
+                               {
+                                   "name": "dhcpv4/bootfile-name",
+                                   "value": "boot.iso"
+                               }
+                           ],
                            'dhcp/scopegroup/1/reservations')])
 def test_rest_reservation_create(reservation_config, scopegroup_id,
                                  address_id, mac, options, url):
