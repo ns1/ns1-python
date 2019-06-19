@@ -323,9 +323,9 @@ class NS1:
         scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_group_id=service_group_id)
         return scope_group.create(dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback)
 
-    def createReservation(self, scopegroup_id, address_id, mac, callback=None, errback=None):
+    def createReservation(self, scopegroup_id, address_id, mac, dhcp_options=None, callback=None, errback=None):
         import ns1.ipam
-        reservation = ns1.ipam.Reservation(self.config, scopegroup_id, address_id, mac)
+        reservation = ns1.ipam.Reservation(self.config, scopegroup_id, address_id, dhcp_options, mac)
         return reservation.create(callback=callback, errback=errback)
 
     def loadReservation(self, scopegroup_id, address_id, callback=None, errback=None):
@@ -333,9 +333,9 @@ class NS1:
         reservation = ns1.ipam.Reservation(self.config, scopegroup_id, address_id)
         return reservation.load(callback=callback, errback=errback)
 
-    def createScope(self, scopegroup_id, address_id, callback=None, errback=None):
+    def createScope(self, scopegroup_id, address_id, dhcp_options=None, callback=None, errback=None):
         import ns1.ipam
-        scope = ns1.ipam.Scope(self.config, scopegroup_id, address_id)
+        scope = ns1.ipam.Scope(self.config, scopegroup_id, address_id, dhcp_options)
         return scope.create(callback=callback, errback=errback)
 
     def loadScope(self, scopegroup_id, address_id, callback=None, errback=None):

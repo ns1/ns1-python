@@ -422,14 +422,21 @@ class Scopegroup(object):
         return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, service_group_id=self.service_group_id,
                                  callback=success, errback=errback)
 
-    def reserve(self, address_id, mac, callback=None, errback=None):
+    def reserve(self, address_id, mac, options=None, callback=None, errback=None):
         """
+        :param int address_id: id of the Address to reserve
+        :param DHCPOptions options: DHCPOptions object that contains the settings for the address
+        :param mac str: MAC address of the reservation
+
         Add scope group reservation. Pass a single Address ID and a MAC address as a string
         """
         if not self.data:
             raise ScopegroupException('Scope Group not loaded')
 
-        reservation = Reservation(self.config, self.id, address_id, mac)
+        if options is None:
+            options = DHCPOptions('dhcpv4', {})
+
+        reservation = Reservation(self.config, self.id, address_id, options, mac)
         return reservation.create(callback=callback, errback=errback)
 
     def create_scope(self, address_id, callback=None, errback=None):
@@ -462,13 +469,14 @@ class Scopegroup(object):
 
 class Reservation(object):
 
-    def __init__(self, config, scopegroup_id, address_id, mac=None):
+    def __init__(self, config, scopegroup_id, address_id, options=None, mac=None):
         """
         Create a new high level Reservation object
 
         :param ns1.config.Config config: config object
         :param int scopegroup_id: id of the scope group
         :param int address_id: id of the address the reservation is associated with
+        :param list options
         :param str mac: mac address of the reservation
         """
         self._rest = Reservations(config)
@@ -477,6 +485,9 @@ class Reservation(object):
         self.address_id = address_id
         self.mac = mac
         self.data = None
+        if options is None:
+            options = DHCPOptions('dhcpv4', {})
+        self.options = options.option_list
 
     def __repr__(self):
         return '<Reservation scopegroup=%s, address=%s, mac=%s>' % (self.scopegroup_id, self.address_id, self.mac)
@@ -505,6 +516,7 @@ class Reservation(object):
             self.data = result
             self.address_id = result['address_id']
             self.mac = result['mac']
+            self.options = result['options']
             if callback:
                 return callback(self)
             else:
@@ -534,28 +546,35 @@ class Reservation(object):
             self.data = result
             self.address_id = result['address_id']
             self.mac = result['mac']
+            self.options = result['options']
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(self.scopegroup_id, self.address_id, mac=self.mac, callback=success, errback=errback, **kwargs)
+        return self._rest.create(self.scopegroup_id, self.address_id, options = self.options, mac=self.mac, callback=success, errback=errback, **kwargs)
 
 
 class Scope(object):
 
-    def __init__(self, config, scopegroup_id, address_id):
+    def __init__(self, config, scopegroup_id, address_id, options=None):
         """
         Create a new high level Scope object
 
         :param ns1.config.Config config: config object
         :param int scopegroup_id: id of the scope group
         :param int address_id: id of the address the reservation is associated with
+        :param DHCPOptions options: DHCPOptions object that contains the settings for the scope
         """
         self._rest = Scopes(config)
         self.config = config
         self.scopegroup_id = scopegroup_id
         self.address_id = address_id
+
+        if options is None:
+            options = DHCPOptions('dhcpv4', {})
+        self.options = options.option_list
+
         self.data = None
 
     def __repr__(self):
@@ -584,6 +603,7 @@ class Scope(object):
         def success(result, *args):
             self.data = result
             self.address_id = result['address_id']
+            self.options = result['options']
             if callback:
                 return callback(self)
             else:
@@ -612,12 +632,13 @@ class Scope(object):
         def success(result, *args):
             self.data = result
             self.address_id = result['address_id']
+            self.options = result['options']
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(self.scopegroup_id, self.address_id, callback=success, errback=errback, **kwargs)
+        return self._rest.create(self.scopegroup_id, self.address_id, self.options, callback=success, errback=errback)
 
 
 

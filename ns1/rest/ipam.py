@@ -244,8 +244,10 @@ class Scopes(resource.BaseResource):
                 return item
         return None
 
-    def create(self, scopegroup_id, address_id, callback=None, errback=None):
-        body = {"address_id": address_id}
+    def create(self, scopegroup_id, address_id, options, callback=None, errback=None):
+        body = {"address_id": address_id,
+                "options": options
+                }
 
         def success(result, *args):
             return self.retrieve(scopegroup_id, address_id, callback=callback, errback=errback)
@@ -280,7 +282,7 @@ class Scopes(resource.BaseResource):
 class Reservations(resource.BaseResource):
     ROOT = 'dhcp/scopegroup'
     INT_FIELDS = ['scopegroup_id', 'address_id']
-    PASSTHRU_FIELDS = ['mac']
+    PASSTHRU_FIELDS = ['mac', 'options']
     BOOL_FIELDS = []
 
     def _buildBody(self, **kwargs):
@@ -295,8 +297,9 @@ class Reservations(resource.BaseResource):
                 return item
         return None
 
-    def create(self, scopegroup_id, address_id, callback=None, errback=None, **kwargs):
+    def create(self, scopegroup_id, address_id, options, callback=None, errback=None, **kwargs):
         kwargs['address_id'] = address_id
+        kwargs['options'] = options
         body = self._buildBody(**kwargs)
 
         def success(result, *args):
