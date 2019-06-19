@@ -436,7 +436,7 @@ class Scopegroup(object):
         if options is None:
             options = DHCPOptions('dhcpv4', {})
 
-        reservation = Reservation(self.config, self.id, address_id, options, mac)
+        reservation = Reservation(self.config, self.id, address_id, mac, options)
         return reservation.create(callback=callback, errback=errback)
 
     def create_scope(self, address_id, callback=None, errback=None):
