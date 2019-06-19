@@ -267,14 +267,14 @@ class Address(object):
         return self._rest.update(self.id, callback=success, errback=errback, parent=parent,
                                  **kwargs)
 
-    def reserve(self, scopegroup_id, mac, callback=None, errback=None):
+    def reserve(self, scopegroup_id, mac, options=None, callback=None, errback=None):
         """
         Add scope group reservation. Pass a single Address object and a MAC address as a string
         """
         if not self.data:
             raise ScopegroupException('Scope Group not loaded')
 
-        reservation = Reservation(self.config, scopegroup_id, self.id, mac)
+        reservation = Reservation(self.config, scopegroup_id, self.id, options, mac)
         return reservation.create(callback=callback, errback=errback)
 
     def create(self, callback=None, errback=None, parent=True, **kwargs):
@@ -433,10 +433,7 @@ class Scopegroup(object):
         if not self.data:
             raise ScopegroupException('Scope Group not loaded')
 
-        if options is None:
-            options = DHCPOptions('dhcpv4', {})
-
-        reservation = Reservation(self.config, self.id, address_id, mac, options)
+        reservation = Reservation(self.config, self.id, address_id, options, mac)
         return reservation.create(callback=callback, errback=errback)
 
     def create_scope(self, address_id, callback=None, errback=None):
