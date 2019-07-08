@@ -10,7 +10,7 @@ from . import resource
 class Addresses(resource.BaseResource):
     ROOT = 'ipam/address'
     INT_FIELDS = ['network_id', 'address_id', 'root_address_id', ' merged_address_id', 'scope_group_id']
-    PASSTHRU_FIELDS = ['prefix', 'type', 'desc', 'kvps', 'tags', 'reserve', 'dhcp_option']
+    PASSTHRU_FIELDS = ['prefix', 'type', 'desc', 'kvps', 'tags', 'reserve']
     BOOL_FIELDS = ['parent']
 
     def _buildBody(self, **kwargs):
@@ -70,22 +70,6 @@ class Addresses(resource.BaseResource):
 
     def retrieve_dhcp_option(self, address_id, callback=None, errback=None):
         return self._make_request('GET', '%s/%s/options' % (self.ROOT, address_id),
-                                  callback=callback,
-                                  errback=errback)
-
-    def create_dhcp_option(self, address_id, option_name, option_value, callback=None, errback=None):
-        body = {"name": option_name,
-                "value": option_value}
-        return self._make_request('POST',
-                                  '%s/%s/options' % (self.ROOT, address_id),
-                                  body=body,
-                                  callback=callback,
-                                  errback=errback)
-
-    def delete_dhcp_option(self, address_id, option_name, callback=None, errback=None):
-        params = {"name": option_name}
-        return self._make_request('DELETE', '%s/%s/options' % (self.ROOT, address_id),
-                                  params=params,
                                   callback=callback,
                                   errback=errback)
 
