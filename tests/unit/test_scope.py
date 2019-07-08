@@ -55,7 +55,7 @@ def test_rest_scope_retrieve(scope_config, scope_id, url):
                                             errback=None)
 
 
-@pytest.mark.parametrize('scopegroup_id, address_id, options, url',
+@pytest.mark.parametrize('sgroup_id, address_id, options, url',
                          [(1, 2,
                            [
                                {
@@ -64,18 +64,18 @@ def test_rest_scope_retrieve(scope_config, scope_id, url):
                                }
                            ],
                            'dhcp/scope')])
-def test_rest_scope_create(scope_config, scopegroup_id,
+def test_rest_scope_create(scope_config, sgroup_id,
                            address_id, options, url):
     z = ns1.rest.ipam.Scopes(scope_config)
     z._make_request = mock.MagicMock()
 
-    z.create(scopegroup_id, address_id, options)
+    z.create(sgroup_id, address_id, options)
     z._make_request.assert_called_once_with('PUT',
                                             url,
                                             callback=Any(),
                                             errback=None,
                                             body={"address_id": address_id,
-                                                  "scope_group_id": scopegroup_id,
+                                                  "scope_group_id": sgroup_id,
                                                   "options": options
                                                   })
 

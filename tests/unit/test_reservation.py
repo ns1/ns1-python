@@ -55,7 +55,7 @@ def test_rest_reservation_retrieve(reservation_config, reservation_id, url):
                                             errback=None)
 
 
-@pytest.mark.parametrize('scopegroup_id, address_id, mac, options, url',
+@pytest.mark.parametrize('sgroup_id, address_id, mac, options, url',
                          [(1, 2, '12:34:56:78:90:ab',
                            [
                                {
@@ -64,18 +64,18 @@ def test_rest_reservation_retrieve(reservation_config, reservation_id, url):
                                }
                            ],
                            'dhcp/reservation')])
-def test_rest_reservation_create(reservation_config, scopegroup_id,
+def test_rest_reservation_create(reservation_config, sgroup_id,
                                  address_id, mac, options, url):
     z = ns1.rest.ipam.Reservations(reservation_config)
     z._make_request = mock.MagicMock()
 
-    z.create(scopegroup_id, address_id, options=options, mac=mac)
+    z.create(sgroup_id, address_id, options=options, mac=mac)
     z._make_request.assert_called_once_with('PUT',
                                             url,
                                             callback=Any(),
                                             errback=None,
                                             body={"address_id": address_id,
-                                                  "scope_group_id": scopegroup_id,
+                                                  "scope_group_id": sgroup_id,
                                                   "mac": mac,
                                                   "options": options
                                                   })
