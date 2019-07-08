@@ -433,7 +433,7 @@ class Scopegroup(object):
         if not self.data:
             raise ScopegroupException('Scope Group not loaded')
 
-        reservation = Reservation(self.config, self.id, address_id, options, mac)
+        reservation = Reservation(self.config, self.id, address_id, options=options, mac=mac)
         return reservation.create(callback=callback, errback=errback)
 
     def create_scope(self, address_id, callback=None, errback=None):
