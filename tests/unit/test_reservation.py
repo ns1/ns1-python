@@ -75,6 +75,7 @@ def test_rest_reservation_create(reservation_config, scopegroup_id,
                                             callback=Any(),
                                             errback=None,
                                             body={"address_id": address_id,
+                                                  "scope_group_id": scopegroup_id,
                                                   "mac": mac,
                                                   "options": options
                                                   })

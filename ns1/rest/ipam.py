@@ -256,7 +256,7 @@ class Scopes(resource.BaseResource):
                                   errback=errback)
 
     def list(self, scopegroup_id, callback=None, errback=None):
-        return self._make_request('GET', '%s?scopeGroupId=%d' % (self.ROOT, int(scopeGroupId)),
+        return self._make_request('GET', '%s?scopeGroupId=%d' % (self.ROOT, int(scopegroup_id)),
                                   callback=callback,
                                   errback=errback)
 
@@ -266,14 +266,14 @@ class Scopes(resource.BaseResource):
                                   errback=errback)
 
     def retrieve(self, scope_id, callback=None, errback=None):
-        return self._make_request('GET', '%/%' % (self.ROOT, scope_id),
+        return self._make_request('GET', '%s/%d' % (self.ROOT, int(scope_id)),
                                   callback=callback,
                                   errback=errback)
 
 
 class Reservations(resource.BaseResource):
-    ROOT = 'dhcp/reservations'
-    INT_FIELDS = ['scopegroup_id', 'address_id']
+    ROOT = 'dhcp/reservation'
+    INT_FIELDS = ['scope_group_id', 'address_id']
     PASSTHRU_FIELDS = ['mac', 'options']
     BOOL_FIELDS = []
 
@@ -316,6 +316,6 @@ class Reservations(resource.BaseResource):
 
     def retrieve(self, reservation_id, callback=None, errback=None):
         return self._make_request('GET',
-                                  '%S/%d', self.ROOT, int(reservation_id),
+                                  '%s/%d' % (self.ROOT, int(reservation_id)),
                                   callback=callback,
                                   errback=errback)
