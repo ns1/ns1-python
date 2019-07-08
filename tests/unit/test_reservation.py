@@ -37,19 +37,18 @@ def test_rest_reservation_list(reservation_config):
     z._make_request = mock.MagicMock()
     z.list(1)
     z._make_request.assert_called_once_with('GET',
-                                            'dhcp/scopegroup/1/reservations',
+                                            'dhcp/reservation?scopeGroupId=1',
                                             callback=None,
                                             errback=None)
 
 
-@pytest.mark.parametrize('scopegroup_id, address_id, url',
-                         [(1, 2,
-                           'dhcp/scopegroup/1/reservations')])
-def test_rest_reservation_retrieve(reservation_config, scopegroup_id,
-                                   address_id, url):
+@pytest.mark.parametrize('scope_id, url',
+                         [(1,
+                           'dhcp/reservation/1')])
+def test_rest_reservation_retrieve(reservation_config, reservation_id, url):
     z = ns1.rest.ipam.Reservations(reservation_config)
     z._make_request = mock.MagicMock()
-    z.retrieve(scopegroup_id, address_id)
+    z.retrieve(reservation_id)
     z._make_request.assert_called_once_with('GET',
                                             url,
                                             callback=None,
@@ -64,14 +63,14 @@ def test_rest_reservation_retrieve(reservation_config, scopegroup_id,
                                    "value": "boot.iso"
                                }
                            ],
-                           'dhcp/scopegroup/1/reservations')])
+                           'dhcp/reservation')])
 def test_rest_reservation_create(reservation_config, scopegroup_id,
                                  address_id, mac, options, url):
     z = ns1.rest.ipam.Reservations(reservation_config)
     z._make_request = mock.MagicMock()
 
     z.create(scopegroup_id, address_id, options=options, mac=mac)
-    z._make_request.assert_called_once_with('POST',
+    z._make_request.assert_called_once_with('PUT',
                                             url,
                                             callback=Any(),
                                             errback=None,
@@ -81,14 +80,13 @@ def test_rest_reservation_create(reservation_config, scopegroup_id,
                                                   })
 
 
-@pytest.mark.parametrize('scopegroup_id, address_id, url',
-                         [(1, 2,
-                           'dhcp/scopegroup/1/reservations?address_id=2')])
-def test_rest_reservation_delete(reservation_config, scopegroup_id,
-                                 address_id, url):
+@pytest.mark.parametrize('reservation_id, url',
+                         [(1,
+                           'dhcp/reservation/1')])
+def test_rest_reservation_delete(reservation_config, reservation_id, url):
     z = ns1.rest.ipam.Reservations(reservation_config)
     z._make_request = mock.MagicMock()
-    z.delete(scopegroup_id, address_id)
+    z.delete(reservation_id)
     z._make_request.assert_called_once_with('DELETE',
                                             url,
                                             callback=None,
