@@ -302,7 +302,7 @@ class Reservations(resource.BaseResource):
                                          errback=errback)
         return reservation
 
-    def delete(self, resveration_id, callback=None, errback=None):
+    def delete(self, reservation_id, callback=None, errback=None):
         return self._make_request('DELETE',
                                   '%s/%s' % (self.ROOT, reservation_id),
                                   callback=callback,
