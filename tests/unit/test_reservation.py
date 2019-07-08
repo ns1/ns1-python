@@ -42,7 +42,7 @@ def test_rest_reservation_list(reservation_config):
                                             errback=None)
 
 
-@pytest.mark.parametrize('scope_id, url',
+@pytest.mark.parametrize('reservation_id, url',
                          [(1,
                            'dhcp/reservation/1')])
 def test_rest_reservation_retrieve(reservation_config, reservation_id, url):
