@@ -255,8 +255,8 @@ class Scopes(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def list(self, callback=None, errback=None):
-        return self._make_request('GET', '%s' % (self.ROOT),
+    def list(self, scopegroup_id, callback=None, errback=None):
+        return self._make_request('GET', '%s?scopeGroupId=%d' % (self.ROOT, int(scopegroup_id)),
                                   callback=callback,
                                   errback=errback)
 
@@ -266,14 +266,14 @@ class Scopes(resource.BaseResource):
                                   errback=errback)
 
     def retrieve(self, scope_id, callback=None, errback=None):
-        return self._make_request('GET', '%/%' % (self.ROOT, scope_id),
+        return self._make_request('GET', '%s/%d' % (self.ROOT, int(scope_id)),
                                   callback=callback,
                                   errback=errback)
 
 
 class Reservations(resource.BaseResource):
-    ROOT = 'dhcp/scopegroup'
-    INT_FIELDS = ['scopegroup_id', 'address_id']
+    ROOT = 'dhcp/reservation'
+    INT_FIELDS = ['scope_group_id', 'address_id']
     PASSTHRU_FIELDS = ['mac', 'options']
     BOOL_FIELDS = []
 
@@ -291,36 +291,31 @@ class Reservations(resource.BaseResource):
 
     def create(self, scopegroup_id, address_id, options, callback=None, errback=None, **kwargs):
         kwargs['address_id'] = address_id
+        kwargs['scope_group_id'] = scopegroup_id
         kwargs['options'] = options
         body = self._buildBody(**kwargs)
 
-        def success(result, *args):
-            return self.retrieve(scopegroup_id, address_id, callback=callback, errback=errback)
-
-        reservation = self._make_request('POST',
-                                         '%s/%s/reservations' % (self.ROOT, scopegroup_id),
+        reservation = self._make_request('PUT',
+                                         self.ROOT,
                                          body=body,
-                                         callback=success,
+                                         callback=callback,
                                          errback=errback)
         return reservation
 
-    def delete(self, scopegroup_id, address_id, callback=None, errback=None):
+    def delete(self, reservation_id, callback=None, errback=None):
         return self._make_request('DELETE',
-                                  '%s/%s/reservations?address_id=%s' % (self.ROOT, scopegroup_id, address_id),
+                                  '%s/%s' % (self.ROOT, reservation_id),
                                   callback=callback,
                                   errback=errback)
 
     def list(self, scopegroup_id, callback=None, errback=None):
         return self._make_request('GET',
-                                  '%s/%s/reservations' % (self.ROOT, scopegroup_id),
+                                  '%s?scopeGroupId=%d' % (self.ROOT, int(scopegroup_id)),
                                   callback=callback,
                                   errback=errback)
 
-    def retrieve(self, scopegroup_id, address_id, callback=None, errback=None):
-        result = self.list(scopegroup_id, errback=errback)
-        reservation = Reservations.select_from_list(result, address_id)
-
-        if callback is not None:
-            return callback(reservation)
-        else:
-            return reservation
+    def retrieve(self, reservation_id, callback=None, errback=None):
+        return self._make_request('GET',
+                                  '%s/%d' % (self.ROOT, int(reservation_id)),
+                                  callback=callback,
+                                  errback=errback)

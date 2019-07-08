@@ -466,18 +466,20 @@ class Scopegroup(object):
 
 class Reservation(object):
 
-    def __init__(self, config, scopegroup_id, address_id, options=None, mac=None):
+    def __init__(self, config, scopegroup_id, address_id, reservation_id=None, options=None, mac=None):
         """
         Create a new high level Reservation object
 
         :param ns1.config.Config config: config object
         :param int scopegroup_id: id of the scope group
         :param int address_id: id of the address the reservation is associated with
-        :param list options
+        :param int reservation_id: id of the reservation
+        :param list options: dhcp options of the reservation
         :param str mac: mac address of the reservation
         """
         self._rest = Reservations(config)
         self.config = config
+        self.id = reservation_id
         self.scopegroup_id = scopegroup_id
         self.address_id = address_id
         self.mac = mac
@@ -519,10 +521,10 @@ class Reservation(object):
             else:
                 return self
 
-        if self.scopegroup_id is None or self.address_id is None:
-            raise ReservationException('Must specify a scopegroup_id and an address_id')
+        if self.id is None:
+            raise ReservationException('Must specify a scope_id')
 
-        return self._rest.retrieve(self.scopegroup_id, self.address_id, callback=success,
+        return self._rest.retrieve(self.id, callback=success,
                                    errback=errback)
 
     def delete(self, callback=None, errback=None):
@@ -554,19 +556,21 @@ class Reservation(object):
 
 class Scope(object):
 
-    def __init__(self, config, scopegroup_id, address_id, options=None):
+    def __init__(self, config, scopegroup_id, address_id, scope_id=None, options=None):
         """
         Create a new high level Scope object
 
         :param ns1.config.Config config: config object
         :param int scopegroup_id: id of the scope group
-        :param int address_id: id of the address the reservation is associated with
+        :param int address_id: id of the address the scope is associated with
+        :param int scope_id: id of the scope
         :param DHCPOptions options: DHCPOptions object that contains the settings for the scope
         """
         self._rest = Scopes(config)
         self.config = config
         self.scopegroup_id = scopegroup_id
         self.address_id = address_id
+        self.id = scope_id
 
         if options is None:
             options = DHCPOptions('dhcpv4', {})
@@ -606,10 +610,10 @@ class Scope(object):
             else:
                 return self
 
-        if self.scopegroup_id is None or self.address_id is None:
-            raise ReservationException('Must specify a scopegroup_id and an address_id')
+        if self.id is None:
+            raise ScopeException('Must specify a scope_id')
 
-        return self._rest.retrieve(self.scopegroup_id, self.address_id, callback=success,
+        return self._rest.retrieve(self.id, callback=success,
                                    errback=errback)
 
     def delete(self, callback=None, errback=None):
