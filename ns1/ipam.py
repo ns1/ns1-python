@@ -522,7 +522,7 @@ class Reservation(object):
                 return self
 
         if self.id is None:
-            raise ReservationException('Must specify a scope_id')
+            raise ReservationException('Must specify a reservation_id')
 
         return self._rest.retrieve(self.id, callback=success,
                                    errback=errback)
@@ -543,6 +543,7 @@ class Reservation(object):
 
         def success(result, *args):
             self.data = result
+            self.id = result['id']
             self.address_id = result['address_id']
             self.mac = result['mac']
             self.options = result['options']
@@ -632,6 +633,7 @@ class Scope(object):
 
         def success(result, *args):
             self.data = result
+            self.id = result['id']
             self.address_id = result['address_id']
             self.options = result['options']
             if callback:
