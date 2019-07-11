@@ -316,7 +316,7 @@ class Address(object):
 
 class Scopegroup(object):
 
-    def __init__(self, config, service_def_id, name=None, id=None):
+    def __init__(self, config, name, service_def_id=None, id=None):
         """
         Create a new high level Scopegroup object
 
@@ -358,7 +358,7 @@ class Scopegroup(object):
             self.id = result['id']
             self.dhcp4 = result['dhcpv4']
             self.dhcp6 = result['dhcpv6']
-            self.name = result['name']
+            self.dhcp_service_id = result.get('dhcp_service_id')
             if callback:
                 return callback(self)
             else:
@@ -389,7 +389,7 @@ class Scopegroup(object):
             self.id = result['id']
             self.dhcp4 = result['dhcpv4']
             self.dhcp6 = result['dhcpv6']
-            self.name = result['name']
+            self.dhcp_service_id = result.get('dhcp_service_id')
             if callback:
                 return callback(self)
             else:
@@ -413,7 +413,7 @@ class Scopegroup(object):
             self.id = result['id']
             self.dhcp4 = result['dhcpv4']
             self.dhcp6 = result['dhcpv6']
-            self.name = result['name']
+            self.dhcp_service_id = result.get('dhcp_service_id')
             if callback:
                 return callback(self)
             else:
