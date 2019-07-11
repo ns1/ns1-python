@@ -316,7 +316,7 @@ class Address(object):
 
 class Scopegroup(object):
 
-    def __init__(self, config, name=None, service_group_id=None, id=None):
+    def __init__(self, config, name, service_def_id=None, id=None):
         """
         Create a new high level Scopegroup object
 
@@ -331,7 +331,7 @@ class Scopegroup(object):
         self.dhcp4 = []
         self.dhcp6 = []
         self.name = name
-        self.service_group_id = service_group_id
+        self.dhcp_service_id = service_def_id
         self.data = None
 
     def __repr__(self):
@@ -358,7 +358,7 @@ class Scopegroup(object):
             self.id = result['id']
             self.dhcp4 = result['dhcpv4']
             self.dhcp6 = result['dhcpv6']
-            self.name = result['name']
+            self.dhcp_service_id = result.get('dhcp_service_id')
             if callback:
                 return callback(self)
             else:
@@ -389,7 +389,7 @@ class Scopegroup(object):
             self.id = result['id']
             self.dhcp4 = result['dhcpv4']
             self.dhcp6 = result['dhcpv6']
-            self.name = result['name']
+            self.dhcp_service_id = result.get('dhcp_service_id')
             if callback:
                 return callback(self)
             else:
@@ -413,13 +413,13 @@ class Scopegroup(object):
             self.id = result['id']
             self.dhcp4 = result['dhcpv4']
             self.dhcp6 = result['dhcpv6']
-            self.name = result['name']
+            self.dhcp_service_id = result.get('dhcp_service_id')
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, service_group_id=self.service_group_id,
+        return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, dhcp_service_id=self.dhcp_service_id,
                                  callback=success, errback=errback)
 
     def reserve(self, address_id, mac, options=None, callback=None, errback=None):

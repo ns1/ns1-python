@@ -177,8 +177,8 @@ class Networks(resource.BaseResource):
 
 class Scopegroups(resource.BaseResource):
     ROOT = 'dhcp/scopegroup'
-    INT_FIELDS = ['scope_group_id', 'valid_lifetime_secs', 'renew_timer_secs', 'rebind_timer_secs', 'service_group_id']
-    PASSTHRU_FIELDS = ['dhcp_option', 'dhcpv4', 'dhcpv6', 'name']
+    INT_FIELDS = ['id', 'dhcp_service_id', 'valid_lifetime_secs']
+    PASSTHRU_FIELDS = ['dhcpv4', 'dhcpv6', 'name']
     BOOL_FIELDS = ['enabled', 'echo_client_id']
 
     def _buildBody(self, **kwargs):
