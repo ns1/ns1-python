@@ -309,7 +309,7 @@ class NS1:
         scope_group = ns1.ipam.Scopegroup(self.config, id=id)
         return scope_group.load(callback=callback, errback=errback)
 
-    def createScopeGroup(self, name, service_group_id, dhcp4, dhcp6, callback=None, errback=None):
+    def createScopeGroup(self, name, service_def_id, dhcp4, dhcp6, callback=None, errback=None):
         """
         Create a new Scope Group
         For the list of keywords available, see :attr:`ns1.rest.ipam.ScopeGroups.INT_FIELDS` and :attr:`ns1.rest.ipam.ScopeGroups.PASSTHRU_FIELDS`
@@ -320,7 +320,7 @@ class NS1:
         :param ns1.ipam.DHCPIOptions dhcp6: DHCPOptions object that contains the options for dhcpv6
         """
         import ns1.ipam
-        scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_group_id=service_group_id)
+        scope_group = ns1.ipam.Scopegroup(self.config, name=name, service_def_id=service_def_id)
         return scope_group.create(dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback)
 
     def createReservation(self, scopegroup_id, address_id, mac, dhcp_options=None, callback=None, errback=None):
