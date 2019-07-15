@@ -316,7 +316,7 @@ class Address(object):
 
 class Scopegroup(object):
 
-    def __init__(self, config, name, service_def_id=None, id=None):
+    def __init__(self, config, name=None, service_def_id=None, id=None):
         """
         Create a new high level Scopegroup object
 
@@ -365,7 +365,7 @@ class Scopegroup(object):
                 return self
 
         if self.id is None:
-            raise AddressException('Must at least specify an ID')
+            raise ScopegroupException('Must at least specify an ID to load a Scopegroup')
 
         return self._rest.retrieve(self.id, callback=success,
                                    errback=errback)
@@ -418,6 +418,9 @@ class Scopegroup(object):
                 return callback(self)
             else:
                 return self
+
+        if self.name is None:
+            raise ScopegroupException('Must at least specify an name to create a Scopegroup')
 
         return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, dhcp_service_id=self.dhcp_service_id,
                                  callback=success, errback=errback)
