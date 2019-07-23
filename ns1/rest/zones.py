@@ -13,7 +13,7 @@ class Zones(resource.BaseResource):
     SEARCH_ROOT = 'search'
 
     INT_FIELDS = ['ttl', 'retry', 'refresh', 'expiry', 'nx_ttl']
-    PASSTHRU_FIELDS = ['secondary', 'hostmaster', 'meta', 'networks', 'link']
+    PASSTHRU_FIELDS = ['primary', 'secondary', 'hostmaster', 'meta', 'networks', 'link']
     BOOL_FIELDS = ['dnssec']
 
     def _buildBody(self, zone, **kwargs):
