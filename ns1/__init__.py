@@ -343,6 +343,11 @@ class NS1:
         scope = ns1.ipam.Scope(self.config, scopegroup_id, address_id)
         return scope.load(callback=callback, errback=errback)
 
+    def loadLeases(self, scope_group_id=None, scope_id=None, limit=None, offset=None, callback=None, errback=None):
+        import ns1.ipam
+        lease = ns1.ipam.Lease(self.config)
+        return lease.load(scope_group_id, scope_id, limit, offset, callback=callback, errback=errback)
+
     def generateDHCPOptionsTemplate(self, address_family):
         """
         Generate boilerplate dictionary to hold dhcp options

@@ -255,6 +255,27 @@ class Scopes(resource.BaseResource):
                                   errback=errback)
 
 
+class Leases(resource.BaseResource):
+    ROOT = 'dhcp/lease'
+    INT_FIELDS = ['scope_group_id', 'scope_id', 'limit', 'offset']
+    PASSTHRU_FIELDS = []
+    BOOL_FIELDS = []
+
+    def list(self, scope_group_id=None, scope_id=None, limit=None, offset=None, callback=None, errback=None):
+        params = {}
+        if scope_group_id is not None:
+            params['scopeGroupId'] = scope_group_id
+        if scope_id is not None:
+            params['scopeId'] = scope_id
+        if limit is not None:
+            params['limit'] = limit
+        if offset is not None:
+            params['offset'] = offset
+        return self._make_request('GET', self.ROOT,
+                                  callback=callback,
+                                  errback=errback,
+                                  params=params)
+
 class Reservations(resource.BaseResource):
     ROOT = 'dhcp/reservation'
     INT_FIELDS = ['scope_group_id', 'address_id']
