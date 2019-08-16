@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from ns1.rest.ipam import Networks, Addresses, Scopegroups, Reservations, Scopes
+from ns1.rest.ipam import Networks, Addresses, Scopegroups, Reservations, Scopes, Leases
 from ns1.rest.errors import ResourceException
 
 
@@ -31,6 +31,8 @@ class ScopeException(Exception):
 class DHCPOptionsException(Exception):
     pass
 
+class LeaseException(Exception):
+    pass
 
 class Network(object):
 
@@ -646,6 +648,44 @@ class Scope(object):
 
         return self._rest.create(self.scopegroup_id, self.address_id, self.options, callback=success, errback=errback)
 
+class Lease(object):
+
+    def __init__(self, config):
+        """
+        Create a new high level Lease object
+
+        :param ns1.config.Config config: config object
+        """
+        self._rest = Leases(config)
+        self.config = config
+        self.leases = None
+        self.data = None
+
+    def __repr__(self):
+        return '<Lease>'
+
+    def reload(self, callback=None, errback=None):
+        """
+        Reload Lease data from the API.
+        """
+        return self.load(reload=True, callback=callback, errback=errback)
+
+    def load(self, scope_group_id=None, scope_id=None, limit=None, offset=None, callback=None, errback=None, reload=False):
+        """
+        Load Lease data from the API.
+        """
+        if not reload and self.data:
+            raise LeaseException('Lease already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.leases = self.data
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.list(scope_group_id, scope_id, limit, offset, callback=success, errback=errback)
 
 
 class DHCPOptions:
