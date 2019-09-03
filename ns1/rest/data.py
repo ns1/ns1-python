@@ -23,6 +23,9 @@ class Source(resource.BaseResource):
                                   errback=errback)
 
     def create(self, name, sourcetype, callback=None, errback=None, **kwargs):
+        """
+        The only supported kwarg is `config`.
+        """
         body = {
             'name': name,
             'sourcetype': sourcetype
@@ -34,9 +37,16 @@ class Source(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-    def update(self, sourceid, callback=None, errback=None, **kwargs):
+    def update(self, sourceid, sourcetype, callback=None, errback=None,
+               **kwargs):
+        """
+        Note that `sourcetype` is required, but cannot be changed by this
+        method.
+
+        Supported kwargs are: `name`, `config`.
+        """
         body = {
-            'id': sourceid
+            'sourcetype': sourcetype
         }
         self._buildStdBody(body, kwargs)
         return self._make_request('POST',
