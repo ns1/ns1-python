@@ -60,7 +60,7 @@ Unit tests use `pytest` (`pip install pytest`). 2.7 also requires `mock` to be
 installed (`pip install mock`).
 
 Tests should, of course, run and pass under 2.7 and 3.3. We use tox to automate
-test runs, see `tox.ini` for config.
+test runs and virtualenv setup, see `tox.ini` for config.
 
 Contributions
 =============
