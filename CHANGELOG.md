@@ -1,7 +1,13 @@
 ## 0.12.0 (Unreleased)
 
-* Add (required) `sourcetype` arg to `source.update`. API requires it, although it cannot be changed.
-* Add unit tests for data (source)
+ENHANCEMENTS:
+
+* Add (required) `sourcetype` arg to `source.update`. API requires it, although it cannot be changed. [#38](https://github.com/ns1/ns1-python/pull/38)
+* Add lease reporting endpoint [#37](https://github.com/ns1-python/pull/37)
+
+IMPROVEMENTS:
+
+* Add unit tests for data (source) [#38](https://github.com/ns1-python/pull/38)
 
 ## 0.11.0 (August 05, 2019)
 
