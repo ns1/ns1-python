@@ -1,5 +1,8 @@
 ## 0.12.0 (Unreleased)
 
+* Add (required) `sourcetype` arg to `source.update`. API requires it, although it cannot be changed.
+* Add unit tests for data (source)
+
 ## 0.11.0 (August 05, 2019)
 
 ENHANCEMENTS:

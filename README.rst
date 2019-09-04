@@ -53,8 +53,16 @@ API Key at the bottom.
 * `Documentation at ReadTheDocs <https://ns1-python.readthedocs.org/en/latest/>`_
 * `NS1 REST API Documentation <https://ns1.com/api/>`_
 
+Tests
+=====
+
+Unit tests use `pytest` (`pip install pytest`). 2.7 also requires `mock` to be
+installed (`pip install mock`).
+
+Tests should, of course, run and pass under 2.7 and 3.3. We use tox to automate
+test runs and virtualenv setup, see `tox.ini` for config.
+
 Contributions
 =============
 
 We welcome contributions! Please fork on GitHub and submit a Pull Request.
-
