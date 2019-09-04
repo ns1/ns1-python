@@ -1,4 +1,4 @@
-## 0.12.0 (Unreleased)
+## 0.12.0 (September 04, 2019)
 
 ENHANCEMENTS:
 
