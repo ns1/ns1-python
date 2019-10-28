@@ -86,6 +86,24 @@ class NS1:
         import ns1.rest.ipam
         return ns1.rest.ipam.Scopegroups(self.config)
 
+    def reservations(self):
+        """
+        Return a new raw REST interface to reservation resources
+
+        :rtype: :py:class:`ns1.rest.ipam.Reservations`
+        """
+        import ns1.rest.ipam
+        return ns1.rest.ipam.Reservations(self.config)
+
+    def scopes(self):
+        """
+        Return a new raw REST interface to scope resources
+
+        :rtype: :py:class:`ns1.rest.ipam.Scopes`
+        """
+        import ns1.rest.ipam
+        return ns1.rest.ipam.Scopes(self.config)
+
     def stats(self):
         """
         Return a new raw REST interface to stats resources
@@ -257,7 +275,7 @@ class NS1:
         """
         import ns1.ipam
         if scope_group_id is not None:
-            scope_group = ns1.ipam.Scopegroup(self.config, id=scope_group_id).update()
+            scope_group = ns1.ipam.Scopegroup(self.config, id=scope_group_id).load()
             kwargs['scope_group'] = scope_group
         network = ns1.ipam.Network(self.config, name=name)
         return network.create(callback=callback, errback=errback, **kwargs)
