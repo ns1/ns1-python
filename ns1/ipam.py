@@ -559,6 +559,28 @@ class Reservation(object):
 
         return self._rest.create(self.scopegroup_id, self.address_id, options = self.options, mac=self.mac, callback=success, errback=errback, **kwargs)
 
+    def update(self, options, callback=None, errback=None, parent=True, **kwargs):
+        """
+        Update reservation configuration. Pass a list of keywords and their values to
+        update. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Reservations.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservations.PASSTHRU_FIELDS`
+        """
+        if not self.data:
+            raise ReservationException('Reservation not loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.id = result['id']
+            self.address_id = result['address_id']
+            self.mac = result['mac']
+            self.options = result['options']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.update(self.id, options, callback=success, errback=errback, parent=parent,
+                                 **kwargs)
+
 
 class Scope(object):
 
@@ -647,6 +669,26 @@ class Scope(object):
                 return self
 
         return self._rest.create(self.scopegroup_id, self.address_id, self.options, callback=success, errback=errback)
+
+    def update(self, address_id, options, callback=None, errback=None, **kwargs):
+        """
+        Update Scope configuration. Pass a list of keywords and their values to
+        update. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scopes.INT_FIELDS` and :attr:`ns1.rest.ipam.Scopes.PASSTHRU_FIELDS`
+        """
+        if not self.data:
+            raise ScopeException('Scope not loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.id = result['id']
+            self.address_id = result['address_id']
+            self.options = result['options']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.update(self.id, address_id, options, callback=success, errback=errback, **kwargs)
 
 class Lease(object):
 

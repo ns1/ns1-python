@@ -73,7 +73,6 @@ class Addresses(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
-
     # NYI in API
     # def retrieve_next(self, address_id, callback=None, errback=None):
     #     return self._make_request('GET', '%s/%s/next' % (self.ROOT, address_id),
@@ -239,6 +238,18 @@ class Scopes(resource.BaseResource):
                                   callback=callback,
                                   errback=errback)
 
+    def update(self, scope_id, address_id, options, scopegroup_id=None, callback=None, errback=None):
+        body = {"address_id": address_id,
+                "options": options
+                }
+        if scopegroup_id is not None:
+            body["scope_group_id"] = scopegroup_id,
+
+        return self._make_request('POST', '%s/%s' % (self.ROOT, scope_id),
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
+
     def list(self, scopegroup_id, callback=None, errback=None):
         return self._make_request('GET', '%s?scopeGroupId=%d' % (self.ROOT, int(scopegroup_id)),
                                   callback=callback,
@@ -276,11 +287,12 @@ class Leases(resource.BaseResource):
                                   errback=errback,
                                   params=params)
 
+
 class Reservations(resource.BaseResource):
     ROOT = 'dhcp/reservation'
     INT_FIELDS = ['scope_group_id', 'address_id']
     PASSTHRU_FIELDS = ['mac', 'options']
-    BOOL_FIELDS = []
+    BOOL_FIELDS = ['dhcpv6']
 
     def _buildBody(self, **kwargs):
         body = {}
@@ -306,6 +318,15 @@ class Reservations(resource.BaseResource):
                                          callback=callback,
                                          errback=errback)
         return reservation
+
+    def update(self, reservation_id, options, callback=None, errback=None, **kwargs):
+        kwargs['options'] = options
+        body = self._buildBody(**kwargs)
+
+        return self._make_request('POST', '%s/%s' % (self.ROOT, reservation_id),
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
 
     def delete(self, reservation_id, callback=None, errback=None):
         return self._make_request('DELETE',
