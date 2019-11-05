@@ -1,3 +1,12 @@
+## 0.14.0 (unreleased)
+
+## 0.13.0 (November 05, 2019)
+
+ENHANCEMENTS:
+
+* Add a helper class for concurrency [#40](https://github.com/ns1/ns1-python/pull/40)
+* Add `update` methods to scopes and reservations [#39](https://github.com/ns1/ns1-python/pull/39)
+
 ## 0.12.0 (September 04, 2019)
 
 ENHANCEMENTS:
@@ -19,4 +28,3 @@ ENHANCEMENTS:
 IMPROVEMENTS:
 
 * Allow Scopegroups to be loaded by ID [#33](https://github.com/ns1/ns1-python/pull/33)
-
