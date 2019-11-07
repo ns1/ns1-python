@@ -31,8 +31,10 @@ class ScopeException(Exception):
 class DHCPOptionsException(Exception):
     pass
 
+
 class LeaseException(Exception):
     pass
+
 
 class Network(object):
 
@@ -137,36 +139,36 @@ class Network(object):
 
         return self._rest.create(name=self.name, callback=success, errback=errback, **kwargs)
 
-    def new_address(self, prefix, type, callback=None, errback=None, **kwargs):
+    def new_address(self, prefix, status, callback=None, errback=None, **kwargs):
         """
         Create a new address space in this Network
 
         :param str prefix: The CIDR prefix of the address to add
-        :param str type: planned, assignment, host
+        :param str status: planned, assigned
         :return: The newly created Address object
         """
         if not self.data:
             raise NetworkException('Network not loaded')
 
-        return Address(self.config, prefix, type, self).create(**kwargs)
+        return Address(self.config, prefix, status, self).create(**kwargs)
 
 
 class Address(object):
 
-    def __init__(self, config, prefix=None, type=None, network=None, scope_group=None, id=None):
+    def __init__(self, config, prefix=None, status=None, network=None, scope_group=None, id=None):
         """
         Create a new high level Address object
 
         :param ns1.config.Config config: config object
         :param str prefix: cidr prefix
-        :param str type: planned, assignment, host
+        :param str status: planned, assigned
         :param Network network: Network Object the address will be part of
         :param Scopegroup scope_group: Scopegroup Object that will be associated with the address
         """
         self._rest = Addresses(config)
         self.config = config
         self.prefix = prefix
-        self.type = type
+        self.status = status
         self.network = network
         # self.scope_group = scope_group
         self.id = id
@@ -197,14 +199,13 @@ class Address(object):
             self.data = result
             self.id = result['id']
             self.prefix = result['prefix']
-            self.type = result['type']
+            self.status = result['status']
             self.network = Network(self.config, id=result['network_id'])
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id']) NYI
-            if self.type != 'host':
-                self.report = self._rest.report(self.id)
-                children = self._rest.retrieve_children(self.id)
-                self.children = [Address(self.config, id=child['id']) for child in
-                                 children if len(children) > 0]
+            self.report = self._rest.report(self.id)
+            children = self._rest.retrieve_children(self.id)
+            self.children = [Address(self.config, id=child['id']) for child in
+                             children if len(children) > 0]
             try:
                 parent = self._rest.retrieve_parent(self.id)
                 self.parent = Address(self.config, id=parent['id'])
@@ -216,13 +217,16 @@ class Address(object):
                 return self
 
         if self.id is None:
-            if self.prefix is None or self.type is None or self.network is None:
-                raise AddressException('Must at least specify an id or prefix, type and network')
+            if self.prefix is None or self.status is None or self.network is None:
+                raise AddressException('Must at least specify an id or prefix, status, and network')
             else:
                 network_id = self.network.id
                 try:
-                    self.id = [address for address in self._rest.list() if address['prefix'] == self.prefix and address[
-                        'type'] == self.type and address['network_id'] == network_id][0]['id']
+                    self.id = [
+                        address for address in self._rest.list()
+                        if address['prefix'] == self.prefix
+                        and address['status'] == self.status
+                        and address['network_id'] == network_id][0]['id']
                 except IndexError:
                     raise AddressException("Could not find address by prefix. It may not exist, or is a child address. "
                                            "Use the topmost parent prefix or specify ID")
@@ -248,14 +252,13 @@ class Address(object):
             self.data = result
             self.id = result['id']
             self.prefix = result['prefix']
-            self.type = result['type']
+            self.status = result['status']
             self.network = Network(self.config, id=result['network_id'])
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id'])
-            if self.type != 'host':
-                self.report = self._rest.report(self.id)
-                children = self._rest.retrieve_children(self.id)
-                self.children = [Address(self.config, id=child['id']) for child in
-                                 children if len(children) > 0]
+            self.report = self._rest.report(self.id)
+            children = self._rest.retrieve_children(self.id)
+            self.children = [Address(self.config, id=child['id']) for child in
+                             children if len(children) > 0]
             try:
                 parent = self._rest.retrieve_parent(self.id)
                 self.parent = Address(self.config, id=parent['id'])
@@ -291,14 +294,13 @@ class Address(object):
             self.data = result
             self.id = result['id']
             self.prefix = result['prefix']
-            self.type = result['type']
+            self.status = result['status']
             self.network = Network(self.config, id=result['network_id'])
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id'])
-            if self.type != 'host':
-                self.report = self._rest.report(self.id)
-                children = self._rest.retrieve_children(self.id)
-                self.children = [Address(self.config, id=child['id']) for child in
-                                 children if len(children) > 0]
+            self.report = self._rest.report(self.id)
+            children = self._rest.retrieve_children(self.id)
+            self.children = [Address(self.config, id=child['id']) for child in
+                             children if len(children) > 0]
             try:
                 parent = self._rest.retrieve_parent(self.id)
                 self.parent = Address(self.config, id=parent['id'])
@@ -312,7 +314,7 @@ class Address(object):
         # if self.scope_group is not None:
         #     kwargs['scope_group_id'] = self.scope_group.id
 
-        return self._rest.create(prefix=self.prefix, type=self.type, network_id=self.network.id, callback=success,
+        return self._rest.create(prefix=self.prefix, status=self.status, network_id=self.network.id, callback=success,
                                  errback=errback, parent=parent, **kwargs)
 
 

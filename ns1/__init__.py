@@ -290,31 +290,31 @@ class NS1:
         address = ns1.ipam.Address(self.config, id=id)
         return address.load(callback=callback, errback=errback)
 
-    def loadAddressbyPrefix(self, prefix, type, network_id, callback=None, errback=None):
+    def loadAddressbyPrefix(self, prefix, status, network_id, callback=None, errback=None):
         """
-        Load an existing address by prefix, type and network into a high level Address object
+        Load an existing address by prefix, status and network into a high level Address object
 
         :param str prefix: CIDR prefix of an existing Address
-        :param str type: Type of address assignement (planned, assignment or host)
+        :param str status: The status of address assignment (planned or assigned)
         :param int network_id: network_id associated with the address
         """
         import ns1.ipam
         network = ns1.ipam.Network(self.config, id=network_id).load()
-        address = ns1.ipam.Address(self.config, prefix=prefix, type=type, network=network)
+        address = ns1.ipam.Address(self.config, prefix=prefix, status=status, network=network)
         return address.load(callback=callback, errback=errback)
 
-    def createAddress(self, prefix, type, network_id, callback=None, errback=None, **kwargs):
+    def createAddress(self, prefix, status, network_id, callback=None, errback=None, **kwargs):
         """
         Create a new Address
         For the list of keywords available, see :attr:`ns1.rest.ipam.Addresses.INT_FIELDS` and :attr:`ns1.rest.ipam.Addresses.PASSTHRU_FIELDS`
 
         :param str prefix: CIDR prefix of the address to be created
-        :param str type: Type of address assignement (planned, assignment or host)
+        :param str status: The status of address assignment (planned or assigned)
         :param int network_id: network_id associated with the address
         """
         import ns1.ipam
         network = ns1.ipam.Network(self.config, id=network_id).load()
-        address = ns1.ipam.Address(self.config, prefix=prefix, type=type, network=network)
+        address = ns1.ipam.Address(self.config, prefix=prefix, status=status, network=network)
         return address.create(callback=callback, errback=errback, **kwargs)
 
     def loadScopeGroup(self, id, callback=None, errback=None):
