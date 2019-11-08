@@ -56,13 +56,13 @@ def test_rest_address_report(address_config, address_id, url):
                                             errback=None)
 
 
-@pytest.mark.parametrize('prefix, network_id, address_type, url',
+@pytest.mark.parametrize('prefix, network_id, address_status, url',
                          [('192.168.0.0/24', 1, 'planned', 'ipam/address')])
 def test_rest_address_create(address_config,
-                             prefix, network_id, address_type, url):
+                             prefix, network_id, address_status, url):
     z = ns1.rest.ipam.Addresses(address_config)
     z._make_request = mock.MagicMock()
-    z.create(prefix=prefix, network_id=network_id, type=address_type)
+    z.create(prefix=prefix, network_id=network_id, status=address_status)
     z._make_request.assert_called_once_with('PUT',
                                             url,
                                             callback=None,
@@ -70,7 +70,7 @@ def test_rest_address_create(address_config,
                                             params={"parent": True},
                                             body={"network_id": network_id,
                                                   "prefix": prefix,
-                                                  "type": address_type
+                                                  "status": address_status
                                                   })
 
 

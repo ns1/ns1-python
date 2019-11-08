@@ -10,7 +10,7 @@ from . import resource
 class Addresses(resource.BaseResource):
     ROOT = 'ipam/address'
     INT_FIELDS = ['network_id', 'address_id', 'root_address_id', ' merged_address_id', 'scope_group_id']
-    PASSTHRU_FIELDS = ['prefix', 'type', 'desc', 'kvps', 'tags', 'reserve']
+    PASSTHRU_FIELDS = ['prefix', 'status', 'desc', 'kvps', 'tags', 'reserve']
     BOOL_FIELDS = ['parent']
 
     def _buildBody(self, **kwargs):
