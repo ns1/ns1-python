@@ -538,7 +538,7 @@ class Reservation(object):
         """
         Delete the Reservation
         """
-        return self._rest.delete(self.scopegroup_id, self.address_id, callback=callback, errback=errback)
+        return self._rest.delete(self.id, callback=callback, errback=errback)
 
     def create(self, callback=None, errback=None, **kwargs):
         """
