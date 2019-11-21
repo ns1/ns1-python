@@ -45,17 +45,24 @@ def test_rest_scope_group_retrieve(scope_group_config, scope_group_id, url):
                                             errback=None)
 
 
-@pytest.mark.parametrize('scope_group_name, url',
-                         [('test_scope_group', 'dhcp/scopegroup')])
-def test_rest_scope_group_create(scope_group_config, scope_group_name, url):
+@pytest.mark.parametrize('scope_group_name, url, echo_client_id',
+                         [('test_scope_group', 'dhcp/scopegroup', False)])
+def test_rest_scope_group_create(
+    scope_group_config, scope_group_name, url, echo_client_id
+):
     z = ns1.rest.ipam.Scopegroups(scope_group_config)
     z._make_request = mock.MagicMock()
-    z.create(name=scope_group_name)
+    z.create(name=scope_group_name, echo_client_id=echo_client_id)
     z._make_request.assert_called_once_with('PUT',
                                             url,
                                             callback=None,
                                             errback=None,
-                                            body={"name": scope_group_name})
+                                            body={
+                                                "name": scope_group_name,
+                                                "dhcpv4": {
+                                                    "echo_client_id": False
+                                                }
+                                            })
 
 
 @pytest.mark.parametrize('scope_group_id, scope_group_name, url',

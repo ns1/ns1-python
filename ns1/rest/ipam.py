@@ -183,6 +183,12 @@ class Scopegroups(resource.BaseResource):
     def _buildBody(self, **kwargs):
         body = {}
         self._buildStdBody(body, kwargs)
+        eci = body.get('echo_client_id')
+        if eci is not None:
+            del body['echo_client_id']
+            dhcpv4 = body.get('dhcpv4', {})
+            dhcpv4['echo_client_id'] = eci
+            body['dhcpv4'] = dhcpv4
         return body
 
     def create(self, callback=None, errback=None, **kwargs):
