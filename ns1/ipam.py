@@ -837,15 +837,6 @@ class DHCPOptions:
         return '<DHCPOptions address_family=%s>' % self.address_family
 
     def update(self, address_family, options):
-        self.validate(address_family, options)
         self.address_family = address_family
         self.__dict__.update(options)
         self.option_list = {"options": [{"name": "%s/%s" % (address_family, key), "value": value} for key, value in options.items()]}
-
-    def validate(self, address_family, options):
-        if address_family not in self.AF:
-            raise DHCPOptionsException("Must choose either dhcp4 or dhcp6 for address_family")
-
-        for option in options:
-            if option not in self.OPTIONS[address_family]:
-                raise DHCPOptionsException("Option names must be one of: %s" % ",".join(self.OPTIONS[address_family]))
