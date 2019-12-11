@@ -294,6 +294,43 @@ class Leases(resource.BaseResource):
                                   params=params)
 
 
+class Optiondefs(resource.BaseResource):
+    ROOT = 'dhcp/optiondef'
+    INT_FIELDS = ['code']
+    PASSTHRU_FIELDS = ['space', 'key', 'friendly_name', 'description', 'schema']
+    BOOL_FIELDS = ['standard']
+
+    def _buildBody(self, **kwargs):
+        body = {}
+        self._buildStdBody(body, kwargs)
+        return body
+
+    def create(self, space, key, callback=None, errback=None, **kwargs):
+        body = self._buildBody(**kwargs)
+        body['space'] = space
+        body['key'] = key
+        return self._make_request('PUT',
+                                  '%s/%s/%s' % (self.ROOT, space,key),
+                                  body=body,
+                                  callback=callback,
+                                  errback=errback)
+
+    def delete(self, space, key, callback=None, errback=None):
+        return self._make_request('DELETE', '%s/%s/%s' % (self.ROOT, space, key),
+                                  callback=callback,
+                                  errback=errback)
+
+    def list(self, callback=None, errback=None):
+        return self._make_request('GET', self.ROOT,
+                                  callback=callback,
+                                  errback=errback)
+
+    def retrieve(self, space, key, callback=None, errback=None):
+        return self._make_request('GET', '%s/%s/%s' % (self.ROOT, space, key),
+                                  callback=callback,
+                                  errback=errback)
+
+
 class Reservations(resource.BaseResource):
     ROOT = 'dhcp/reservation'
     INT_FIELDS = ['scope_group_id', 'address_id']

@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from ns1.rest.ipam import Networks, Addresses, Scopegroups, Reservations, Scopes, Leases
+from ns1.rest.ipam import Networks, Addresses, Scopegroups, Reservations, Scopes, Leases, Optiondefs
 from ns1.rest.errors import ResourceException
 
 
@@ -35,6 +35,8 @@ class DHCPOptionsException(Exception):
 class LeaseException(Exception):
     pass
 
+class OptiondefException(Exception):
+    pass
 
 class Network(object):
 
@@ -582,6 +584,88 @@ class Reservation(object):
 
         return self._rest.update(self.id, options, callback=success, errback=errback, parent=parent,
                                  **kwargs)
+
+
+class Optiondef(object):
+
+    def __init__(self, config, space, key):
+        """
+        Create a new high level Optiondef object
+
+        :param ns1.config.Config config: config object
+        :param str space: dhcpv4 or dhcpv6
+        :param str key: option key
+        """
+        self._rest = Optiondefs(config)
+        self.config = config
+        self.space = space
+        self.key = key
+        self.data = None
+
+    def __repr__(self):
+        return '<Optiondef space=%s, key=%s>' % (self.space, self.key)
+
+    def __getitem__(self, item):
+        if item == "space":
+            return self.space
+        if item == "key":
+            return self.key
+        return self.data.get(item, None)
+
+    def reload(self, callback=None, errback=None):
+        """
+        Reload OptionDef data from the API.
+        """
+        return self.load(reload=True, callback=callback, errback=errback)
+
+    def load(self, callback=None, errback=None, reload=False):
+        """
+        Load Optiondef data from the API.
+        """
+        if not reload and self.data:
+            raise ReservationException('Optiondef already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.space = result['space']
+            self.key = result['key']
+            self.code = result['code']
+            self.friendly_name = result['friendly_name']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.retrieve(self.space, self.key, callback=success,
+                                   errback=errback)
+
+    def delete(self, callback=None, errback=None):
+        """
+        Delete the Optiondef
+        """
+        return self._rest.delete(self.space, self.key, callback=callback, errback=errback)
+
+    def create(self, callback=None, errback=None, **kwargs):
+        """
+        Create a new Optiondef. Pass a list of keywords and their values to
+        configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Optiondef.INT_FIELDS` and :attr:`ns1.rest.ipam.Optiondef.PASSTHRU_FIELDS`
+        """
+        if self.data:
+            raise OptiondefException('Optiondef already loaded')
+
+        def success(result, *args):
+            self.data = result
+            self.space = result['space']
+            self.key = result['key']
+            self.code = result['code']
+            self.friendly_name = result['friendly_name']
+            if callback:
+                return callback(self)
+            else:
+                return self
+
+        return self._rest.create(self.space, self.key, callback=success, errback=errback, **kwargs)
+
 
 
 class Scope(object):
