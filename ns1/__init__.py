@@ -104,6 +104,15 @@ class NS1:
         import ns1.rest.ipam
         return ns1.rest.ipam.Scopes(self.config)
 
+    def optiondefs(self):
+        """
+        Return a new raw REST interface to optiondefs resources
+
+        :rtype: :py:class:`ns1.rest.ipam.Optiondefs`
+        """
+        import ns1.rest.ipam
+        return ns1.rest.ipam.Optiondefs(self.config)
+
     def stats(self):
         """
         Return a new raw REST interface to stats resources
