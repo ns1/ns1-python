@@ -7,6 +7,9 @@
 import json
 import os
 
+from ns1.rest.rate_limiting import default_rate_limit_func, \
+    rate_limit_strategy_concurrent, rate_limit_strategy_solo
+
 
 class ConfigException(Exception):
     pass
@@ -202,6 +205,24 @@ class Config:
         return 'https://%s%s/%s/' % (endpoint,
                                      port,
                                      self._data['api_version'])
+
+    def getRateLimitingFunc(self):
+        """
+        choose how to handle rate limiting
+        """
+        rate_limit_strategy = self.get('rate_limit_strategy', None)
+        if rate_limit_strategy == 'concurrent':
+            parallelism = self.get('parallelism')
+            if parallelism is None:
+                raise ConfigException(
+                    '"parallelism" must be set when '
+                    'rate_limit_strategy is "concurrent"'
+                )
+            return rate_limit_strategy_concurrent(parallelism)
+        elif rate_limit_strategy == 'solo':
+            return rate_limit_strategy_solo()
+        else:
+            return default_rate_limit_func
 
     def __repr__(self):
         return 'config file [%s]: %s' % (self._path,

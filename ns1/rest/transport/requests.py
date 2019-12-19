@@ -32,11 +32,23 @@ class RequestsTransport(TransportBase):
         if isinstance(self._timeout, list) and len(self._timeout) == 2:
             self._timeout = tuple(self._timeout)
 
+    def _rateLimitHeaders(self, headers):
+        return {
+            'by': headers.get('X-RateLimit-By', 'customer'),
+            'limit': int(headers.get('X-RateLimit-Limit', 10)),
+            'period': int(headers.get('X-RateLimit-Period', 1)),
+            'remaining': int(headers.get('X-RateLimit-Remaining', 100))
+        }
+
     def send(self, method, url, headers=None, data=None, params=None, files=None,
              callback=None, errback=None):
         self._logHeaders(headers)
         resp = self.REQ_MAP[method](url, headers=headers, verify=self._verify,
                                     data=data, files=files, params=params, timeout=self._timeout)
+
+        response_headers = resp.headers
+        rate_limit_headers = self._rateLimitHeaders(response_headers)
+        self._rate_limit_func(rate_limit_headers)
 
         if resp.status_code < 200 or resp.status_code >= 300:
             if errback:
@@ -46,10 +58,10 @@ class RequestsTransport(TransportBase):
                 if resp.status_code == 429:
                     raise RateLimitException(
                         'rate limit exceeded', resp, resp.text,
-                        by=resp.headers.get('X-RateLimit-By', 'customer'),
-                        limit=resp.headers.get('X-RateLimit-Limit', 10),
-                        period=resp.headers.get('X-RateLimit-Period', 1),
-                        remaining=resp.headers.get('X-RateLimit-Remaining', 100)
+                        by=rate_limit_headers['by'],
+                        limit=rate_limit_headers['limit'],
+                        period=rate_limit_headers['period'],
+                        remaining=rate_limit_headers['remaining']
                     )
                 elif resp.status_code == 401:
                     raise AuthException('unauthorized',
@@ -79,5 +91,6 @@ class RequestsTransport(TransportBase):
             return callback(jsonOut)
         else:
             return jsonOut
+
 
 TransportBase.REGISTRY['requests'] = RequestsTransport

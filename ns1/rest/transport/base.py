@@ -19,6 +19,7 @@ class TransportBase(object):
                  self._config.get(
                      'ignore-ssl-errors',
                      False))
+        self._rate_limit_func = self._config.getRateLimitingFunc()
 
     def _logHeaders(self, headers):
         if self._config['verbosity'] > 0:
@@ -28,4 +29,4 @@ class TransportBase(object):
 
     def send(self, method, url, headers=None, data=None, params=None,
              files=None, callback=None, errback=None):
-        pass
+        raise NotImplementedError()

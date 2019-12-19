@@ -25,6 +25,30 @@ class BasicTransport(TransportBase):
     def __init__(self, config):
         TransportBase.__init__(self, config, self.__module__)
         self._timeout = self._config.get('timeout', socket._GLOBAL_DEFAULT_TIMEOUT)
+        self._opener = self._set_opener()
+
+    def _rateLimitHeaders(self, headers):
+        return {
+            'by': headers.get('x-ratelimit-by', 'customer'),
+            'limit': int(headers.get('x-ratelimit-limit', 10)),
+            'period': int(headers.get('x-ratelimit-period', 1)),
+            'remaining': int(headers.get('x-ratelimit-remaining', 100))
+        }
+
+    def _set_opener(self):
+        # Some changes to the ssl and urllib modules were introduced in Python
+        # 2.7.9, so we work around those differences here.
+        if (
+            (sys.version_info.major == 2 and sys.version_info >= (2, 7, 9))
+            or sys.version_info >= (3, 4, 0)
+        ):
+            import ssl
+            context = ssl.create_default_context()
+            if not self._verify:
+                context.check_hostname = False
+                context.verify_mode = ssl.CERT_NONE
+            return build_opener(HTTPSHandler(context=context))
+        return build_opener(HTTPSHandler)
 
     def send(self, method, url, headers=None, data=None, files=None, params=None,
              callback=None, errback=None):
@@ -35,18 +59,6 @@ class BasicTransport(TransportBase):
             raise Exception('file uploads not supported in BasicTransport yet')
         self._logHeaders(headers)
         self._log.debug("%s %s %s" % (method, url, data))
-
-        # Some changes to the ssl and urllib modules were introduced in Python
-        # 2.7.9, so we work around those differences here.
-        if sys.version_info >= (2, 7, 9):
-            import ssl
-            context = ssl.create_default_context()
-            if not self._verify:
-                context.check_hostname = False
-                context.verify_mode = ssl.CERT_NONE
-            opener = build_opener(HTTPSHandler(context=context))
-        else:
-            opener = build_opener(HTTPSHandler)
 
         if sys.version_info.major >= 3 and isinstance(data, str):
             data = data.encode('utf-8')
@@ -59,7 +71,7 @@ class BasicTransport(TransportBase):
                 return
 
             if code == 429:
-                hdrs = resp.hdrs.dict
+                hdrs = self._get_headers(resp)
                 raise RateLimitException(
                     'rate limit exceeded', resp, msg,
                     by=hdrs.get('x-ratelimit-by', 'customer'),
@@ -79,16 +91,26 @@ class BasicTransport(TransportBase):
         # Handle error and responses the same so we can
         # always pass the body to the handleProblem function
         try:
-            resp = opener.open(request, timeout=self._timeout)
+            resp = self._opener.open(request, timeout=self._timeout)
             body = resp.read()
+            headers = self._get_headers(resp)
         except HTTPError as e:
             resp = e
             body = resp.read()
+            headers = self._get_headers(resp)
             if not 200 <= resp.code < 300:
                 handleProblem(resp.code, resp, body)
+        finally:
+            rate_limit_headers = self._rateLimitHeaders(headers)
+            self._rate_limit_func(rate_limit_headers)
 
         # TODO make sure json is valid if there is a body
         if body:
+            # decode since body is bytes in 3.3
+            try:
+                body = body.decode('utf-8')
+            except AttributeError:
+                pass
             try:
                 jsonOut = json.loads(body)
             except ValueError:
@@ -106,5 +128,10 @@ class BasicTransport(TransportBase):
             return callback(jsonOut)
         else:
             return jsonOut
+
+    def _get_headers(self, response):
+        # works for 2 and 3
+        return {k.lower(): v for k, v in response.headers.items()}
+
 
 TransportBase.REGISTRY['basic'] = BasicTransport

@@ -11,6 +11,7 @@ import json
 import random
 import sys
 
+
 if sys.version_info[0] == 3:
     from io import StringIO
     from urllib.parse import urlencode
@@ -87,6 +88,10 @@ if have_twisted:
 class TwistedTransport(TransportBase):
 
     def __init__(self, config):
+        if sys.version_info[0] == 3 and sys.version_info <= (3, 5, 0):
+            raise ResourceException(
+                'Twisted on Python 3 requires Python 3.5 or later.'
+            )
         if not have_twisted:
             raise ImportError('Twisted required for TwistedTransport')
         TransportBase.__init__(self, config, self.__module__)
@@ -102,7 +107,21 @@ class TwistedTransport(TransportBase):
     def _callback(self, response, user_callback, data, headers):
         d = readBody(response)
         d.addCallback(self._onBody, response, user_callback, data, headers)
+        d.addCallback(self._handleRateLimiting)
         return d
+
+    def _handleRateLimiting(self, data):
+        headers, jsonOut = data
+        self._rate_limit_func(self._rateLimitHeaders(headers))
+        return jsonOut
+
+    def _rateLimitHeaders(self, headers):
+        return {
+            'by': headers.getRawHeaders('x-ratelimit-by', ['customer'])[0],
+            'limit': int(headers.getRawHeaders('x-ratelimit-limit', [10])[0]),
+            'period': int(headers.getRawHeaders('x-ratelimit-period', [1])[0]),
+            'remaining': int(headers.getRawHeaders('x-ratelimit-remaining', [100])[0])
+        }
 
     def _onBody(self, body, response, user_callback, data, headers):
         self._logHeaders(headers)
@@ -110,14 +129,19 @@ class TwistedTransport(TransportBase):
                                          response.request.absoluteURI,
                                          response.code,
                                          data))
+
+        responseHeaders = response.headers
         if response.code < 200 or response.code >= 300:
             if response.code == 429:
+                rateLimitHeaders = self._rateLimitHeaders(responseHeaders)
                 raise RateLimitException(
-                    'rate limit exceeded', response, body,
-                    by=response.headers.getRawHeaders('x-ratelimit-by', ['customer'])[0],
-                    limit=response.headers.getRawHeaders('x-ratelimit-limit', [10])[0],
-                    period=response.headers.getRawHeaders('x-ratelimit-period', [1])[0],
-                    remaining=response.headers.getRawHeaders('x-ratelimit-remaining', [100])[0]
+                    'rate limit exceeded',
+                    response,
+                    body,
+                    by=rateLimitHeaders['by'],
+                    limit=rateLimitHeaders['limit'],
+                    period=rateLimitHeaders['period'],
+                    remaining=rateLimitHeaders['remaining']
                 )
             elif response.code == 401:
                 raise AuthException('unauthorized',
@@ -139,9 +163,9 @@ class TwistedTransport(TransportBase):
             # set these in case callback throws, so we have them for errback
             self.response = response
             self.body = body
-            return user_callback(jsonOut, body, response)
+            return responseHeaders, user_callback(jsonOut, body, response)
         else:
-            return jsonOut
+            return responseHeaders, jsonOut
 
     def _errback(self, failure, user_errback):
         # print "failure: %s" % failure.printTraceback()
@@ -181,5 +205,6 @@ class TwistedTransport(TransportBase):
         d.addCallback(self._callback, callback, data, headers)
         d.addErrback(self._errback, errback)
         return d
+
 
 TransportBase.REGISTRY['twisted'] = TwistedTransport
