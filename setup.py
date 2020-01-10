@@ -6,40 +6,24 @@ import ns1
 
 cwd = path.abspath(path.dirname(__file__))
 
-with open(path.join(cwd, 'README.rst'), encoding='utf-8') as f:
+with open(path.join(cwd, "README.rst"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name='ns1-python',
-
+    name="ns1-python",
     # flake8: noqa
     version=ns1.version,
-
-    description='Python SDK for the NS1 DNS platform',
+    description="Python SDK for the NS1 DNS platform",
     long_description=long_description,
-
-    license='MIT',
-
+    license="MIT",
     # contact information
-    author='NS1 Developers',
-    author_email='devteam@ns1.com',
-    url='https://github.com/ns1/ns1-python',
-
-    packages=find_packages(exclude=['tests', 'examples']),
-
-    setup_requires=[
-        'pytest-runner',
-        'wheel',
-    ],
-
-    tests_require=[
-        'pytest',
-        'pytest-pep8',
-        'pytest-cov',
-        'mock',
-    ],
-
-    keywords='dns development rest sdk ns1 nsone',
+    author="NS1 Developers",
+    author_email="devteam@ns1.com",
+    url="https://github.com/ns1/ns1-python",
+    packages=find_packages(exclude=["tests", "examples"]),
+    setup_requires=["pytest-runner", "wheel",],
+    tests_require=["pytest", "pytest-pep8", "pytest-cov", "mock",],
+    keywords="dns development rest sdk ns1 nsone",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -52,6 +36,6 @@ setup(
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
         "Topic :: Software Development :: Libraries :: Python Modules",
-        "Topic :: Internet :: Name Service (DNS)"
+        "Topic :: Internet :: Name Service (DNS)",
     ],
 )

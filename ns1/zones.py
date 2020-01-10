@@ -36,7 +36,7 @@ class Zone(object):
         self.data = None
 
     def __repr__(self):
-        return '<Zone zone=%s>' % self.zone
+        return "<Zone zone=%s>" % self.zone
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -52,7 +52,7 @@ class Zone(object):
         Load zone data from the API.
         """
         if not reload and self.data:
-            raise ZoneException('zone already loaded')
+            raise ZoneException("zone already loaded")
 
         def success(result, *args):
             self.data = result
@@ -61,15 +61,16 @@ class Zone(object):
             else:
                 return self
 
-        return self._rest.retrieve(self.zone, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(
+            self.zone, callback=success, errback=errback
+        )
 
     def search(self, q=None, has_geo=False, callback=None, errback=None):
         """
         Search within a zone for specific metadata. Zone must already be loaded.
         """
         if not self.data:
-            raise ZoneException('zone not loaded')
+            raise ZoneException("zone not loaded")
 
         return self._rest.search(self.zone, q, has_geo, callback, errback)
 
@@ -87,7 +88,7 @@ class Zone(object):
         :attr:`ns1.rest.zones.Zones.PASSTHRU_FIELDS`
         """
         if not self.data:
-            raise ZoneException('zone not loaded')
+            raise ZoneException("zone not loaded")
 
         def success(result, *args):
             self.data = result
@@ -96,8 +97,9 @@ class Zone(object):
             else:
                 return self
 
-        return self._rest.update(self.zone, callback=success, errback=errback,
-                                 **kwargs)
+        return self._rest.update(
+            self.zone, callback=success, errback=errback, **kwargs
+        )
 
     def create(self, zoneFile=None, callback=None, errback=None, **kwargs):
         """
@@ -109,7 +111,7 @@ class Zone(object):
         that will be used to populate the created zone file.
         """
         if self.data:
-            raise ZoneException('zone already loaded')
+            raise ZoneException("zone already loaded")
 
         def success(result, *args):
             self.data = result
@@ -119,29 +121,36 @@ class Zone(object):
                 return self
 
         if zoneFile:
-            return self._rest.import_file(self.zone, zoneFile,
-                                          callback=success, errback=errback,
-                                          **kwargs)
+            return self._rest.import_file(
+                self.zone,
+                zoneFile,
+                callback=success,
+                errback=errback,
+                **kwargs
+            )
         else:
-            return self._rest.create(self.zone, callback=success,
-                                     errback=errback, **kwargs)
+            return self._rest.create(
+                self.zone, callback=success, errback=errback, **kwargs
+            )
 
     def __getattr__(self, item):
 
-        if not item.startswith('add_'):
+        if not item.startswith("add_"):
             raise AttributeError(item)
 
         # dynamic adding of various record types, e.g. add_A, add_CNAME, etc
-        (_, rtype) = item.split('_', 2)
+        (_, rtype) = item.split("_", 2)
 
         def add_X(domain, answers, callback=None, errback=None, **kwargs):
-            kwargs['answers'] = answers
+            kwargs["answers"] = answers
             record = Record(self, domain, rtype)
             return record.create(callback=callback, errback=errback, **kwargs)
+
         return add_X
 
-    def createLinkToSelf(self, new_zone, callback=None, errback=None,
-                         **kwargs):
+    def createLinkToSelf(
+        self, new_zone, callback=None, errback=None, **kwargs
+    ):
         """
         Create a new linked zone, linking to ourselves. All records in this
         zone will then be available as "linked records" in the new zone.
@@ -150,11 +159,18 @@ class Zone(object):
         :return: new Zone
         """
         zone = Zone(self.config, new_zone)
-        kwargs['link'] = self.data['zone']
+        kwargs["link"] = self.data["zone"]
         return zone.create(callback=callback, errback=errback, **kwargs)
 
-    def linkRecord(self, existing_domain, new_domain, rtype,
-                   callback=None, errback=None, **kwargs):
+    def linkRecord(
+        self,
+        existing_domain,
+        new_domain,
+        rtype,
+        callback=None,
+        errback=None,
+        **kwargs
+    ):
 
         """
         Create a new linked record in this zone. These records use the
@@ -170,18 +186,27 @@ class Zone(object):
         :return: new Record
         """
 
-        if '.' not in existing_domain:
-            existing_domain = existing_domain + '.' + self.zone
+        if "." not in existing_domain:
+            existing_domain = existing_domain + "." + self.zone
 
         record = Record(self, new_domain, rtype)
-        return record.create(answers=[],
-                             link=existing_domain,
-                             callback=callback,
-                             errback=errback,
-                             **kwargs)
+        return record.create(
+            answers=[],
+            link=existing_domain,
+            callback=callback,
+            errback=errback,
+            **kwargs
+        )
 
-    def cloneRecord(self, existing_domain, new_domain, rtype,
-                    zone=None, callback=None, errback=None):
+    def cloneRecord(
+        self,
+        existing_domain,
+        new_domain,
+        rtype,
+        zone=None,
+        callback=None,
+        errback=None,
+    ):
         """
         Clone the given record to a new record such that their configs are
         identical.
@@ -198,7 +223,7 @@ class Zone(object):
             zone = self.zone
 
         if not new_domain.endswith(zone):
-            new_domain = new_domain + '.' + zone
+            new_domain = new_domain + "." + zone
 
         def onSaveNewRecord(new_data):
             if zone != self.zone:
@@ -214,16 +239,21 @@ class Zone(object):
 
         def onLoadRecord(old_rec):
             data = old_rec.data
-            data['zone'] = zone
-            data['domain'] = new_domain
+            data["zone"] = zone
+            data["domain"] = new_domain
             restapi = Records(self.config)
-            return restapi.create_raw(zone, new_domain, rtype, data,
-                                      callback=onSaveNewRecord,
-                                      errback=errback)
+            return restapi.create_raw(
+                zone,
+                new_domain,
+                rtype,
+                data,
+                callback=onSaveNewRecord,
+                errback=errback,
+            )
 
-        return self.loadRecord(existing_domain, rtype,
-                               callback=onLoadRecord,
-                               errback=errback)
+        return self.loadRecord(
+            existing_domain, rtype, callback=onLoadRecord, errback=errback
+        )
 
     def loadRecord(self, domain, rtype, callback=None, errback=None):
         """
@@ -255,5 +285,6 @@ class Zone(object):
         :return: usage information
         """
         stats = Stats(self.config)
-        return stats.usage(zone=self.zone, callback=callback, errback=errback,
-                           **kwargs)
+        return stats.usage(
+            zone=self.zone, callback=callback, errback=errback, **kwargs
+        )

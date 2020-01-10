@@ -39,14 +39,18 @@ def test_singleton_mixin():
     assert a is not b
 
 
-@pytest.mark.parametrize('queue_class,process,repetitions', [
-    (multiprocessing.Queue, multiprocessing.Process, 64),
-    (queue.Queue, threading.Thread, 64),
-])
+@pytest.mark.parametrize(
+    "queue_class,process,repetitions",
+    [
+        (multiprocessing.Queue, multiprocessing.Process, 64),
+        (queue.Queue, threading.Thread, 64),
+    ],
+)
 def test_singleton_mixin_with_concurrency(queue_class, process, repetitions):
     """
     it should hold up under multiple processes or threads
     """
+
     def inner(queue):
         a = A()
         b = A()

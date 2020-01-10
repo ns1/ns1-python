@@ -14,19 +14,26 @@ class TransportBase(object):
     def __init__(self, config, module):
         self._config = config
         self._log = logging.getLogger(module)
-        self._verify = not self._config.getKeyConfig() \
-            .get('ignore-ssl-errors',
-                 self._config.get(
-                     'ignore-ssl-errors',
-                     False))
+        self._verify = not self._config.getKeyConfig().get(
+            "ignore-ssl-errors", self._config.get("ignore-ssl-errors", False)
+        )
         self._rate_limit_func = self._config.getRateLimitingFunc()
 
     def _logHeaders(self, headers):
-        if self._config['verbosity'] > 0:
+        if self._config["verbosity"] > 0:
             argcopy = copy.deepcopy(headers)
-            argcopy['X-NSONE-Key'] = '<redacted>'
+            argcopy["X-NSONE-Key"] = "<redacted>"
             self._log.debug(argcopy)
 
-    def send(self, method, url, headers=None, data=None, params=None,
-             files=None, callback=None, errback=None):
+    def send(
+        self,
+        method,
+        url,
+        headers=None,
+        data=None,
+        params=None,
+        files=None,
+        callback=None,
+        errback=None,
+    ):
         raise NotImplementedError()

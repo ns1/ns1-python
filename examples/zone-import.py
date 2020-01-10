@@ -16,7 +16,7 @@ api = NS1()
 # api = NS1(configFile='/etc/ns1/api.json')
 
 # import a zone from the included example zone definition
-zone = api.createZone('example2.com', zoneFile='./importzone.db')
+zone = api.createZone("example2.com", zoneFile="./importzone.db")
 print(zone)
 
 # delete a whole zone, including all records, data feeds, etc. this is

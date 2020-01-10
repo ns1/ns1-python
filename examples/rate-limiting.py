@@ -23,13 +23,13 @@ def rate_limit_strategy_solo_example():
     have a single process/worker hitting the API.
     """
     config = _get_config()
-    config['rate_limit_strategy'] = 'solo'
+    config["rate_limit_strategy"] = "solo"
 
     api = NS1(config=config)
     zones_list = api.zones().list()
     for z in zones_list:
-        print(z['zone'])
-        zone = api.zones().retrieve(z['zone'])
+        print(z["zone"])
+        zone = api.zones().retrieve(z["zone"])
         print(zone)
 
 
@@ -41,15 +41,15 @@ def rate_limit_strategy_concurrent_example():
     API concurrently.
     """
     config = _get_config()
-    config['rate_limit_strategy'] = 'concurrent'
+    config["rate_limit_strategy"] = "concurrent"
     # number of workers
-    config['parallelism'] = 11
+    config["parallelism"] = 11
 
     api = NS1(config=config)
     zones_list = api.zones().list()
     for z in zones_list:
-        print(z['zone'])
-        zone = api.zones().retrieve(z['zone'])
+        print(z["zone"])
+        zone = api.zones().retrieve(z["zone"])
         print(zone)
 
 
@@ -64,6 +64,6 @@ def _get_config():
     return config
 
 
-if __name__ == 'main':
+if __name__ == "main":
     rate_limit_strategy_solo_example()
     rate_limit_strategy_concurrent_example()

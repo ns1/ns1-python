@@ -3,9 +3,14 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
-
-from ns1.rest.ipam import Networks, Addresses, Scopegroups, Reservations, Scopes, Leases, Optiondefs
 from ns1.rest.errors import ResourceException
+from ns1.rest.ipam import Addresses
+from ns1.rest.ipam import Leases
+from ns1.rest.ipam import Networks
+from ns1.rest.ipam import Optiondefs
+from ns1.rest.ipam import Reservations
+from ns1.rest.ipam import Scopegroups
+from ns1.rest.ipam import Scopes
 
 
 class NetworkException(Exception):
@@ -35,11 +40,12 @@ class DHCPOptionsException(Exception):
 class LeaseException(Exception):
     pass
 
+
 class OptiondefException(Exception):
     pass
 
-class Network(object):
 
+class Network(object):
     def __init__(self, config, name=None, id=None):
         """
         Create a new high level Network object
@@ -56,7 +62,7 @@ class Network(object):
         self.data = None
 
     def __repr__(self):
-        return '<Network network=%s>' % self.name
+        return "<Network network=%s>" % self.name
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -65,20 +71,23 @@ class Network(object):
         """
         Reload network data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(self, callback=None, errback=None, reload=False):
         """
         Load network data from the API.
         """
+
         if not reload and self.data:
-            raise NetworkException('Network already loaded')
+            raise NetworkException("Network already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.name = result['name']
+            self.id = result["id"]
+            self.name = result["name"]
             self.report = self._rest.report(self.id)
+
             if callback:
                 return callback(self)
             else:
@@ -86,18 +95,21 @@ class Network(object):
 
         if self.id is None:
             if self.name is None:
-                raise NetworkException('Must at least specify an id or name')
+                raise NetworkException("Must at least specify an id or name")
             else:
-                self.id = [network for network in self._rest.list()
-                           if network['name'] == self.name][0]['id']
+                self.id = [
+                    network
+                    for network in self._rest.list()
+                    if network["name"] == self.name
+                ][0]["id"]
 
-        return self._rest.retrieve(self.id, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(self.id, callback=success, errback=errback)
 
     def delete(self, callback=None, errback=None):
         """
         Delete the Network and all associated addresses
         """
+
         return self._rest.delete(self.id, callback=callback, errback=errback)
 
     def update(self, callback=None, errback=None, **kwargs):
@@ -105,43 +117,52 @@ class Network(object):
         Update Network configuration. Pass a list of keywords and their values to update.
         For the list of keywords available for zone configuration, see :attr:`ns1.rest.ipam.Networks.INT_FIELDS` and :attr:`ns1.rest.ipam.Networks.PASSTHRU_FIELDS`
         """
+
         if not self.data:
-            raise NetworkException('Network not loaded')
+            raise NetworkException("Network not loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.name = result['name']
+            self.id = result["id"]
+            self.name = result["name"]
             self.report = self._rest.report(self.id)
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.update(self.id, callback=success, errback=errback,
-                                 **kwargs)
+        return self._rest.update(
+            self.id, callback=success, errback=errback, **kwargs
+        )
 
     def create(self, callback=None, errback=None, **kwargs):
         """
         Create a new Network. Pass a list of keywords and their values to configure.
         For the list of keywords available for network configuration, see :attr:`ns1.rest.ipam.Networks.INT_FIELDS` and :attr:`ns1.rest.ipam.Networks.PASSTHRU_FIELDS`
         """
+
         if self.data:
-            raise NetworkException('Network already loaded')
+            raise NetworkException("Network already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.name = result['name']
+            self.id = result["id"]
+            self.name = result["name"]
             self.report = self._rest.report(self.id)
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(name=self.name, callback=success, errback=errback, **kwargs)
+        return self._rest.create(
+            name=self.name, callback=success, errback=errback, **kwargs
+        )
 
-    def new_address(self, prefix, status, callback=None, errback=None, **kwargs):
+    def new_address(
+        self, prefix, status, callback=None, errback=None, **kwargs
+    ):
         """
         Create a new address space in this Network
 
@@ -149,15 +170,23 @@ class Network(object):
         :param str status: planned, assigned
         :return: The newly created Address object
         """
+
         if not self.data:
-            raise NetworkException('Network not loaded')
+            raise NetworkException("Network not loaded")
 
         return Address(self.config, prefix, status, self).create(**kwargs)
 
 
 class Address(object):
-
-    def __init__(self, config, prefix=None, status=None, network=None, scope_group=None, id=None):
+    def __init__(
+        self,
+        config,
+        prefix=None,
+        status=None,
+        network=None,
+        scope_group=None,
+        id=None,
+    ):
         """
         Create a new high level Address object
 
@@ -179,7 +208,7 @@ class Address(object):
         self.data = None
 
     def __repr__(self):
-        return '<Address address=%s>' % self.prefix
+        return "<Address address=%s>" % self.prefix
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -188,58 +217,74 @@ class Address(object):
         """
         Reload address data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(self, callback=None, errback=None, reload=False):
         """
         Load address data from the API.
         """
+
         if not reload and self.data:
-            raise AddressException('Address already loaded')
+            raise AddressException("Address already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.prefix = result['prefix']
-            self.status = result['status']
-            self.network = Network(self.config, id=result['network_id'])
+            self.id = result["id"]
+            self.prefix = result["prefix"]
+            self.status = result["status"]
+            self.network = Network(self.config, id=result["network_id"])
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id']) NYI
             self.report = self._rest.report(self.id)
             children = self._rest.retrieve_children(self.id)
-            self.children = [Address(self.config, id=child['id']) for child in
-                             children if len(children) > 0]
+            self.children = [
+                Address(self.config, id=child["id"])
+                for child in children
+                if len(children) > 0
+            ]
             try:
                 parent = self._rest.retrieve_parent(self.id)
-                self.parent = Address(self.config, id=parent['id'])
+                self.parent = Address(self.config, id=parent["id"])
             except ResourceException:
                 pass
+
             if callback:
                 return callback(self)
             else:
                 return self
 
         if self.id is None:
-            if self.prefix is None or self.status is None or self.network is None:
-                raise AddressException('Must at least specify an id or prefix, status, and network')
+            if (
+                self.prefix is None
+                or self.status is None
+                or self.network is None
+            ):
+                raise AddressException(
+                    "Must at least specify an id or prefix, status, and network"
+                )
             else:
                 network_id = self.network.id
                 try:
                     self.id = [
-                        address for address in self._rest.list()
-                        if address['prefix'] == self.prefix
-                        and address['status'] == self.status
-                        and address['network_id'] == network_id][0]['id']
+                        address
+                        for address in self._rest.list()
+                        if address["prefix"] == self.prefix
+                        and address["status"] == self.status
+                        and address["network_id"] == network_id
+                    ][0]["id"]
                 except IndexError:
-                    raise AddressException("Could not find address by prefix. It may not exist, or is a child address. "
-                                           "Use the topmost parent prefix or specify ID")
+                    raise AddressException(
+                        "Could not find address by prefix. It may not exist, or is a child address. "
+                        "Use the topmost parent prefix or specify ID"
+                    )
 
-        return self._rest.retrieve(self.id, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(self.id, callback=success, errback=errback)
 
     def delete(self, callback=None, errback=None):
         """
         Delete the address and all child addresses
         """
+
         return self._rest.delete(self.id, callback=callback, errback=errback)
 
     def update(self, callback=None, errback=None, parent=True, **kwargs):
@@ -247,41 +292,53 @@ class Address(object):
         Update address configuration. Pass a list of keywords and their values to
         update. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Addresses.INT_FIELDS` and :attr:`ns1.rest.ipam.Addresses.PASSTHRU_FIELDS`
         """
+
         if not self.data:
-            raise AddressException('Address not loaded')
+            raise AddressException("Address not loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.prefix = result['prefix']
-            self.status = result['status']
-            self.network = Network(self.config, id=result['network_id'])
+            self.id = result["id"]
+            self.prefix = result["prefix"]
+            self.status = result["status"]
+            self.network = Network(self.config, id=result["network_id"])
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id'])
             self.report = self._rest.report(self.id)
             children = self._rest.retrieve_children(self.id)
-            self.children = [Address(self.config, id=child['id']) for child in
-                             children if len(children) > 0]
+            self.children = [
+                Address(self.config, id=child["id"])
+                for child in children
+                if len(children) > 0
+            ]
             try:
                 parent = self._rest.retrieve_parent(self.id)
-                self.parent = Address(self.config, id=parent['id'])
+                self.parent = Address(self.config, id=parent["id"])
             except ResourceException:
                 pass
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.update(self.id, callback=success, errback=errback, parent=parent,
-                                 **kwargs)
+        return self._rest.update(
+            self.id, callback=success, errback=errback, parent=parent, **kwargs
+        )
 
-    def reserve(self, scopegroup_id, mac, options=None, callback=None, errback=None):
+    def reserve(
+        self, scopegroup_id, mac, options=None, callback=None, errback=None
+    ):
         """
         Add scope group reservation. Pass a single Address object and a MAC address as a string
         """
-        if not self.data:
-            raise ScopegroupException('Scope Group not loaded')
 
-        reservation = Reservation(self.config, scopegroup_id, self.id, options, mac)
+        if not self.data:
+            raise ScopegroupException("Scope Group not loaded")
+
+        reservation = Reservation(
+            self.config, scopegroup_id, self.id, options, mac
+        )
+
         return reservation.create(callback=callback, errback=errback)
 
     def create(self, callback=None, errback=None, parent=True, **kwargs):
@@ -289,25 +346,30 @@ class Address(object):
         Create a new Address. Pass a list of keywords and their values to
         configure. For the list of keywords available for address configuration,see :attr:`ns1.rest.ipam.Addresses.INT_FIELDS` and :attr:`ns1.rest.ipam.Addresses.PASSTHRU_FIELDS`
         """
+
         if self.data:
-            raise AddressException('Address already loaded')
+            raise AddressException("Address already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.prefix = result['prefix']
-            self.status = result['status']
-            self.network = Network(self.config, id=result['network_id'])
+            self.id = result["id"]
+            self.prefix = result["prefix"]
+            self.status = result["status"]
+            self.network = Network(self.config, id=result["network_id"])
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id'])
             self.report = self._rest.report(self.id)
             children = self._rest.retrieve_children(self.id)
-            self.children = [Address(self.config, id=child['id']) for child in
-                             children if len(children) > 0]
+            self.children = [
+                Address(self.config, id=child["id"])
+                for child in children
+                if len(children) > 0
+            ]
             try:
                 parent = self._rest.retrieve_parent(self.id)
-                self.parent = Address(self.config, id=parent['id'])
+                self.parent = Address(self.config, id=parent["id"])
             except ResourceException:
                 pass
+
             if callback:
                 return callback(self)
             else:
@@ -316,12 +378,18 @@ class Address(object):
         # if self.scope_group is not None:
         #     kwargs['scope_group_id'] = self.scope_group.id
 
-        return self._rest.create(prefix=self.prefix, status=self.status, network_id=self.network.id, callback=success,
-                                 errback=errback, parent=parent, **kwargs)
+        return self._rest.create(
+            prefix=self.prefix,
+            status=self.status,
+            network_id=self.network.id,
+            callback=success,
+            errback=errback,
+            parent=parent,
+            **kwargs
+        )
 
 
 class Scopegroup(object):
-
     def __init__(self, config, name=None, service_def_id=None, id=None):
         """
         Create a new high level Scopegroup object
@@ -341,7 +409,7 @@ class Scopegroup(object):
         self.data = None
 
     def __repr__(self):
-        return '<Scopegroup scope_group=%s>' % self.name
+        return "<Scopegroup scope_group=%s>" % self.name
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -350,36 +418,41 @@ class Scopegroup(object):
         """
         Reload Scopegroup data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(self, callback=None, errback=None, reload=False):
         """
         Load Scopegroup data from the API.
         """
+
         if not reload and self.data:
-            raise ScopegroupException('Scope Group already loaded')
+            raise ScopegroupException("Scope Group already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.dhcp4 = result['dhcpv4']
-            self.dhcp6 = result['dhcpv6']
-            self.dhcp_service_id = result.get('dhcp_service_id')
+            self.id = result["id"]
+            self.dhcp4 = result["dhcpv4"]
+            self.dhcp6 = result["dhcpv6"]
+            self.dhcp_service_id = result.get("dhcp_service_id")
+
             if callback:
                 return callback(self)
             else:
                 return self
 
         if self.id is None:
-            raise ScopegroupException('Must at least specify an ID to load a Scopegroup')
+            raise ScopegroupException(
+                "Must at least specify an ID to load a Scopegroup"
+            )
 
-        return self._rest.retrieve(self.id, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(self.id, callback=success, errback=errback)
 
     def delete(self, callback=None, errback=None):
         """
         Delete the Scopegroup and all child addresses
         """
+
         return self._rest.delete(self.id, callback=callback, errback=errback)
 
     def update(self, callback=None, errback=None, **kwargs):
@@ -387,21 +460,25 @@ class Scopegroup(object):
         Update scope group configuration. Pass a list of keywords and their values to
         update. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scopegroups.INT_FIELDS` and :attr:`ns1.rest.ipam.Scopegroups.PASSTHRU_FIELDS`
         """
+
         if not self.data:
-            raise ScopegroupException('Scope Group not loaded')
+            raise ScopegroupException("Scope Group not loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.dhcp4 = result['dhcpv4']
-            self.dhcp6 = result['dhcpv6']
-            self.dhcp_service_id = result.get('dhcp_service_id')
+            self.id = result["id"]
+            self.dhcp4 = result["dhcpv4"]
+            self.dhcp6 = result["dhcpv6"]
+            self.dhcp_service_id = result.get("dhcp_service_id")
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.update(self.id, callback=success, errback=errback, **kwargs)
+        return self._rest.update(
+            self.id, callback=success, errback=errback, **kwargs
+        )
 
     def create(self, dhcp4, dhcp6, callback=None, errback=None):
         """
@@ -415,25 +492,37 @@ class Scopegroup(object):
         """
 
         if self.data:
-            raise ScopegroupException('Scope Group already loaded')
+            raise ScopegroupException("Scope Group already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.dhcp4 = result['dhcpv4']
-            self.dhcp6 = result['dhcpv6']
-            self.dhcp_service_id = result.get('dhcp_service_id')
+            self.id = result["id"]
+            self.dhcp4 = result["dhcpv4"]
+            self.dhcp6 = result["dhcpv6"]
+            self.dhcp_service_id = result.get("dhcp_service_id")
+
             if callback:
                 return callback(self)
             else:
                 return self
 
         if self.name is None:
-            raise ScopegroupException('Must at least specify an name to create a Scopegroup')
+            raise ScopegroupException(
+                "Must at least specify an name to create a Scopegroup"
+            )
 
-        return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, dhcp_service_id=self.dhcp_service_id, callback=success, errback=errback)
+        return self._rest.create(
+            dhcpv4=dhcp4.option_list,
+            dhcpv6=dhcp6.option_list,
+            name=self.name,
+            dhcp_service_id=self.dhcp_service_id,
+            callback=success,
+            errback=errback,
+        )
 
-    def reserve(self, address_id, mac, options=None, callback=None, errback=None):
+    def reserve(
+        self, address_id, mac, options=None, callback=None, errback=None
+    ):
         """
         :param int address_id: id of the Address to reserve
         :param DHCPOptions options: DHCPOptions object that contains the settings for the address
@@ -441,43 +530,59 @@ class Scopegroup(object):
 
         Add scope group reservation. Pass a single Address ID and a MAC address as a string
         """
-        if not self.data:
-            raise ScopegroupException('Scope Group not loaded')
 
-        reservation = Reservation(self.config, self.id, address_id, options=options, mac=mac)
+        if not self.data:
+            raise ScopegroupException("Scope Group not loaded")
+
+        reservation = Reservation(
+            self.config, self.id, address_id, options=options, mac=mac
+        )
+
         return reservation.create(callback=callback, errback=errback)
 
     def create_scope(self, address_id, callback=None, errback=None):
         """
         Add scope group scope. Pass a single Address ID
         """
+
         if not self.data:
-            raise ScopegroupException('Scope Group not loaded')
+            raise ScopegroupException("Scope Group not loaded")
 
         scope = Scope(self.config, self.id, address_id)
-        return scope.create(callback=callback, errback=errback)
 
+        return scope.create(callback=callback, errback=errback)
 
     @property
     def reservations(self, callback=None, errback=None):
         if not self.data:
-            raise ScopegroupException('Scope Group not loaded')
+            raise ScopegroupException("Scope Group not loaded")
 
         reservations_config = Reservations(self.config)
-        return reservations_config.list(self.id, callback=callback, errback=errback)
+
+        return reservations_config.list(
+            self.id, callback=callback, errback=errback
+        )
 
     @property
     def scopes(self, callback=None, errback=None):
         if not self.data:
-            raise ScopegroupException('Scope Group not loaded')
+            raise ScopegroupException("Scope Group not loaded")
 
         scopes_config = Scopes(self.config)
+
         return scopes_config.list(self.id, callback=callback, errback=errback)
 
 
 class Reservation(object):
-
-    def __init__(self, config, scopegroup_id, address_id, reservation_id=None, options=None, mac=None):
+    def __init__(
+        self,
+        config,
+        scopegroup_id,
+        address_id,
+        reservation_id=None,
+        options=None,
+        mac=None,
+    ):
         """
         Create a new high level Reservation object
 
@@ -495,53 +600,63 @@ class Reservation(object):
         self.address_id = address_id
         self.mac = mac
         self.data = None
+
         if options is None:
-            options = DHCPOptions('dhcpv4', {})
-        self.options = options.option_list['options']
+            options = DHCPOptions("dhcpv4", {})
+        self.options = options.option_list["options"]
 
     def __repr__(self):
-        return '<Reservation scopegroup=%s, address=%s, mac=%s>' % (self.scopegroup_id, self.address_id, self.mac)
+        return "<Reservation scopegroup=%s, address=%s, mac=%s>" % (
+            self.scopegroup_id,
+            self.address_id,
+            self.mac,
+        )
 
     def __getitem__(self, item):
         if item == "scopegroup_id":
             return self.scopegroup_id
+
         if item == "address_id":
             return self.address_id
+
         return self.data.get(item, None)
 
     def reload(self, callback=None, errback=None):
         """
         Reload Reservation data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(self, callback=None, errback=None, reload=False):
         """
         Load Reservation data from the API.
         """
+
         if not reload and self.data:
-            raise ReservationException('Reservation already loaded')
+            raise ReservationException("Reservation already loaded")
 
         def success(result, *args):
             self.data = result
-            self.address_id = result['address_id']
-            self.mac = result['mac']
-            self.options = result['options']
+            self.address_id = result["address_id"]
+            self.mac = result["mac"]
+            self.options = result["options"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
         if self.id is None:
-            raise ReservationException('Must specify a reservation_id')
+            raise ReservationException("Must specify a reservation_id")
 
-        return self._rest.retrieve(self.id, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(self.id, callback=success, errback=errback)
 
     def delete(self, callback=None, errback=None):
         """
         Delete the Reservation
         """
+
         return self._rest.delete(self.id, callback=callback, errback=errback)
 
     def create(self, callback=None, errback=None, **kwargs):
@@ -549,47 +664,66 @@ class Reservation(object):
         Create a new Reservation. Pass a list of keywords and their values to
         configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Reservations.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservations.PASSTHRU_FIELDS`
         """
+
         if self.data:
-            raise ReservationException('Reservation already loaded')
+            raise ReservationException("Reservation already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.address_id = result['address_id']
-            self.mac = result['mac']
-            self.options = result['options']
+            self.id = result["id"]
+            self.address_id = result["address_id"]
+            self.mac = result["mac"]
+            self.options = result["options"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(self.scopegroup_id, self.address_id, options = self.options, mac=self.mac, callback=success, errback=errback, **kwargs)
+        return self._rest.create(
+            self.scopegroup_id,
+            self.address_id,
+            options=self.options,
+            mac=self.mac,
+            callback=success,
+            errback=errback,
+            **kwargs
+        )
 
-    def update(self, options, callback=None, errback=None, parent=True, **kwargs):
+    def update(
+        self, options, callback=None, errback=None, parent=True, **kwargs
+    ):
         """
         Update reservation configuration. Pass a list of keywords and their values to
         update. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Reservations.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservations.PASSTHRU_FIELDS`
         """
+
         if not self.data:
-            raise ReservationException('Reservation not loaded')
+            raise ReservationException("Reservation not loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.address_id = result['address_id']
-            self.mac = result['mac']
-            self.options = result['options']
+            self.id = result["id"]
+            self.address_id = result["address_id"]
+            self.mac = result["mac"]
+            self.options = result["options"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.update(self.id, options, callback=success, errback=errback, parent=parent,
-                                 **kwargs)
+        return self._rest.update(
+            self.id,
+            options,
+            callback=success,
+            errback=errback,
+            parent=parent,
+            **kwargs
+        )
 
 
 class Optiondef(object):
-
     def __init__(self, config, space, key):
         """
         Create a new high level Optiondef object
@@ -605,74 +739,87 @@ class Optiondef(object):
         self.data = None
 
     def __repr__(self):
-        return '<Optiondef space=%s, key=%s>' % (self.space, self.key)
+        return "<Optiondef space=%s, key=%s>" % (self.space, self.key)
 
     def __getitem__(self, item):
         if item == "space":
             return self.space
+
         if item == "key":
             return self.key
+
         return self.data.get(item, None)
 
     def reload(self, callback=None, errback=None):
         """
         Reload OptionDef data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(self, callback=None, errback=None, reload=False):
         """
         Load Optiondef data from the API.
         """
+
         if not reload and self.data:
-            raise ReservationException('Optiondef already loaded')
+            raise ReservationException("Optiondef already loaded")
 
         def success(result, *args):
             self.data = result
-            self.space = result['space']
-            self.key = result['key']
-            self.code = result['code']
-            self.friendly_name = result['friendly_name']
+            self.space = result["space"]
+            self.key = result["key"]
+            self.code = result["code"]
+            self.friendly_name = result["friendly_name"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.retrieve(self.space, self.key, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(
+            self.space, self.key, callback=success, errback=errback
+        )
 
     def delete(self, callback=None, errback=None):
         """
         Delete the Optiondef
         """
-        return self._rest.delete(self.space, self.key, callback=callback, errback=errback)
+
+        return self._rest.delete(
+            self.space, self.key, callback=callback, errback=errback
+        )
 
     def create(self, callback=None, errback=None, **kwargs):
         """
         Create a new Optiondef. Pass a list of keywords and their values to
         configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Optiondef.INT_FIELDS` and :attr:`ns1.rest.ipam.Optiondef.PASSTHRU_FIELDS`
         """
+
         if self.data:
-            raise OptiondefException('Optiondef already loaded')
+            raise OptiondefException("Optiondef already loaded")
 
         def success(result, *args):
             self.data = result
-            self.space = result['space']
-            self.key = result['key']
-            self.code = result['code']
-            self.friendly_name = result['friendly_name']
+            self.space = result["space"]
+            self.key = result["key"]
+            self.code = result["code"]
+            self.friendly_name = result["friendly_name"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(self.space, self.key, callback=success, errback=errback, **kwargs)
-
+        return self._rest.create(
+            self.space, self.key, callback=success, errback=errback, **kwargs
+        )
 
 
 class Scope(object):
-
-    def __init__(self, config, scopegroup_id, address_id, scope_id=None, options=None):
+    def __init__(
+        self, config, scopegroup_id, address_id, scope_id=None, options=None
+    ):
         """
         Create a new high level Scope object
 
@@ -689,53 +836,61 @@ class Scope(object):
         self.id = scope_id
 
         if options is None:
-            options = DHCPOptions('dhcpv4', {})
-        self.options = options.option_list['options']
+            options = DHCPOptions("dhcpv4", {})
+        self.options = options.option_list["options"]
 
         self.data = None
 
     def __repr__(self):
-        return '<Scope scopegroup=%s, address=%s>' % (self.scopegroup_id, self.address_id)
+        return "<Scope scopegroup=%s, address=%s>" % (
+            self.scopegroup_id,
+            self.address_id,
+        )
 
     def __getitem__(self, item):
         if item == "scopegroup_id":
             return self.scopegroup_id
+
         if item == "address_id":
             return self.address_id
+
         return self.data.get(item, None)
 
     def reload(self, callback=None, errback=None):
         """
         Reload Scope data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(self, callback=None, errback=None, reload=False):
         """
         Load Reservation data from the API.
         """
+
         if not reload and self.data:
-            raise ScopeException('Scope already loaded')
+            raise ScopeException("Scope already loaded")
 
         def success(result, *args):
             self.data = result
-            self.address_id = result['address_id']
-            self.options = result['options']
+            self.address_id = result["address_id"]
+            self.options = result["options"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
         if self.id is None:
-            raise ScopeException('Must specify a scope_id')
+            raise ScopeException("Must specify a scope_id")
 
-        return self._rest.retrieve(self.id, callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(self.id, callback=success, errback=errback)
 
     def delete(self, callback=None, errback=None):
         """
         Delete the Scope
         """
+
         return self._rest.delete(self.id, callback=callback, errback=errback)
 
     def create(self, callback=None, errback=None, **kwargs):
@@ -743,43 +898,62 @@ class Scope(object):
         Create a new Scope. Pass a list of keywords and their values to
         configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scope.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservations.PASSTHRU_FIELDS`
         """
+
         if self.data:
-            raise ScopeException('Scope already loaded')
+            raise ScopeException("Scope already loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.address_id = result['address_id']
-            self.options = result['options']
+            self.id = result["id"]
+            self.address_id = result["address_id"]
+            self.options = result["options"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.create(self.scopegroup_id, self.address_id, self.options, callback=success, errback=errback)
+        return self._rest.create(
+            self.scopegroup_id,
+            self.address_id,
+            self.options,
+            callback=success,
+            errback=errback,
+        )
 
-    def update(self, address_id, options, callback=None, errback=None, **kwargs):
+    def update(
+        self, address_id, options, callback=None, errback=None, **kwargs
+    ):
         """
         Update Scope configuration. Pass a list of keywords and their values to
         update. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scopes.INT_FIELDS` and :attr:`ns1.rest.ipam.Scopes.PASSTHRU_FIELDS`
         """
+
         if not self.data:
-            raise ScopeException('Scope not loaded')
+            raise ScopeException("Scope not loaded")
 
         def success(result, *args):
             self.data = result
-            self.id = result['id']
-            self.address_id = result['address_id']
-            self.options = result['options']
+            self.id = result["id"]
+            self.address_id = result["address_id"]
+            self.options = result["options"]
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.update(self.id, address_id, options, callback=success, errback=errback, **kwargs)
+        return self._rest.update(
+            self.id,
+            address_id,
+            options,
+            callback=success,
+            errback=errback,
+            **kwargs
+        )
+
 
 class Lease(object):
-
     def __init__(self, config):
         """
         Create a new high level Lease object
@@ -792,38 +966,65 @@ class Lease(object):
         self.data = None
 
     def __repr__(self):
-        return '<Lease>'
+        return "<Lease>"
 
     def reload(self, callback=None, errback=None):
         """
         Reload Lease data from the API.
         """
+
         return self.load(reload=True, callback=callback, errback=errback)
 
-    def load(self, scope_group_id=None, scope_id=None, limit=None, offset=None, callback=None, errback=None, reload=False):
+    def load(
+        self,
+        scope_group_id=None,
+        scope_id=None,
+        limit=None,
+        offset=None,
+        callback=None,
+        errback=None,
+        reload=False,
+    ):
         """
         Load Lease data from the API.
         """
+
         if not reload and self.data:
-            raise LeaseException('Lease already loaded')
+            raise LeaseException("Lease already loaded")
 
         def success(result, *args):
             self.data = result
             self.leases = self.data
+
             if callback:
                 return callback(self)
             else:
                 return self
 
-        return self._rest.list(scope_group_id, scope_id, limit, offset, callback=success, errback=errback)
+        return self._rest.list(
+            scope_group_id,
+            scope_id,
+            limit,
+            offset,
+            callback=success,
+            errback=errback,
+        )
 
 
 class DHCPOptions:
-    AF = ['dhcpv4', 'dhcpv6']
+    AF = ["dhcpv4", "dhcpv6"]
     OPTIONS = {
-        'dhcpv4': ['bootfile-name', 'domain-name', 'domain-name-servers', 'host-name', 'routers', 'tftp-server-name',
-                   'time-servers', 'vendor-class-identifier'],
-        'dhcpv6': ['dns-servers']
+        "dhcpv4": [
+            "bootfile-name",
+            "domain-name",
+            "domain-name-servers",
+            "host-name",
+            "routers",
+            "tftp-server-name",
+            "time-servers",
+            "vendor-class-identifier",
+        ],
+        "dhcpv6": ["dns-servers"],
     }
 
     def __init__(self, address_family, options, server_options=None):
@@ -833,6 +1034,7 @@ class DHCPOptions:
         :param str address_family: This is either dhcpv4 or dhcpv6
         :param dict options: This is a dict representing the options set. Valid options are listed in :attr:`ns1.ipam.DHCPOptions.OPTIONS`
         """
+
         if server_options is None:
             self.server_options = {}
         else:
@@ -841,7 +1043,7 @@ class DHCPOptions:
         self.update(address_family, options, self.server_options)
 
     def __repr__(self):
-        return '<DHCPOptions address_family=%s>' % self.address_family
+        return "<DHCPOptions address_family=%s>" % self.address_family
 
     def update(self, address_family, options, server_options=None):
         if server_options is not None:
@@ -851,6 +1053,9 @@ class DHCPOptions:
         self.__dict__.update(options)
         self.__dict__.update(server_options)
         self.option_list = {
-            "options": [{"name": "%s/%s" % (self.address_family, key), "value": value} for key, value in options.items()]
+            "options": [
+                {"name": "%s/%s" % (self.address_family, key), "value": value}
+                for key, value in options.items()
+            ]
         }
         self.option_list.update(self.server_options)

@@ -3,12 +3,12 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
-
 import json
 import os
 
-from ns1.rest.rate_limiting import default_rate_limit_func, \
-    rate_limit_strategy_concurrent, rate_limit_strategy_solo
+from ns1.rest.rate_limiting import default_rate_limit_func
+from ns1.rest.rate_limiting import rate_limit_strategy_concurrent
+from ns1.rest.rate_limiting import rate_limit_strategy_solo
 
 
 class ConfigException(Exception):
@@ -22,13 +22,14 @@ class Config:
     Config files are simple JSON text files.
     To set or retrieve vales, use the object like a dict.
     """
-    ENDPOINT = 'api.nsone.net'
+
+    ENDPOINT = "api.nsone.net"
 
     PORT = 443
 
-    API_VERSION = 'v1'
+    API_VERSION = "v1"
 
-    DEFAULT_CONFIG_FILE = '~/.nsone'
+    DEFAULT_CONFIG_FILE = "~/.nsone"
 
     def __init__(self, path=None):
         """
@@ -38,24 +39,31 @@ class Config:
         self._path = None
         self._keyID = None
         self._data = {}
+
         if path:
             self.loadFromFile(path)
 
     def _doDefaults(self):
-        if 'default_key' in self._data:
-            self.useKeyID(self._data['default_key'])
-        if 'endpoint' not in self._data:
-            self._data['endpoint'] = self.ENDPOINT
-        if 'port' not in self._data:
-            self._data['port'] = self.PORT
-        if 'api_version' not in self._data:
-            self._data['api_version'] = self.API_VERSION
-        if 'cli' not in self._data:
-            self._data['cli'] = {}
-        if 'verbosity' not in self._data:
-            self._data['verbosity'] = 0
-        if 'ddi' not in self._data:
-            self._data['ddi'] = False
+        if "default_key" in self._data:
+            self.useKeyID(self._data["default_key"])
+
+        if "endpoint" not in self._data:
+            self._data["endpoint"] = self.ENDPOINT
+
+        if "port" not in self._data:
+            self._data["port"] = self.PORT
+
+        if "api_version" not in self._data:
+            self._data["api_version"] = self.API_VERSION
+
+        if "cli" not in self._data:
+            self._data["cli"] = {}
+
+        if "verbosity" not in self._data:
+            self._data["verbosity"] = 0
+
+        if "ddi" not in self._data:
+            self._data["ddi"] = False
 
     def createFromAPIKey(self, apikey, maybeWriteDefault=False):
         """
@@ -66,16 +74,12 @@ class Config:
             exist write out the resulting config there.
         """
         self._data = {
-            'default_key': 'default',
-            'keys': {
-                'default': {
-                    'key': apikey,
-                    'desc': 'imported API key'
-                }
-            }
+            "default_key": "default",
+            "keys": {"default": {"key": apikey, "desc": "imported API key"}},
         }
-        self._keyID = 'default'
+        self._keyID = "default"
         self._doDefaults()
+
         if maybeWriteDefault:
             path = os.path.expanduser(self.DEFAULT_CONFIG_FILE)
             self.write(path)
@@ -98,8 +102,9 @@ class Config:
         try:
             self._data = json.loads(body)
         except Exception as e:
-            raise ConfigException('%s: invalid config body: %s' %
-                                  (self._path, e.message))
+            raise ConfigException(
+                "%s: invalid config body: %s" % (self._path, e.message)
+            )
         self._doDefaults()
 
     def loadFromFile(self, path):
@@ -108,7 +113,8 @@ class Config:
 
         :param str path: path to config file
         """
-        if '~' in path:
+
+        if "~" in path:
             path = os.path.expanduser(path)
         f = open(path)
         body = f.read()
@@ -124,13 +130,16 @@ class Config:
 
         :param str path: path to config file
         """
+
         if not self._path and not path:
-            raise ConfigException('no config path given')
+            raise ConfigException("no config path given")
+
         if path:
             self._path = path
-        if '~' in self._path:
+
+        if "~" in self._path:
             self._path = os.path.expanduser(self._path)
-        f = open(self._path, 'w')
+        f = open(self._path, "w")
         f.write(json.dumps(self._data))
         f.close()
 
@@ -141,8 +150,9 @@ class Config:
 
         :param str keyID: an index into the 'keys' maintained in this config
         """
-        if keyID not in self._data['keys']:
-            raise ConfigException('keyID does not exist: %s' % keyID)
+
+        if keyID not in self._data["keys"]:
+            raise ConfigException("keyID does not exist: %s" % keyID)
         self._keyID = keyID
 
     def getCurrentKeyID(self):
@@ -151,6 +161,7 @@ class Config:
 
         :return: current keyID in use
         """
+
         return self._keyID
 
     def getKeyConfig(self, keyID=None):
@@ -161,9 +172,11 @@ class Config:
         :return: a dict of the request (or current) key config
         """
         k = keyID if keyID is not None else self._keyID
-        if not k or k not in self._data['keys']:
-            raise ConfigException('request key does not exist: %s' % k)
-        return self._data['keys'][k]
+
+        if not k or k not in self._data["keys"]:
+            raise ConfigException("request key does not exist: %s" % k)
+
+        return self._data["keys"][k]
 
     def isKeyWriteLocked(self, keyID=None):
         """
@@ -173,7 +186,8 @@ class Config:
         :return: True if the given (or current) keyID is writeLocked
         """
         kcfg = self.getKeyConfig(keyID)
-        return 'writeLock' in kcfg and kcfg['writeLock'] is True
+
+        return "writeLock" in kcfg and kcfg["writeLock"] is True
 
     def getAPIKey(self, keyID=None):
         """
@@ -183,9 +197,11 @@ class Config:
         :return: API Key for the given keyID
         """
         kcfg = self.getKeyConfig(keyID)
-        if 'key' not in kcfg:
-            raise ConfigException('invalid config: missing api key')
-        return kcfg['key']
+
+        if "key" not in kcfg:
+            raise ConfigException("invalid config: missing api key")
+
+        return kcfg["key"]
 
     def getEndpoint(self):
         """
@@ -193,42 +209,48 @@ class Config:
 
         :return: URL of the NS1 API that will be used for requests
         """
-        port = ''
-        endpoint = ''
+        port = ""
+        endpoint = ""
         keyConfig = self.getKeyConfig()
-        if 'port' in keyConfig:
-            port = ':' + keyConfig['port']
-        elif self._data['port'] != self.PORT:
-            port = ':' + self._data['port']
-        if 'endpoint' in keyConfig:
-            endpoint = keyConfig['endpoint']
+
+        if "port" in keyConfig:
+            port = ":" + keyConfig["port"]
+        elif self._data["port"] != self.PORT:
+            port = ":" + self._data["port"]
+
+        if "endpoint" in keyConfig:
+            endpoint = keyConfig["endpoint"]
         else:
-            endpoint = self._data['endpoint']
-        return 'https://%s%s/%s/' % (endpoint,
-                                     port,
-                                     self._data['api_version'])
+            endpoint = self._data["endpoint"]
+
+        return "https://%s%s/%s/" % (endpoint, port, self._data["api_version"])
 
     def getRateLimitingFunc(self):
         """
         choose how to handle rate limiting
         """
-        rate_limit_strategy = self.get('rate_limit_strategy', None)
-        if rate_limit_strategy == 'concurrent':
-            parallelism = self.get('parallelism')
+        rate_limit_strategy = self.get("rate_limit_strategy", None)
+
+        if rate_limit_strategy == "concurrent":
+            parallelism = self.get("parallelism")
+
             if parallelism is None:
                 raise ConfigException(
                     '"parallelism" must be set when '
                     'rate_limit_strategy is "concurrent"'
                 )
+
             return rate_limit_strategy_concurrent(parallelism)
-        elif rate_limit_strategy == 'solo':
+        elif rate_limit_strategy == "solo":
             return rate_limit_strategy_solo()
         else:
             return default_rate_limit_func
 
     def __repr__(self):
-        return 'config file [%s]: %s' % (self._path,
-                                         json.dumps(self._data, indent=True))
+        return "config file [%s]: %s" % (
+            self._path,
+            json.dumps(self._data, indent=True),
+        )
 
     def __getitem__(self, item):
         return self._data.get(item, None)
@@ -245,4 +267,5 @@ class Config:
             exist
         :return: Requested value, or `default` if it didn't exist
         """
+
         return self._data.get(item, default)

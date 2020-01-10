@@ -19,7 +19,7 @@ config.loadFromFile(Config.DEFAULT_CONFIG_FILE)
 
 # override default synchronous transport. note, this would normally go
 # in config file.
-config['transport'] = 'twisted'
+config["transport"] = "twisted"
 api = NS1(config=config)
 
 
@@ -28,19 +28,20 @@ def getQPS():
     # when twisted transport is in use, all of the NS1 methods return
     # Deferred. yield them to gather the results, or add callbacks/errbacks
     # to be run when results are available
-    zone = yield api.loadZone('test.com')
+    zone = yield api.loadZone("test.com")
     qps = yield zone.qps()
     defer.returnValue(qps)
 
 
 def gotQPS(result):
-    print("current QPS for test.com: %s" % result['qps'])
+    print("current QPS for test.com: %s" % result["qps"])
     reactor.stop()
 
 
 def handleError(failure):
     print(failure)
     reactor.stop()
+
 
 qps = getQPS()
 qps.addCallback(gotQPS)
