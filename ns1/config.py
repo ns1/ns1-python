@@ -51,6 +51,8 @@ class Config:
             self._data['cli'] = {}
         if 'verbosity' not in self._data:
             self._data['verbosity'] = 0
+        if 'ddi' not in self._data:
+            self._data['ddi'] = False
 
     def createFromAPIKey(self, apikey, maybeWriteDefault=False):
         """

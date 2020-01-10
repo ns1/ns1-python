@@ -167,6 +167,36 @@ class NS1:
         import ns1.rest.account
         return ns1.rest.account.Plan(self.config)
 
+    def team(self):
+        """
+        Return a new raw REST interface to team resources
+
+        :rtype: :py:class:`ns1.rest.team.Team`
+        """
+        import ns1.rest.team
+
+        return ns1.rest.team.Team(self.config)
+
+    def user(self):
+        """
+        Return a new raw REST interface to user resources
+
+        :rtype: :py:class:`ns1.rest.user.User`
+        """
+        import ns1.rest.user
+
+        return ns1.rest.user.User(self.config)
+
+    def apikey(self):
+        """
+        Return a new raw REST interface to API key resources
+
+        :rtype: :py:class:`ns1.rest.apikey.APIKey`
+        """
+        import ns1.rest.apikey
+
+        return ns1.rest.apikey.APIKey(self.config)
+
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         """

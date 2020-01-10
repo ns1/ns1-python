@@ -1,5 +1,9 @@
 ## 0.14.0 (unreleased)
 
+ENHANCEMENTS:
+
+* Add REST support for teams, users, and API keys
+
 ## 0.13.0 (November 05, 2019)
 
 ENHANCEMENTS:

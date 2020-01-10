@@ -10,7 +10,7 @@ class Monitors(resource.BaseResource):
 
     ROOT = 'monitoring/jobs'
     PASSTHRU_FIELDS = [
-      'name', 'config', 'region_scope', 'regions', 'job_type', 
+      'name', 'config', 'region_scope', 'regions', 'job_type',
       'policy', 'notes', 'rules', 'notify_delay', 'notify_list'
     ]
     INT_FIELDS = ['frequency']
