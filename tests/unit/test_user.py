@@ -10,17 +10,20 @@ except ImportError:
 
 @pytest.fixture
 def user_config(config):
-    config.loadFromDict({
-        "endpoint": "api.nsone.net",
-        "default_key": "test1",
-        "keys": {
-            "test1": {
-                "key": "key-1",
-                "desc": "test key number 1",
-                "writeLock": True,
-            }
-        },
-    })
+    config.loadFromDict(
+        {
+            "endpoint": "api.nsone.net",
+            "default_key": "test1",
+            "keys": {
+                "test1": {
+                    "key": "key-1",
+                    "desc": "test key number 1",
+                    "writeLock": True,
+                }
+            },
+        }
+    )
+
     return config
 
 
@@ -28,10 +31,9 @@ def test_rest_user_list(user_config):
     z = ns1.rest.user.User(user_config)
     z._make_request = mock.MagicMock()
     z.list()
-    z._make_request.assert_called_once_with("GET",
-                                            "account/users",
-                                            callback=None,
-                                            errback=None)
+    z._make_request.assert_called_once_with(
+        "GET", "account/users", callback=None, errback=None
+    )
 
 
 @pytest.mark.parametrize("username, url", [("1", "account/users/1")])
@@ -39,10 +41,9 @@ def test_rest_user_retrieve(user_config, username, url):
     z = ns1.rest.user.User(user_config)
     z._make_request = mock.MagicMock()
     z.retrieve(username)
-    z._make_request.assert_called_once_with("GET",
-                                            url,
-                                            callback=None,
-                                            errback=None)
+    z._make_request.assert_called_once_with(
+        "GET", url, callback=None, errback=None
+    )
 
 
 @pytest.mark.parametrize(
@@ -69,26 +70,24 @@ def test_rest_user_create(user_config, name, username, email, url):
 
 @pytest.mark.parametrize(
     "username, name, ip_whitelist, permissions, url",
-    [(
-        "test-username",
-        "test-user",
-        ["1.1.1.1", "2.2.2.2"],
-        {
-            "data": {
-                "push_to_datafeeds": True
-            }
-        },
-        "account/users/test-username",
-    )],
+    [
+        (
+            "test-username",
+            "test-user",
+            ["1.1.1.1", "2.2.2.2"],
+            {"data": {"push_to_datafeeds": True}},
+            "account/users/test-username",
+        )
+    ],
 )
-def test_rest_user_update(user_config, username, name, ip_whitelist,
-                          permissions, url):
+def test_rest_user_update(
+    user_config, username, name, ip_whitelist, permissions, url
+):
     z = ns1.rest.user.User(user_config)
     z._make_request = mock.MagicMock()
-    z.update(username,
-             name=name,
-             ip_whitelist=ip_whitelist,
-             permissions=permissions)
+    z.update(
+        username, name=name, ip_whitelist=ip_whitelist, permissions=permissions
+    )
     z._make_request.assert_called_once_with(
         "POST",
         url,
@@ -103,13 +102,13 @@ def test_rest_user_update(user_config, username, name, ip_whitelist,
     )
 
 
-@pytest.mark.parametrize("username, url",
-                         [("test-username", "account/users/test-username")])
+@pytest.mark.parametrize(
+    "username, url", [("test-username", "account/users/test-username")]
+)
 def test_rest_user_delete(user_config, username, url):
     z = ns1.rest.user.User(user_config)
     z._make_request = mock.MagicMock()
     z.delete(username)
-    z._make_request.assert_called_once_with("DELETE",
-                                            url,
-                                            callback=None,
-                                            errback=None)
+    z._make_request.assert_called_once_with(
+        "DELETE", url, callback=None, errback=None
+    )
