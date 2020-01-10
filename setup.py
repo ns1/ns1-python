@@ -29,6 +29,7 @@ setup(
 
     setup_requires=[
         'pytest-runner',
+        'wheel',
     ],
 
     tests_require=[
