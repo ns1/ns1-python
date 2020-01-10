@@ -18,7 +18,8 @@ and includes both a simple NS1 REST API wrapper as well as a higher level
 interface for managing zones, records, data feeds, and more.
 It supports synchronous and asynchronous transports.
 
-Both python 2.7 and 3.3 are supported.
+Both python 2.7 and 3.3+ are supported. Automated tests are currently run
+against 2.7 and 3.6.
 
 Installation
 ============
@@ -32,7 +33,7 @@ None, but supports different transport backends. Currently supported:
 
  * `requests <http://docs.python-requests.org/en/latest/>`_ (synchronous, the default if available)
  * urllib (synchronous, the default if requests isn't available)
- * `twisted <https://twistedmatrix.com/>`_ (asynchronous)
+ * `twisted <https://twistedmatrix.com/>`_ (asynchronous, requires 2.7 or 3.5+)
 
 Other transports are easy to add, see `transport <https://github.com/ns1/ns1-python/tree/master/ns1/rest/transport>`_
 
@@ -59,8 +60,8 @@ Tests
 Unit tests use `pytest` (`pip install pytest`). 2.7 also requires `mock` to be
 installed (`pip install mock`).
 
-Tests should, of course, run and pass under 2.7 and 3.3. We use tox to automate
-test runs and virtualenv setup, see `tox.ini` for config.
+Tests should, of course, run and pass under python 2 and 3. We use tox to
+automate test runs and virtualenv setup, see `tox.ini` for config.
 
 Contributions
 =============
