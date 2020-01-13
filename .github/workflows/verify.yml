@@ -1,6 +1,10 @@
 name: NS1 Python SDK
 
-on: [push]
+on:
+  push:
+  pull_request:
+    branches:    
+      - master
 
 jobs:
   lint:
@@ -20,7 +24,9 @@ jobs:
         pip install flake8 black
     - name: Lint with flake8
       run: |
-        flake8 . --count --show-source --statistics --exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,build,lib --extend-ignore=E501
+        # Ignore the line length rule because black will handle that
+        # and flake8 doesn't allow long comment lines.
+        flake8 . --count --show-source --statistics --extend-ignore=E501
     - name: Lint with black
       run: |
         black . --check -l 79 --diff
