@@ -17,14 +17,12 @@ jobs:
         python setup.py install
         python setup.py bdist_wheel
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install flake8 black
     - name: Lint with flake8
       run: |
-        pip install flake8
         flake8 . --count --show-source --statistics --exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg,build,lib --extend-ignore=E501
     - name: Lint with black
       run: |
-        pip install black
         black . --check -l 79 --diff
 
   test:
@@ -45,8 +43,7 @@ jobs:
         python setup.py install
         python setup.py bdist_wheel
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install pytest mock
     - name: Test with pytest
       run: |
-        pip install pytest mock
         pytest
