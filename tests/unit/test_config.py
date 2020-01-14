@@ -11,7 +11,8 @@ defaults = {
     "endpoint": "api.nsone.net",
     "port": 443,
     "api_version": "v1",
-    "cli": {}
+    "cli": {},
+    "ddi": False
 }
 
 
