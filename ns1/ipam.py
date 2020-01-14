@@ -409,8 +409,11 @@ class Scopegroup(object):
         :param DHCPOptions dhcp6: DHCPOptions object that contains the settings for dhcp6
 
         Create a new Scope Group. Pass a list of keywords and their values to
-        configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scopegroups.INT_FIELDS` and :attr:`ns1.rest.ipam.Scopegroups.PASSTHRU_FIELDS`
+        configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scopegroups.INT_FIELDS` and :attr:`ns1.rest.ipam.Scopegroups.PASSTHRU_FIELDS`.
+        For the list of settings see :attr:`ns1.ipan.Scopegroup.SETTINGS`. Note that if `enabled` is True, then `valid_lifetime_secs` must be 
+        set to a value greater than 0.
         """
+
         if self.data:
             raise ScopegroupException('Scope Group already loaded')
 
@@ -428,8 +431,7 @@ class Scopegroup(object):
         if self.name is None:
             raise ScopegroupException('Must at least specify an name to create a Scopegroup')
 
-        return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, dhcp_service_id=self.dhcp_service_id,
-                                 callback=success, errback=errback)
+        return self._rest.create(dhcpv4=dhcp4.option_list, dhcpv6=dhcp6.option_list, name=self.name, dhcp_service_id=self.dhcp_service_id, callback=success, errback=errback)
 
     def reserve(self, address_id, mac, options=None, callback=None, errback=None):
         """
@@ -824,19 +826,31 @@ class DHCPOptions:
         'dhcpv6': ['dns-servers']
     }
 
-    def __init__(self, address_family, options):
+    def __init__(self, address_family, options, server_options=None):
         """
         Create the DHCP options class that can be used by the IPAM API
 
         :param str address_family: This is either dhcpv4 or dhcpv6
         :param dict options: This is a dict representing the options set. Valid options are listed in :attr:`ns1.ipam.DHCPOptions.OPTIONS`
         """
-        self.update(address_family, options)
+        if server_options is None:
+            self.server_options = {}
+        else:
+            self.server_options = server_options
+
+        self.update(address_family, options, self.server_options)
 
     def __repr__(self):
         return '<DHCPOptions address_family=%s>' % self.address_family
 
-    def update(self, address_family, options):
+    def update(self, address_family, options, server_options=None):
+        if server_options is not None:
+            self.server_options = server_options
+
         self.address_family = address_family
         self.__dict__.update(options)
-        self.option_list = {"options": [{"name": "%s/%s" % (address_family, key), "value": value} for key, value in options.items()]}
+        self.__dict__.update(server_options)
+        self.option_list = {
+            "options": [{"name": "%s/%s" % (self.address_family, key), "value": value} for key, value in options.items()]
+        }
+        self.option_list.update(self.server_options)
