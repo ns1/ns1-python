@@ -3,6 +3,7 @@ from threading import Lock
 
 class SingletonMixin(object):
     """double-locked thread safe singleton"""
+
     _instance = None
     _lock = Lock()
 

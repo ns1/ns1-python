@@ -13,32 +13,32 @@ from ns1 import NS1, Config
 api = NS1()
 
 # to specify an apikey here instead, use:
-api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
+api = NS1(apiKey="qACMD09OJXBxT7XOuRs8")
 
 # to load an alternate configuration file:
-api = NS1(configFile='/etc/ns1/api.json')
+api = NS1(configFile="/etc/ns1/api.json")
 
 # to load a specific keyID inside of your config file (see config format
 # in docs), use this. this only makes sense for config file loads, not
 # apiKey loads:
-api = NS1(keyID='all-access')
+api = NS1(keyID="all-access")
 
 # if you have special needs, build your own Config object and pass it to
 # NS1:
 config = Config()
-config.createFromAPIKey('qACMD09OJXBxT7XOwv9v')
-config['verbosity'] = 5
-config['transport'] = 'twisted'
+config.createFromAPIKey("qACMD09OJXBxT7XOwv9v")
+config["verbosity"] = 5
+config["transport"] = "twisted"
 api = NS1(config=config)
 
 #  you can get the current config object NS1 is using via
 config = api.config
 
 # change config variables
-config['verbosity'] = 5
+config["verbosity"] = 5
 
 # write out new config files
-config.write('/tmp/newconfig.json')
+config.write("/tmp/newconfig.json")
 
 # the config file format supports different apiKeys (see docs) using keyID
 
@@ -46,4 +46,4 @@ config.write('/tmp/newconfig.json')
 print(config.getCurrentKeyID())
 
 # use a different keyID
-config.useKeyID('read-access')
+config.useKeyID("read-access")

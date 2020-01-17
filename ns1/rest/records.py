@@ -2,23 +2,22 @@
 # Copyright (c) 2014 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
-
-import sys
 import collections
+import sys
 
 from . import resource
 
 
-py_str = str if sys.version_info[0] == 3 else basestring
+py_str = str if sys.version_info[0] == 3 else basestring  # noqa: F821
 
 
 class Records(resource.BaseResource):
 
-    ROOT = 'zones'
+    ROOT = "zones"
 
-    INT_FIELDS = ['ttl']
-    BOOL_FIELDS = ['use_client_subnet', 'use_csubnet', 'override_ttl']
-    PASSTHRU_FIELDS = ['networks', 'meta', 'regions', 'link']
+    INT_FIELDS = ["ttl"]
+    BOOL_FIELDS = ["use_client_subnet", "use_csubnet", "override_ttl"]
+    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link"]
 
     # answers must be:
     #  1) a single string
@@ -37,23 +36,28 @@ class Records(resource.BaseResource):
     def _getAnswersForBody(self, answers):
         realAnswers = []
         # simplest: they specify a single string ip
+
         if isinstance(answers, py_str):
             answers = [answers]
         # otherwise, we need an iterable
         elif not isinstance(answers, collections.Iterable):
-            raise Exception('invalid answers format (must be str or iterable)')
+            raise Exception("invalid answers format (must be str or iterable)")
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
+
         for a in answers:
             if isinstance(a, py_str):
-                realAnswers.append({'answer': [a]})
+                realAnswers.append({"answer": [a]})
             elif isinstance(a, (list, tuple)):
-                realAnswers.append({'answer': a})
+                realAnswers.append({"answer": a})
             elif isinstance(a, dict):
                 realAnswers.append(a)
             else:
-                raise Exception('invalid answers format: list must contain '
-                                'only str, list, or dict')
+                raise Exception(
+                    "invalid answers format: list must contain "
+                    "only str, list, or dict"
+                )
+
         return realAnswers
 
     # filters must be a list of dict which can have two forms:
@@ -68,87 +72,94 @@ class Records(resource.BaseResource):
         realFilters = []
 
         if type(filters) is not list:
-            raise Exception('filter argument must be list of dict')
+            raise Exception("filter argument must be list of dict")
 
         for f in filters:
             if type(f) is not dict:
-                raise Exception('filter items must be dict')
+                raise Exception("filter items must be dict")
 
-            if 'filter' in f:
+            if "filter" in f:
                 # full
                 realFilters.append(f)
             else:
                 # simple, synthesize
                 (fname, fconfig) = f.popitem()
-                realFilters.append({'filter': fname, 'config': fconfig})
+                realFilters.append({"filter": fname, "config": fconfig})
 
         return realFilters
 
     def _buildBody(self, zone, domain, type, **kwargs):
         body = {}
-        body['zone'] = zone
-        body['domain'] = domain
-        body['type'] = type.upper()
+        body["zone"] = zone
+        body["domain"] = domain
+        body["type"] = type.upper()
 
-        if 'filters' in kwargs:
-            body['filters'] = self._getFiltersForBody(kwargs['filters'])
+        if "filters" in kwargs:
+            body["filters"] = self._getFiltersForBody(kwargs["filters"])
 
-        if 'answers' in kwargs:
-            body['answers'] = self._getAnswersForBody(kwargs['answers'])
+        if "answers" in kwargs:
+            body["answers"] = self._getAnswersForBody(kwargs["answers"])
 
         self._buildStdBody(body, kwargs)
 
-        if 'use_csubnet' in body:
+        if "use_csubnet" in body:
             # key mapping
-            body['use_client_subnet'] = body['use_csubnet']
-            del body['use_csubnet']
+            body["use_client_subnet"] = body["use_csubnet"]
+            del body["use_csubnet"]
 
         return body
 
-    def create(self, zone, domain, type,
-               callback=None, errback=None, **kwargs):
+    def create(
+        self, zone, domain, type, callback=None, errback=None, **kwargs
+    ):
         body = self._buildBody(zone, domain, type, **kwargs)
-        return self.create_raw(zone, domain, type, body,
-                               callback=callback, errback=errback,
-                               **kwargs)
 
-    def create_raw(self, zone, domain, type, body,
-                   callback=None, errback=None, **kwargs):
-        return self._make_request('PUT',
-                                  '%s/%s/%s/%s' % (self.ROOT,
-                                                   zone,
-                                                   domain,
-                                                   type.upper()),
-                                  body=body,
-                                  callback=callback,
-                                  errback=errback)
+        return self.create_raw(
+            zone,
+            domain,
+            type,
+            body,
+            callback=callback,
+            errback=errback,
+            **kwargs
+        )
 
-    def update(self, zone, domain, type,
-               callback=None, errback=None, **kwargs):
+    def create_raw(
+        self, zone, domain, type, body, callback=None, errback=None, **kwargs
+    ):
+        return self._make_request(
+            "PUT",
+            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            body=body,
+            callback=callback,
+            errback=errback,
+        )
+
+    def update(
+        self, zone, domain, type, callback=None, errback=None, **kwargs
+    ):
         body = self._buildBody(zone, domain, type, **kwargs)
-        return self._make_request('POST',
-                                  '%s/%s/%s/%s' % (self.ROOT,
-                                                   zone,
-                                                   domain,
-                                                   type.upper()),
-                                  body=body,
-                                  callback=callback,
-                                  errback=errback)
+
+        return self._make_request(
+            "POST",
+            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            body=body,
+            callback=callback,
+            errback=errback,
+        )
 
     def delete(self, zone, domain, type, callback=None, errback=None):
-        return self._make_request('DELETE', '%s/%s/%s/%s' %
-                                  (self.ROOT,
-                                   zone,
-                                   domain,
-                                   type.upper()),
-                                  callback=callback,
-                                  errback=errback)
+        return self._make_request(
+            "DELETE",
+            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            callback=callback,
+            errback=errback,
+        )
 
     def retrieve(self, zone, domain, type, callback=None, errback=None):
-        return self._make_request('GET', '%s/%s/%s/%s' %
-                                  (self.ROOT,
-                                   zone,
-                                   domain,
-                                   type.upper()),
-                                  callback=callback,
-                                  errback=errback)
+        return self._make_request(
+            "GET",
+            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            callback=callback,
+            errback=errback,
+        )

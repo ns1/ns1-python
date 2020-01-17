@@ -30,20 +30,20 @@ class Record(object):
         self._rest = Records(parentZone.config)
         self.parentZone = parentZone
         if not domain.endswith(parentZone.zone):
-            domain = domain + '.' + parentZone.zone
+            domain = domain + "." + parentZone.zone
         self.domain = domain
         self.type = type
         self.data = None
 
     def __repr__(self):
-        return '<Record domain=%s type=%s>' % (self.domain, self.type)
+        return "<Record domain=%s type=%s>" % (self.domain, self.type)
 
     def __getitem__(self, item):
         return self.data.get(item, None)
 
     def _parseModel(self, data):
         self.data = data
-        self.answers = data['answers']
+        self.answers = data["answers"]
         # XXX break out the rest? use getattr instead?
 
     def reload(self, callback=None, errback=None):
@@ -57,7 +57,7 @@ class Record(object):
         Load record data from the API.
         """
         if not reload and self.data:
-            raise RecordException('record already loaded')
+            raise RecordException("record already loaded")
 
         def success(result, *args):
             self._parseModel(result)
@@ -65,9 +65,14 @@ class Record(object):
                 return callback(self)
             else:
                 return self
-        return self._rest.retrieve(self.parentZone.zone,
-                                   self.domain, self.type,
-                                   callback=success, errback=errback)
+
+        return self._rest.retrieve(
+            self.parentZone.zone,
+            self.domain,
+            self.type,
+            callback=success,
+            errback=errback,
+        )
 
     def delete(self, callback=None, errback=None):
         """
@@ -75,7 +80,7 @@ class Record(object):
         meta data, etc.
         """
         if not self.data:
-            raise RecordException('record not loaded')
+            raise RecordException("record not loaded")
 
         def success(result, *args):
             if callback:
@@ -83,9 +88,13 @@ class Record(object):
             else:
                 return result
 
-        return self._rest.delete(self.parentZone.zone,
-                                 self.domain, self.type,
-                                 callback=success, errback=errback)
+        return self._rest.delete(
+            self.parentZone.zone,
+            self.domain,
+            self.type,
+            callback=success,
+            errback=errback,
+        )
 
     def update(self, callback=None, errback=None, **kwargs):
         """
@@ -96,7 +105,7 @@ class Record(object):
         :attr:`ns1.rest.records.Records.BOOL_FIELDS`
         """
         if not self.data:
-            raise RecordException('record not loaded')
+            raise RecordException("record not loaded")
 
         def success(result, *args):
             self._parseModel(result)
@@ -105,8 +114,14 @@ class Record(object):
             else:
                 return self
 
-        return self._rest.update(self.parentZone.zone, self.domain, self.type,
-                                 callback=success, errback=errback, **kwargs)
+        return self._rest.update(
+            self.parentZone.zone,
+            self.domain,
+            self.type,
+            callback=success,
+            errback=errback,
+            **kwargs
+        )
 
     def create(self, callback=None, errback=None, **kwargs):
         """
@@ -117,7 +132,7 @@ class Record(object):
         :attr:`ns1.rest.records.Records.BOOL_FIELDS`
         """
         if self.data:
-            raise RecordException('record already loaded')
+            raise RecordException("record already loaded")
 
         def success(result, *args):
             self._parseModel(result)
@@ -126,8 +141,14 @@ class Record(object):
             else:
                 return self
 
-        return self._rest.create(self.parentZone.zone, self.domain, self.type,
-                                 callback=success, errback=errback, **kwargs)
+        return self._rest.create(
+            self.parentZone.zone,
+            self.domain,
+            self.type,
+            callback=success,
+            errback=errback,
+            **kwargs
+        )
 
     def qps(self, callback=None, errback=None):
         """
@@ -137,13 +158,15 @@ class Record(object):
         :return: QPS information
         """
         if not self.data:
-            raise RecordException('record not loaded')
+            raise RecordException("record not loaded")
         stats = Stats(self.parentZone.config)
-        return stats.qps(zone=self.parentZone.zone,
-                         domain=self.domain,
-                         type=self.type,
-                         callback=callback,
-                         errback=errback)
+        return stats.qps(
+            zone=self.parentZone.zone,
+            domain=self.domain,
+            type=self.type,
+            callback=callback,
+            errback=errback,
+        )
 
     def usage(self, callback=None, errback=None, **kwargs):
         """
@@ -153,14 +176,16 @@ class Record(object):
         :return: usage information
         """
         if not self.data:
-            raise RecordException('record not loaded')
+            raise RecordException("record not loaded")
         stats = Stats(self.parentZone.config)
-        return stats.usage(zone=self.parentZone.zone,
-                           domain=self.domain,
-                           type=self.type,
-                           callback=callback,
-                           errback=errback,
-                           **kwargs)
+        return stats.usage(
+            zone=self.parentZone.zone,
+            domain=self.domain,
+            type=self.type,
+            callback=callback,
+            errback=errback,
+            **kwargs
+        )
 
     def addAnswers(self, answers, callback=None, errback=None, **kwargs):
         """
@@ -169,9 +194,10 @@ class Record(object):
         :param answers: answers structure. See the class note on answer format.
         """
         if not self.data:
-            raise RecordException('record not loaded')
-        orig_answers = self.data['answers']
+            raise RecordException("record not loaded")
+        orig_answers = self.data["answers"]
         new_answers = self._rest._getAnswersForBody(answers)
         orig_answers.extend(new_answers)
-        return self.update(answers=orig_answers, callback=callback,
-                           errback=errback, **kwargs)
+        return self.update(
+            answers=orig_answers, callback=callback, errback=errback, **kwargs
+        )

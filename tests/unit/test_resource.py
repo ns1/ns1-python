@@ -17,7 +17,7 @@ class MockResponse:
         self.status_code = status_code
         self._json = json_data
         self._headers = {} if headers is None else headers
-        self._body = '{}' if body is None else body
+        self._body = "{}" if body is None else body
 
     def json(self):
         return self._json
@@ -41,7 +41,7 @@ def test_basic_transport():
     """
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
-    config['transport'] = 'basic'
+    config["transport"] = "basic"
 
     resource = BaseResource(config)
 
@@ -52,15 +52,15 @@ def test_basic_transport():
     resource._transport._opener.open.return_value = MockResponse(200, {})
     resource._transport._rate_limit_func = mock.Mock()
 
-    res = resource._make_request('GET', 'my_path')
+    res = resource._make_request("GET", "my_path")
     assert res == {}
 
-    resource._transport._rate_limit_func.assert_called_once_with({
-        'by': 'customer', 'limit': 10, 'period': 1, 'remaining': 100
-    })
+    resource._transport._rate_limit_func.assert_called_once_with(
+        {"by": "customer", "limit": 10, "period": 1, "remaining": 100}
+    )
 
 
-@pytest.mark.skipif(not have_requests, reason='requests not found')
+@pytest.mark.skipif(not have_requests, reason="requests not found")
 def test_requests_transport():
     """
     it should get transport from config
@@ -68,33 +68,33 @@ def test_requests_transport():
     """
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
-    config['transport'] = 'requests'
+    config["transport"] = "requests"
 
     resource = BaseResource(config)
 
     assert resource._config == config
     assert isinstance(resource._transport, RequestsTransport)
 
-    resource._transport.REQ_MAP['GET'] = mock.Mock()
-    resource._transport.REQ_MAP['GET'].return_value = MockResponse(200, {})
+    resource._transport.REQ_MAP["GET"] = mock.Mock()
+    resource._transport.REQ_MAP["GET"].return_value = MockResponse(200, {})
     resource._transport._rate_limit_func = mock.Mock()
 
-    res = resource._make_request('GET', 'my_path')
+    res = resource._make_request("GET", "my_path")
     assert res == {}
 
-    resource._transport._rate_limit_func.assert_called_once_with({
-        'by': 'customer', 'limit': 10, 'period': 1, 'remaining': 100
-    })
+    resource._transport._rate_limit_func.assert_called_once_with(
+        {"by": "customer", "limit": 10, "period": 1, "remaining": 100}
+    )
 
 
-@pytest.mark.skipif(not have_twisted, reason='twisted not found')
+@pytest.mark.skipif(not have_twisted, reason="twisted not found")
 def test_twisted_transport():
     """
     it should get transport from config
     """
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
-    config['transport'] = 'twisted'
+    config["transport"] = "twisted"
 
     resource = BaseResource(config)
 
@@ -110,15 +110,15 @@ def test_rate_limiting_strategies():
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
     resource = BaseResource(config)
     rate_limit_func_name = resource._transport._rate_limit_func.__name__
-    assert rate_limit_func_name == 'default_rate_limit_func'
+    assert rate_limit_func_name == "default_rate_limit_func"
 
-    config['rate_limit_strategy'] = 'solo'
+    config["rate_limit_strategy"] = "solo"
     resource = BaseResource(config)
     rate_limit_func_name = resource._transport._rate_limit_func.__name__
-    assert rate_limit_func_name == 'solo_rate_limit_func'
+    assert rate_limit_func_name == "solo_rate_limit_func"
 
-    config['rate_limit_strategy'] = 'concurrent'
-    config['parallelism'] = 11
+    config["rate_limit_strategy"] = "concurrent"
+    config["parallelism"] = 11
     resource = BaseResource(config)
     rate_limit_func_name = resource._transport._rate_limit_func.__name__
-    assert rate_limit_func_name == 'concurrent_rate_limit_func'
+    assert rate_limit_func_name == "concurrent_rate_limit_func"

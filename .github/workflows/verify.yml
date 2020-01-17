@@ -1,0 +1,51 @@
+name: NS1 Python SDK
+
+on: [pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        python setup.py install
+        python setup.py bdist_wheel
+        python -m pip install --upgrade pip
+        pip install flake8 black
+    - name: Lint with flake8
+      run: |
+        # Ignore the line length rule because black will handle that
+        # and flake8 doesn't allow long comment lines.
+        flake8 . --count --show-source --statistics --extend-ignore=E501
+    - name: Lint with black
+      run: |
+        black . --check -l 79 --diff
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [2.7, 3.7]
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python setup.py install
+        python setup.py bdist_wheel
+        python -m pip install --upgrade pip
+        pip install pytest mock
+    - name: Test with pytest
+      run: |
+        pytest

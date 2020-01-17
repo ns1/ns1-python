@@ -31,7 +31,10 @@ class Monitor(object):
             self.data = None
 
     def __repr__(self):
-        return '<Monitor monitor=%s with id=%s>' % (self.data['name'], self.data['id'])
+        return "<Monitor monitor=%s with id=%s>" % (
+            self.data["name"],
+            self.data["id"],
+        )
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -47,7 +50,7 @@ class Monitor(object):
         Load monitor data from the API.
         """
         if not reload and self.data:
-            raise MonitorException('monitor already loaded')
+            raise MonitorException("monitor already loaded")
 
         def success(result, *args):
             self.data = result
@@ -56,14 +59,17 @@ class Monitor(object):
             else:
                 return self
 
-        return self._rest.retrieve(self.data['id'], callback=success,
-                                   errback=errback)
+        return self._rest.retrieve(
+            self.data["id"], callback=success, errback=errback
+        )
 
     def delete(self, callback=None, errback=None):
         """
         Delete the monitor
         """
-        return self._rest.delete(self.data['id'], callback=callback, errback=errback)
+        return self._rest.delete(
+            self.data["id"], callback=callback, errback=errback
+        )
 
     def update(self, callback=None, errback=None, **kwargs):
         """
@@ -71,7 +77,7 @@ class Monitor(object):
         update.
         """
         if not self.data:
-            raise MonitorException('monitor not loaded')
+            raise MonitorException("monitor not loaded")
 
         def success(result, *args):
             self.data = result
@@ -80,7 +86,9 @@ class Monitor(object):
             else:
                 return self
 
-        return self._rest.update(self.data['id'], {}, callback=success, errback=errback, **kwargs)
+        return self._rest.update(
+            self.data["id"], {}, callback=success, errback=errback, **kwargs
+        )
 
     def create(self, callback=None, errback=None, **kwargs):
         """
@@ -88,7 +96,7 @@ class Monitor(object):
         configure
         """
         if self.data:
-            raise MonitorException('monitor already loaded')
+            raise MonitorException("monitor already loaded")
 
         def success(result, *args):
             self.data = result
@@ -97,5 +105,6 @@ class Monitor(object):
             else:
                 return self
 
-        return self._rest.create({}, callback=success,
-                                     errback=errback, **kwargs)
+        return self._rest.create(
+            {}, callback=success, errback=errback, **kwargs
+        )

@@ -11,33 +11,32 @@
 #
 # All configuration values have a default; values that are commented out
 # serve to show the default.
-
-import sys
 import os
+import sys
 
-sys.path[0:0] = [os.path.abspath('..')]
-import ns1
+sys.path[0:0] = [os.path.abspath("..")]
+import ns1  # noqa
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.todo',
-    'sphinx.ext.coverage',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # The suffix of source filenames.
-source_suffix = '.rst'
+source_suffix = ".rst"
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = "index"
 
 # General information about the project.
-project = u'NS1 Python SDK'
-copyright = u'2014, NSONE, Inc.'
+project = u"NS1 Python SDK"
+copyright = u"2014, NSONE, Inc."
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -50,38 +49,42 @@ release = ns1.version
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['_build']
+exclude_patterns = ["_build"]
 
 # The name of the Pygments (syntax highlighting) style to use.
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 
 
 # -- Options for HTML output ----------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_theme = 'default'
+html_theme = "default"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'NS1PythonSDKdoc'
+htmlhelp_basename = "NS1PythonSDKdoc"
 
 
 # -- Options for LaTeX output ---------------------------------------------
 
-latex_elements = {
-}
+latex_elements = {}
 
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    ('index', 'NS1PythonSDK.tex', u'NS1 Python SDK Documentation',
-     u'NSONE, Inc.', 'manual'),
+    (
+        "index",
+        "NS1PythonSDK.tex",
+        u"NS1 Python SDK Documentation",
+        u"NSONE, Inc.",
+        "manual",
+    ),
 ]
 
 # -- Options for manual page output ---------------------------------------
@@ -89,8 +92,13 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'ns1pythonsdk', u'NS1 Python SDK Documentation',
-     [u'NSONE, Inc.'], 1)
+    (
+        "index",
+        "ns1pythonsdk",
+        u"NS1 Python SDK Documentation",
+        [u"NSONE, Inc."],
+        1,
+    )
 ]
 
 
@@ -100,13 +108,19 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'NS1PythonSDK', u'NS1 Python SDK Documentation',
-     u'NSONE, Inc.', 'NS1PythonSDK', 'One line description of project.',
-     'Miscellaneous'),
+    (
+        "index",
+        "NS1PythonSDK",
+        u"NS1 Python SDK Documentation",
+        u"NSONE, Inc.",
+        "NS1PythonSDK",
+        "One line description of project.",
+        "Miscellaneous",
+    ),
 ]
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'http://docs.python.org/': None}
+intersphinx_mapping = {"http://docs.python.org/": None}
 
-autoclass_content = 'both'
+autoclass_content = "both"
