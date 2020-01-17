@@ -487,7 +487,7 @@ class Scopegroup(object):
 
         Create a new Scope Group. Pass a list of keywords and their values to
         configure. For the list of keywords available for address configuration, see :attr:`ns1.rest.ipam.Scopegroups.INT_FIELDS` and :attr:`ns1.rest.ipam.Scopegroups.PASSTHRU_FIELDS`.
-        For the list of settings see :attr:`ns1.ipan.Scopegroup.SETTINGS`. Note that if `enabled` is True, then `valid_lifetime_secs` must be 
+        For the list of settings see :attr:`ns1.ipan.Scopegroup.SETTINGS`. Note that if `enabled` is True, then `valid_lifetime_secs` must be
         set to a value greater than 0.
         """
 
