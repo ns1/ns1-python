@@ -67,3 +67,13 @@ Contributions
 =============
 
 We welcome contributions! Please fork on GitHub and submit a Pull Request.
+
+Our CI process will lint and check for formatting issues with `flake8` and
+`black`. 
+It is suggested to run these checks prior to submitting a pull request and fix
+any issues:
+```
+pip install flake8 black
+flake8 . --count --show-source --statistics --extend-ignore=E501
+black . --check -l 79 --diff
+```
