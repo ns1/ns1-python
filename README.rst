@@ -2,6 +2,8 @@
 NS1 Python SDK
 ==============
 
+> This project is in [active development](https://github.com/ns1/community/blob/master/project_status/ACTIVE_DEVELOPMENT.md).
+
 :Info: A Python SDK for accessing NS1, the Data Driven DNS platform.
 
 .. image:: https://travis-ci.org/ns1/ns1-python.svg?branch=master
@@ -67,6 +69,8 @@ Contributions
 =============
 
 We welcome contributions! Please fork on GitHub and submit a Pull Request.
+
+Please refer to the [NS1 Contribution Guidelines](https://github.com/ns1/community) before opening a pull request or issue.
 
 Our CI process will lint and check for formatting issues with `flake8` and
 `black`. 
