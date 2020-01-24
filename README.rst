@@ -67,10 +67,7 @@ automate test runs and virtualenv setup, see `tox.ini` for config.
 
 Contributions
 =============
-
-We welcome contributions! Please fork on GitHub and submit a Pull Request.
-
-Please refer to the [NS1 Contribution Guidelines](https://github.com/ns1/community) before opening a pull request or issue.
+Pull Requests and issues are welcome. See the [NS1 Contribution Guidelines](https://github.com/ns1/community) for more information.
 
 Our CI process will lint and check for formatting issues with `flake8` and
 `black`. 
