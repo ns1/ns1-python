@@ -1067,7 +1067,6 @@ class DHCPOptions:
 
 
 class DHCPOptionValue:
-
     def __init__(self, key, value, always_send=None):
         """
         Create the DHCPOptionValue class that can be used as value with :class:`ns1.ipam.DHCPOptions`
@@ -1078,7 +1077,9 @@ class DHCPOptionValue:
         """
         self.key = key
         self.value = value
-        self.always_send = bool(always_send) if always_send is not None else always_send
+        self.always_send = (
+            bool(always_send) if always_send is not None else always_send
+        )
 
     def generate_option(self, address_family):
         """
@@ -1086,7 +1087,10 @@ class DHCPOptionValue:
 
         :param str address_family one of dhcpv4 or dhcpv6 family name
         """
-        option = {"name": "%s/%s" % (address_family, self.key), "value": self.value}
+        option = {
+            "name": "%s/%s" % (address_family, self.key),
+            "value": self.value,
+        }
         if self.always_send is not None:
             option.update({"always_send": self.always_send})
 
