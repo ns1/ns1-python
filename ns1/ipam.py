@@ -1077,15 +1077,13 @@ class DHCPOptionValue:
         """
         self.key = key
         self.value = value
-        self.always_send = (
-            bool(always_send) if always_send is not None else always_send
-        )
+        self.always_send = always_send
 
     def generate_option(self, address_family):
         """
         Generates dhcp option value with a proper format
 
-        :param str address_family one of dhcpv4 or dhcpv6 family name
+        :param address_family str one of dhcpv4 or dhcpv6 family name
         """
         option = {
             "name": "%s/%s" % (address_family, self.key),
