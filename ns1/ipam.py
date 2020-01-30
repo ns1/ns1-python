@@ -1092,6 +1092,6 @@ class DHCPOptionValue:
             "value": self.value,
         }
         if self.always_send is not None:
-            option.update({"always_send": self.always_send})
+            option["always_send"] = self.always_send
 
         return option
