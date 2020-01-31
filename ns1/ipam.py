@@ -1032,8 +1032,11 @@ class DHCPOptions:
         Create the DHCP options class that can be used by the IPAM API
 
         :param str address_family: This is either dhcpv4 or dhcpv6
-        :param dict options: This is a dict representing the options set. Valid options are listed in :attr:`ns1.ipam.DHCPOptions.OPTIONS`
+        :param list options: This is a list of :class:`ns1.ipam.DHCPOptionsValue` objects representing the DHCP options
         """
+        self.option_list = {}
+        self.address_family = ""
+        self.options = []
 
         if server_options is None:
             self.server_options = {}
@@ -1050,12 +1053,43 @@ class DHCPOptions:
             self.server_options = server_options
 
         self.address_family = address_family
-        self.__dict__.update(options)
+        self.options = options
         self.__dict__.update(server_options)
+
         self.option_list = {
             "options": [
-                {"name": "%s/%s" % (self.address_family, key), "value": value}
-                for key, value in options.items()
+                option.generate_option(address_family)
+                for option in self.options
             ]
         }
+
         self.option_list.update(self.server_options)
+
+
+class DHCPOptionValue:
+    def __init__(self, key, value, always_send=None):
+        """
+        Create the DHCPOptionValue class that can be used as value with :class:`ns1.ipam.DHCPOptions`
+
+        :param key str option name
+        :param value any option value
+        :param always_send bool indicates whether this option be sent back in lease or not
+        """
+        self.key = key
+        self.value = value
+        self.always_send = always_send
+
+    def generate_option(self, address_family):
+        """
+        Generates dhcp option value with a proper format
+
+        :param address_family str one of dhcpv4 or dhcpv6 family name
+        """
+        option = {
+            "name": "%s/%s" % (address_family, self.key),
+            "value": self.value,
+        }
+        if self.always_send is not None:
+            option["always_send"] = self.always_send
+
+        return option
