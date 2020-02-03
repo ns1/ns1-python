@@ -67,6 +67,18 @@ class Monitors(resource.BaseResource):
             errback=errback,
         )
 
+    @property
+    def jobtypes(self, callback=None, errback=None):
+        return self._make_request(
+            "GET", "monitoring/jobtypes", callback=callback, errback=errback,
+        )
+
+    @property
+    def regions(self, callback=None, errback=None):
+        return self._make_request(
+            "GET", "monitoring/regions", callback=callback, errback=errback,
+        )
+
 
 class NotifyLists(resource.BaseResource):
 
