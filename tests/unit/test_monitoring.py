@@ -79,7 +79,7 @@ def test_rest_monitoring_crud(
     m._make_request.assert_called_once_with(method, url, **kwargs)
 
 
-@pytest.mark.parametrize("op", ["jobtypes", "regions",])
+@pytest.mark.parametrize("op", ["jobtypes", "regions"])
 def test_rest_monitoring_properties(monitoring_config, op):
     m = ns1.rest.monitoring.Monitors(monitoring_config)
     m._make_request = mock.MagicMock()
