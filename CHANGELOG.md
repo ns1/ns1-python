@@ -1,8 +1,25 @@
-## 0.14.0 (unreleased)
+## 0.15.0 (unreleased)
+
+## 0.14.0 (February 03, 2020)
 
 ENHANCEMENTS:
 
 * Add REST support for teams, users, and API keys
+* various IPAM features added
+* support for rate limit "strategies" [#47](https://github.com/ns1/ns1-python/pull/47)
+
+IMPROVEMENTS:
+
+* codebase linted (w/black) and GH action for keeping it that way
+* project status added to README
+
+BUG FIXES:
+
+* wrong args passed to reservation.delete [#42](https://github.com/ns1/ns1-python/pull/42)
+
+POTENTIAL BREAKING CHANGES:
+
+* Changes to ipam.Address model for v2.2, v2.1 users should stick to v0.13.0 [#41](https://github.com/ns1/ns1-python/pull/41)
 
 ## 0.13.0 (November 05, 2019)
 
