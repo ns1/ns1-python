@@ -67,18 +67,6 @@ class Monitors(resource.BaseResource):
             errback=errback,
         )
 
-    @property
-    def jobtypes(self, callback=None, errback=None):
-        return self._make_request(
-            "GET", "monitoring/jobtypes", callback=callback, errback=errback,
-        )
-
-    @property
-    def regions(self, callback=None, errback=None):
-        return self._make_request(
-            "GET", "monitoring/regions", callback=callback, errback=errback,
-        )
-
 
 class NotifyLists(resource.BaseResource):
 
@@ -124,4 +112,26 @@ class NotifyLists(resource.BaseResource):
             "%s/%s" % (self.ROOT, nlid),
             callback=callback,
             errback=errback,
+        )
+
+
+class JobTypes(resource.BaseResource):
+
+    ROOT = "monitoring/jobtypes"
+    PASSTHRU_FIELDS = []
+
+    def list(self, callback=None, errback=None):
+        return self._make_request(
+            "GET", self.ROOT, callback=callback, errback=errback,
+        )
+
+
+class Regions(resource.BaseResource):
+
+    ROOT = "monitoring/regions"
+    PASSTHRU_FIELDS = []
+
+    def list(self, callback=None, errback=None):
+        return self._make_request(
+            "GET", self.ROOT, callback=callback, errback=errback,
         )

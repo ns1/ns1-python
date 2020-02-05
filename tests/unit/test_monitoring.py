@@ -66,7 +66,7 @@ def monitoring_config(config):
         ),
     ],
 )
-def test_rest_monitoring_crud(
+def test_rest_monitoring_monitors(
     monitoring_config, op, args, method, url, kwargs
 ):
     m = ns1.rest.monitoring.Monitors(monitoring_config)
@@ -77,16 +77,6 @@ def test_rest_monitoring_crud(
     else:
         operation()
     m._make_request.assert_called_once_with(method, url, **kwargs)
-
-
-@pytest.mark.parametrize("op", ["jobtypes", "regions"])
-def test_rest_monitoring_properties(monitoring_config, op):
-    m = ns1.rest.monitoring.Monitors(monitoring_config)
-    m._make_request = mock.MagicMock()
-    getattr(m, op)
-    m._make_request.assert_called_once_with(
-        "GET", "monitoring/{}".format(op), callback=None, errback=None
-    )
 
 
 @pytest.mark.parametrize(
@@ -123,7 +113,7 @@ def test_rest_monitoring_properties(monitoring_config, op):
         ),
     ],
 )
-def test_rest_notifylists_crud(
+def test_rest_monitoring_notifylists(
     monitoring_config, op, args, method, url, kwargs
 ):
     m = ns1.rest.monitoring.NotifyLists(monitoring_config)
@@ -134,3 +124,21 @@ def test_rest_notifylists_crud(
     else:
         operation()
     m._make_request.assert_called_once_with(method, url, **kwargs)
+
+
+def test_rest_monitoring_jobtypes(monitoring_config):
+    m = ns1.rest.monitoring.JobTypes(monitoring_config)
+    m._make_request = mock.MagicMock()
+    m.list()
+    m._make_request.assert_called_once_with(
+        "GET", "monitoring/jobtypes", callback=None, errback=None
+    )
+
+
+def test_rest_monitoring_regions(monitoring_config):
+    m = ns1.rest.monitoring.Regions(monitoring_config)
+    m._make_request = mock.MagicMock()
+    m.list()
+    m._make_request.assert_called_once_with(
+        "GET", "monitoring/regions", callback=None, errback=None
+    )
