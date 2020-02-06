@@ -39,27 +39,30 @@ def ns1_config(config):
     return config
 
 
-@pytest.mark.parametrize("method, want", [
-    ("zones", Zones),
-    ("records", Records),
-    ("addresses", Addresses),
-    ("networks", Networks),
-    ("scope_groups", Scopegroups),
-    ("reservations", Reservations),
-    ("scopes", Scopes),
-    ("optiondefs", Optiondefs),
-    ("stats", Stats),
-    ("datasource", Source),
-    ("datafeed", Feed),
-    ("monitors", Monitors),
-    ("notifylists", NotifyLists),
-    ("monitoring_jobtypes", JobTypes),
-    ("monitoring_regions", Regions),
-    ("plan", Plan),
-    ("team", Team),
-    ("user", User),
-    ("apikey", APIKey),
-])
+@pytest.mark.parametrize(
+    "method, want",
+    [
+        ("zones", Zones),
+        ("records", Records),
+        ("addresses", Addresses),
+        ("networks", Networks),
+        ("scope_groups", Scopegroups),
+        ("reservations", Reservations),
+        ("scopes", Scopes),
+        ("optiondefs", Optiondefs),
+        ("stats", Stats),
+        ("datasource", Source),
+        ("datafeed", Feed),
+        ("monitors", Monitors),
+        ("notifylists", NotifyLists),
+        ("monitoring_jobtypes", JobTypes),
+        ("monitoring_regions", Regions),
+        ("plan", Plan),
+        ("team", Team),
+        ("user", User),
+        ("apikey", APIKey),
+    ],
+)
 def test_rest_interface(ns1_config, method, want):
     client = NS1(config=ns1_config)
     got = getattr(client, method)()
