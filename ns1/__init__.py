@@ -173,6 +173,26 @@ class NS1:
 
         return ns1.rest.monitoring.NotifyLists(self.config)
 
+    def monitoring_jobtypes(self):
+        """
+        Return a new raw REST interface to monitoring jobtypes resources
+
+        :rtype: :py:class:`ns1.rest.monitoring.JobTypes`
+        """
+        import ns1.rest.monitoring
+
+        return ns1.rest.monitoring.JobTypes(self.config)
+
+    def monitoring_regions(self):
+        """
+        Return a new raw REST interface to monitoring regions resources
+
+        :rtype: :py:class:`ns1.rest.monitoring.Regions`
+        """
+        import ns1.rest.monitoring
+
+        return ns1.rest.monitoring.Regions(self.config)
+
     def plan(self):
         """
         Return a new raw REST interface to account plan

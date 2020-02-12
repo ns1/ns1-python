@@ -113,3 +113,25 @@ class NotifyLists(resource.BaseResource):
             callback=callback,
             errback=errback,
         )
+
+
+class JobTypes(resource.BaseResource):
+
+    ROOT = "monitoring/jobtypes"
+    PASSTHRU_FIELDS = []
+
+    def list(self, callback=None, errback=None):
+        return self._make_request(
+            "GET", self.ROOT, callback=callback, errback=errback,
+        )
+
+
+class Regions(resource.BaseResource):
+
+    ROOT = "monitoring/regions"
+    PASSTHRU_FIELDS = []
+
+    def list(self, callback=None, errback=None):
+        return self._make_request(
+            "GET", self.ROOT, callback=callback, errback=errback,
+        )
