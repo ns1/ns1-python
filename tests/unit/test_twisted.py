@@ -16,6 +16,7 @@ class MockHeaders(object):
     """
     lookups should return lists
     """
+
     def __init__(self, lookup=None):
         self._lookup = {} if lookup is None else lookup
 
@@ -27,6 +28,7 @@ class MockResponse(object):
     """
     pretend we're a twisted.web.client.response
     """
+
     method = "GET"
     absoluteURI = "http://"
 
@@ -38,7 +40,7 @@ class MockResponse(object):
         self.request = self
 
     def deliverBody(self, protocol):
-        protocol.dataReceived(json.dumps(self.body).encode('utf-8'))
+        protocol.dataReceived(json.dumps(self.body).encode("utf-8"))
         protocol.connectionLost(self)
 
     def check(self, reason):
@@ -69,10 +71,12 @@ def test_twisted():
 
     # first response
     d1 = defer.Deferred()
-    d1.addCallback(lambda x: MockResponse(
-        headers={"Link": ["<http://a.co/b>; rel=next;"]},
-        body=[{"1st": ""}]
-    ))
+    d1.addCallback(
+        lambda x: MockResponse(
+            headers={"Link": ["<http://a.co/b>; rel=next;"]},
+            body=[{"1st": ""}],
+        )
+    )
     reactor.callLater(0, d1.callback, None)
 
     # second response
@@ -87,6 +91,7 @@ def test_twisted():
         out = deepcopy(jsonOut)
         out.extend(next_json)
         return out
+
     pagination_handler = mock.Mock(side_effect=_pagination_handler)
 
     # callbacks

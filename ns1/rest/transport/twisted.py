@@ -152,9 +152,11 @@ class TwistedTransport(TransportBase):
             d.addCallback(self._callback, request_data)
             d.addErrback(self._errback, request_data["user_errback"])
             # ... and a callback to our pagination_handler
-            d.addCallback(lambda next_json: request_data["pagination_handler"](
-                jsonOut, next_json
-            ))
+            d.addCallback(
+                lambda next_json: request_data["pagination_handler"](
+                    jsonOut, next_json
+                )
+            )
             return d
 
         # our (non-deferred) response goes back up the chain
