@@ -31,7 +31,11 @@ def test_rest_zone_list(zones_config):
     z._make_request = mock.MagicMock()
     z.list()
     z._make_request.assert_called_once_with(
-        "GET", "zones", callback=None, errback=None
+        "GET",
+        "zones",
+        callback=None,
+        errback=None,
+        pagination_handler=ns1.rest.zones.zone_list_pagination,
     )
 
 
@@ -41,7 +45,11 @@ def test_rest_zone_retrieve(zones_config, zone, url):
     z._make_request = mock.MagicMock()
     z.retrieve(zone)
     z._make_request.assert_called_once_with(
-        "GET", url, callback=None, errback=None
+        "GET",
+        url,
+        callback=None,
+        errback=None,
+        pagination_handler=ns1.rest.zones.zone_retrieve_pagination,
     )
 
 

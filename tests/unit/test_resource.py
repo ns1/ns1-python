@@ -1,10 +1,10 @@
+import json
 import pytest
 
 from ns1.config import Config
 from ns1.rest.resource import BaseResource
 from ns1.rest.transport.basic import BasicTransport
 from ns1.rest.transport.requests import have_requests, RequestsTransport
-from ns1.rest.transport.twisted import have_twisted, TwistedTransport
 
 try:  # Python 3.3 +
     import unittest.mock as mock
@@ -12,12 +12,15 @@ except ImportError:
     import mock
 
 
+# Note: twisted transport tests are in test_twisted.py
+
+
 class MockResponse:
     def __init__(self, status_code, json_data, headers=None, body=None):
         self.status_code = status_code
         self._json = json_data
         self._headers = {} if headers is None else headers
-        self._body = "{}" if body is None else body
+        self._body = json.dumps(json_data)
 
     def json(self):
         return self._json
@@ -60,6 +63,35 @@ def test_basic_transport():
     )
 
 
+def test_basic_transport_pagination():
+    config = Config()
+    config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
+    config["transport"] = "basic"
+
+    resource = BaseResource(config)
+
+    resource._transport._opener.open = mock.Mock()
+    resource._transport._opener.open.side_effect = [
+        MockResponse(
+            200, [{"1st": ""}], {"Link": "<http://a.co/b>; rel=next;"}
+        ),
+        MockResponse(
+            200, [{"2nd": ""}], {"Link": "<http://a.co/c>; rel=next;"}
+        ),
+        MockResponse(200, [{"3rd": ""}]),
+    ]
+    resource._transport._rate_limit_func = mock.Mock()
+
+    def pagination_handler(jsonOut, next_json):
+        jsonOut.extend(next_json)
+        return jsonOut
+
+    res = resource._make_request(
+        "GET", "my_path", pagination_handler=pagination_handler
+    )
+    assert res == [{"1st": ""}, {"2nd": ""}, {"3rd": ""}]
+
+
 @pytest.mark.skipif(not have_requests, reason="requests not found")
 def test_requests_transport():
     """
@@ -87,19 +119,34 @@ def test_requests_transport():
     )
 
 
-@pytest.mark.skipif(not have_twisted, reason="twisted not found")
-def test_twisted_transport():
-    """
-    it should get transport from config
-    """
+@pytest.mark.skipif(not have_requests, reason="requests not found")
+def test_requests_transport_pagination():
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
-    config["transport"] = "twisted"
+    config["transport"] = "requests"
 
     resource = BaseResource(config)
 
-    assert resource._config == config
-    assert isinstance(resource._transport, TwistedTransport)
+    resource._transport.REQ_MAP["GET"] = mock.Mock()
+    resource._transport.REQ_MAP["GET"].side_effect = [
+        MockResponse(
+            200, [{"1st": ""}], {"Link": "<http://a.co/b>; rel=next;"}
+        ),
+        MockResponse(
+            200, [{"2nd": ""}], {"Link": "<http://a.co/c>; rel=next;"}
+        ),
+        MockResponse(200, [{"3rd": ""}]),
+    ]
+    resource._transport._rate_limit_func = mock.Mock()
+
+    def pagination_handler(jsonOut, next_json):
+        jsonOut.extend(next_json)
+        return jsonOut
+
+    res = resource._make_request(
+        "GET", "my_path", pagination_handler=pagination_handler
+    )
+    assert res == [{"1st": ""}, {"2nd": ""}, {"3rd": ""}]
 
 
 def test_rate_limiting_strategies():

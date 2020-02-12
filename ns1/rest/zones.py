@@ -3,6 +3,7 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+from copy import deepcopy
 
 from . import resource
 
@@ -71,7 +72,11 @@ class Zones(resource.BaseResource):
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET", "%s" % self.ROOT, callback=callback, errback=errback
+            "GET",
+            "%s" % self.ROOT,
+            callback=callback,
+            errback=errback,
+            pagination_handler=zone_list_pagination,
         )
 
     def retrieve(self, zone, callback=None, errback=None):
@@ -80,6 +85,7 @@ class Zones(resource.BaseResource):
             "%s/%s" % (self.ROOT, zone),
             callback=callback,
             errback=errback,
+            pagination_handler=zone_retrieve_pagination,
         )
 
     def search(self, zone, q=None, has_geo=False, callback=None, errback=None):
@@ -95,3 +101,19 @@ class Zones(resource.BaseResource):
             callback=callback,
             errback=errback,
         )
+
+
+# successive pages just extend the list of zones
+def zone_list_pagination(curr_json, next_json):
+    # avoid mutating our inputs. not an issue now, but so it doesn't become one
+    out = deepcopy(curr_json)
+    out.extend(next_json)
+    return out
+
+
+# successive pages only differ in the "records" list
+def zone_retrieve_pagination(curr_json, next_json):
+    # avoid mutating our inputs. not an issue now, but so it doesn't become one
+    out = deepcopy(curr_json)
+    out["records"].extend(next_json["records"])
+    return out

@@ -70,7 +70,7 @@ Contributions
 Pull Requests and issues are welcome. See the [NS1 Contribution Guidelines](https://github.com/ns1/community) for more information.
 
 Our CI process will lint and check for formatting issues with `flake8` and
-`black`. 
+`black`.
 It is suggested to run these checks prior to submitting a pull request and fix
 any issues:
 ```

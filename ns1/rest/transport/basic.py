@@ -5,6 +5,7 @@
 #
 from __future__ import absolute_import
 
+from ns1.helpers import get_next_page
 from ns1.rest.transport.base import TransportBase
 from ns1.rest.errors import (
     ResourceException,
@@ -54,30 +55,7 @@ class BasicTransport(TransportBase):
             return build_opener(HTTPSHandler(context=context))
         return build_opener(HTTPSHandler)
 
-    def send(
-        self,
-        method,
-        url,
-        headers=None,
-        data=None,
-        files=None,
-        params=None,
-        callback=None,
-        errback=None,
-    ):
-        if headers is None:
-            headers = {}
-        if files is not None:
-            # XXX
-            raise Exception("file uploads not supported in BasicTransport yet")
-        self._logHeaders(headers)
-        self._log.debug("%s %s %s" % (method, url, data))
-
-        if sys.version_info.major >= 3 and isinstance(data, str):
-            data = data.encode("utf-8")
-        request = Request(url, headers=headers, data=data)
-        request.get_method = lambda: method
-
+    def _send(self, url, headers, data, method, errback):
         def handleProblem(code, resp, msg):
             if errback:
                 errback((resp, msg))
@@ -103,6 +81,9 @@ class BasicTransport(TransportBase):
                     body=msg,
                 )
 
+        request = Request(url, headers=headers, data=data)
+        request.get_method = lambda: method
+
         # Handle error and responses the same so we can
         # always pass the body to the handleProblem function
         try:
@@ -127,22 +108,54 @@ class BasicTransport(TransportBase):
             except AttributeError:
                 pass
             try:
-                jsonOut = json.loads(body)
+                return headers, json.loads(body)
             except ValueError:
                 if errback:
                     errback(resp)
-                    return
                 else:
                     raise ResourceException(
                         "invalid json in response", resp, body
                     )
         else:
-            jsonOut = None
+            return headers, None
+
+    def send(
+        self,
+        method,
+        url,
+        headers=None,
+        data=None,
+        files=None,
+        params=None,
+        callback=None,
+        errback=None,
+        pagination_handler=None,
+    ):
+        if headers is None:
+            headers = {}
+        if files is not None:
+            # XXX
+            raise Exception("file uploads not supported in BasicTransport yet")
+        self._logHeaders(headers)
+        self._log.debug("%s %s %s" % (method, url, data))
+
+        if sys.version_info.major >= 3 and isinstance(data, str):
+            data = data.encode("utf-8")
+
+        resp_headers, jsonOut = self._send(url, headers, data, method, errback)
+        if pagination_handler is not None:
+            next_page = get_next_page(resp_headers)
+            while next_page is not None:
+                self._log.debug("following pagination to: %s" % (next_page))
+                next_headers, next_json = self._send(
+                    next_page, headers, data, method, errback
+                )
+                jsonOut = pagination_handler(jsonOut, next_json)
+                next_page = get_next_page(next_headers)
 
         if callback:
             return callback(jsonOut)
-        else:
-            return jsonOut
+        return jsonOut
 
     def _get_headers(self, response):
         # works for 2 and 3
