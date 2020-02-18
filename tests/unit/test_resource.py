@@ -67,6 +67,7 @@ def test_basic_transport_pagination():
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
     config["transport"] = "basic"
+    config["follow_pagination"] = True
 
     resource = BaseResource(config)
 
@@ -124,6 +125,7 @@ def test_requests_transport_pagination():
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
     config["transport"] = "requests"
+    config["follow_pagination"] = True
 
     resource = BaseResource(config)
 

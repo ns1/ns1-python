@@ -65,6 +65,9 @@ class Config:
         if "ddi" not in self._data:
             self._data["ddi"] = False
 
+        if "follow_pagination" not in self._data:
+            self._data["follow_pagination"] = False
+
     def createFromAPIKey(self, apikey, maybeWriteDefault=False):
         """
         Create a basic config from a single API key

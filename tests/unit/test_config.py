@@ -12,6 +12,7 @@ defaults = {
     "api_version": "v1",
     "cli": {},
     "ddi": False,
+    "follow_pagination": False,
 }
 
 

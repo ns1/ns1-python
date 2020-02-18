@@ -58,6 +58,7 @@ def test_twisted():
     config = Config()
     config.createFromAPIKey("AAAAAAAAAAAAAAAAA")
     config["transport"] = "twisted"
+    config["follow_pagination"] = True
 
     resource = BaseResource(config)
 

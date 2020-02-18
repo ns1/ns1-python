@@ -18,6 +18,7 @@ class TransportBase(object):
             "ignore-ssl-errors", self._config.get("ignore-ssl-errors", False)
         )
         self._rate_limit_func = self._config.getRateLimitingFunc()
+        self._follow_pagination = self._config.get("follow_pagination", False)
 
     def _logHeaders(self, headers):
         if self._config["verbosity"] > 0:

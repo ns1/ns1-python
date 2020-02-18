@@ -111,7 +111,7 @@ class RequestsTransport(TransportBase):
         resp_headers, jsonOut = self._send(
             method, url, headers, data, files, params, errback
         )
-        if pagination_handler is not None:
+        if self._follow_pagination and pagination_handler is not None:
             next_page = get_next_page(resp_headers)
             while next_page is not None:
                 self._log.debug("following pagination to: %s" % next_page)

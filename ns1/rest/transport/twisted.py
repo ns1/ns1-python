@@ -141,6 +141,8 @@ class TwistedTransport(TransportBase):
 
     def _handlePagination(self, data, request_data):
         headers, jsonOut = data
+        if not self._follow_pagination:
+            return jsonOut
         link = {"link": headers.getRawHeaders("Link", [""])[0]}
         next_page = get_next_page(link)
         if next_page:
