@@ -3,7 +3,6 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
-from copy import deepcopy
 
 from . import resource
 
