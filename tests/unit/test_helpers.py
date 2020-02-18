@@ -91,6 +91,13 @@ def test_singleton_mixin_with_concurrency(queue_class, process, repetitions):
         ),
         (
             {
+                "Link": "<https://a.co/b.jpg>; rel=next; type='image/jpeg',"
+                "<http://b.co/c.jpg>; rel=last;type='image/jpeg'"
+            },
+            "https://a.co/b.jpg",
+        ),
+        (
+            {
                 "link": "<http://a.co/b.jpg>; rel=front; type='image/jpeg',"
                 "<http://b.co/c.jpg>; rel=back;type='image/jpeg'"
             },

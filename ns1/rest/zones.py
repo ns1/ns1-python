@@ -105,15 +105,11 @@ class Zones(resource.BaseResource):
 
 # successive pages just extend the list of zones
 def zone_list_pagination(curr_json, next_json):
-    # avoid mutating our inputs. not an issue now, but so it doesn't become one
-    out = deepcopy(curr_json)
-    out.extend(next_json)
-    return out
+    curr_json.extend(next_json)
+    return curr_json
 
 
 # successive pages only differ in the "records" list
 def zone_retrieve_pagination(curr_json, next_json):
-    # avoid mutating our inputs. not an issue now, but so it doesn't become one
-    out = deepcopy(curr_json)
-    out["records"].extend(next_json["records"])
-    return out
+    curr_json["records"].extend(next_json["records"])
+    return curr_json

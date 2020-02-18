@@ -127,8 +127,6 @@ class TwistedTransport(TransportBase):
         return d
 
     def _errback(self, failure, user_errback):
-        # print "failure: %s" % failure.printTraceback()
-
         if user_errback:
             return user_errback(failure)
         else:

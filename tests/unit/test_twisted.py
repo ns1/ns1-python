@@ -88,6 +88,7 @@ def test_twisted():
 
     # pagination
     def _pagination_handler(jsonOut, next_json):
+        # don't mutate args, since assertions operate on references to them
         out = deepcopy(jsonOut)
         out.extend(next_json)
         return out
