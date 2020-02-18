@@ -294,8 +294,12 @@ class NS1:
         Load an existing record into a high level Record object.
 
         :param str domain: domain name of the record in the zone, for example \
-            'myrecord'. You may leave off the zone, since it must be \
-            specified in the zone parameter
+            'myrecord'. You may leave off the zone, if it is specified in the \
+            zone parameter. This is recommended. You can pass a fully \
+            qualified domain and not pass the zone argument, but this will \
+            not work as expected if there are any dots in the domain, e.g. \
+            `foo.example.com` is OK, `foo.bar.example.com` will not work as
+            expected.
         :param str type: record type, such as 'A', 'MX', 'AAAA', etc.
         :param str zone: zone name, like 'example.com'
         :rtype: :py:class:`ns1.records`
