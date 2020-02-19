@@ -8,6 +8,7 @@ import json
 import random
 import sys
 
+from ns1.helpers import get_next_page
 from ns1.rest.errors import AuthException
 from ns1.rest.errors import RateLimitException
 from ns1.rest.errors import ResourceException
@@ -117,17 +118,48 @@ class TwistedTransport(TransportBase):
 
         self.agent = Agent(reactor, policy, connectTimeout=self._timeout)
 
-    def _callback(self, response, user_callback, data, headers):
+    def _callback(self, response, request_data):
         d = readBody(response)
-        d.addCallback(self._onBody, response, user_callback, data, headers)
+        d.addCallback(self._onBody, response, request_data)
         d.addCallback(self._handleRateLimiting)
+        d.addCallback(self._handlePagination, request_data)
 
         return d
+
+    def _errback(self, failure, user_errback):
+        if user_errback:
+            return user_errback(failure)
+        else:
+            if failure.check(ResourceException, RateLimitException):
+                raise failure.value
+            raise ResourceException(failure.getErrorMessage())
 
     def _handleRateLimiting(self, data):
         headers, jsonOut = data
         self._rate_limit_func(self._rateLimitHeaders(headers))
+        return headers, jsonOut
 
+    def _handlePagination(self, data, request_data):
+        headers, jsonOut = data
+        if not self._follow_pagination:
+            return jsonOut
+        link = {"link": headers.getRawHeaders("Link", [""])[0]}
+        next_page = get_next_page(link)
+        if next_page:
+            self._log.debug("following pagination to: {}".format(next_page))
+            # kickoff new deferred, with the original callbacks ...
+            d = request_data["request_func"](next_page)
+            d.addCallback(self._callback, request_data)
+            d.addErrback(self._errback, request_data["user_errback"])
+            # ... and a callback to our pagination_handler
+            d.addCallback(
+                lambda next_json: request_data["pagination_handler"](
+                    jsonOut, next_json
+                )
+            )
+            return d
+
+        # our (non-deferred) response goes back up the chain
         return jsonOut
 
     def _rateLimitHeaders(self, headers):
@@ -140,15 +172,15 @@ class TwistedTransport(TransportBase):
             ),
         }
 
-    def _onBody(self, body, response, user_callback, data, headers):
-        self._logHeaders(headers)
+    def _onBody(self, body, response, request_data):
+        self._logHeaders(request_data["headers"])
         self._log.debug(
             "%s %s %s %s"
             % (
                 response.request.method,
                 response.request.absoluteURI,
                 response.code,
-                data,
+                request_data["data"],
             )
         )
 
@@ -181,6 +213,7 @@ class TwistedTransport(TransportBase):
         else:
             jsonOut = None
 
+        user_callback = request_data["user_callback"]
         if user_callback:
             # set these in case callback throws, so we have them for errback
             self.response = response
@@ -190,29 +223,12 @@ class TwistedTransport(TransportBase):
         else:
             return responseHeaders, jsonOut
 
-    def _errback(self, failure, user_errback):
-        # print "failure: %s" % failure.printTraceback()
-
-        if user_errback:
-            return user_errback(failure)
-        else:
-            if failure.check(ResourceException, RateLimitException):
-                raise failure.value
-            raise ResourceException(failure.getErrorMessage())
-
-    def send(
-        self,
-        method,
-        url,
-        headers=None,
-        data=None,
-        files=None,
-        params=None,
-        callback=None,
-        errback=None,
-    ):
+    def _request_func(self, method, headers, data, files):
+        """
+        Apply the basic request parameters that won't change over subrequests,
+        return a function that takes a url and returns a (new) deferred.
+        """
         bProducer = None
-
         if data:
             bProducer = StringProducer(data)
         elif files:
@@ -231,18 +247,52 @@ class TwistedTransport(TransportBase):
                 "Content-Type"
             ] = "multipart/form-data; boundary={}".format(boundary)
             bProducer = FileBodyProducer(StringIO.StringIO(body))
-        theaders = None
 
-        if params is not None:
-            qstr = urlencode(params)
-            url = "?".join((url, qstr))
+        theaders = (
+            Headers({str(k): [str(v)] for (k, v) in headers.items()})
+            if headers
+            else None
+        )
 
-        if headers:
-            theaders = Headers(
-                {str(k): [str(v)] for (k, v) in headers.items()}
+        def req(url):
+            # explicit encoding is so this works for py2 and py3
+            return self.agent.request(
+                method.encode("utf-8"),
+                url.encode("utf-8"),
+                theaders,
+                bProducer,
             )
-        d = self.agent.request(method, str(url), theaders, bProducer)
-        d.addCallback(self._callback, callback, data, headers)
+
+        return req
+
+    def send(
+        self,
+        method,
+        url,
+        headers=None,
+        data=None,
+        files=None,
+        params=None,
+        callback=None,
+        errback=None,
+        pagination_handler=None,
+    ):
+        if params is not None:
+            url = "?".join((url, urlencode(params)))
+
+        # gather everything we need to make more requests...
+        request_data = {
+            "data": data,
+            "headers": headers,
+            "pagination_handler": pagination_handler,
+            "request_func": self._request_func(method, headers, data, files),
+            "user_callback": callback,
+            "user_errback": errback,
+        }
+
+        d = request_data["request_func"](url)
+        # ... and pass it along
+        d.addCallback(self._callback, request_data)
         d.addErrback(self._errback, errback)
 
         return d

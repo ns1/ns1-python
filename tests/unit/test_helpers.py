@@ -69,3 +69,47 @@ def test_singleton_mixin_with_concurrency(queue_class, process, repetitions):
         assert a is b
         assert a not in seen_uuids
         seen_uuids.add(a)
+
+
+@pytest.mark.parametrize(
+    "headers, want",
+    [
+        ({}, None),
+        (
+            {
+                "link": "<http://a.co/b.jpg>; rel=next; type='image/jpeg',"
+                "<http://b.co/c.jpg>; rel=last;type='image/jpeg'"
+            },
+            "https://a.co/b.jpg",
+        ),
+        (
+            {
+                "Link": "<http://a.co/b.jpg>; rel=next; type='image/jpeg',"
+                "<http://b.co/c.jpg>; rel=last;type='image/jpeg'"
+            },
+            "https://a.co/b.jpg",
+        ),
+        (
+            {
+                "Link": "<https://a.co/b.jpg>; rel=next; type='image/jpeg',"
+                "<http://b.co/c.jpg>; rel=last;type='image/jpeg'"
+            },
+            "https://a.co/b.jpg",
+        ),
+        (
+            {
+                "link": "<http://a.co/b.jpg>; rel=front; type='image/jpeg',"
+                "<http://b.co/c.jpg>; rel=back;type='image/jpeg'"
+            },
+            None,
+        ),
+    ],
+)
+def test_next_page(headers, want):
+    """
+    it should get the "next" link
+    it should "https-ify" http links
+    it is not case-sensitive when reading header dict
+    """
+    got = ns1.helpers.get_next_page(headers)
+    assert got == want

@@ -5,6 +5,7 @@
 #
 from __future__ import absolute_import
 
+from ns1.helpers import get_next_page
 from ns1.rest.transport.base import TransportBase
 from ns1.rest.errors import (
     ResourceException,
@@ -43,18 +44,7 @@ class RequestsTransport(TransportBase):
             "remaining": int(headers.get("X-RateLimit-Remaining", 100)),
         }
 
-    def send(
-        self,
-        method,
-        url,
-        headers=None,
-        data=None,
-        params=None,
-        files=None,
-        callback=None,
-        errback=None,
-    ):
-        self._logHeaders(headers)
+    def _send(self, method, url, headers, data, files, params, errback):
         resp = self.REQ_MAP[method](
             url,
             headers=headers,
@@ -92,7 +82,7 @@ class RequestsTransport(TransportBase):
         # TODO make sure json is valid if a body is returned
         if resp.text:
             try:
-                jsonOut = resp.json()
+                return response_headers, resp.json()
             except ValueError:
                 if errback:
                     errback(resp)
@@ -102,12 +92,38 @@ class RequestsTransport(TransportBase):
                         "invalid json in response", resp, resp.text
                     )
         else:
-            jsonOut = None
+            return response_headers, None
+
+    def send(
+        self,
+        method,
+        url,
+        headers=None,
+        data=None,
+        params=None,
+        files=None,
+        callback=None,
+        errback=None,
+        pagination_handler=None,
+    ):
+        self._logHeaders(headers)
+
+        resp_headers, jsonOut = self._send(
+            method, url, headers, data, files, params, errback
+        )
+        if self._follow_pagination and pagination_handler is not None:
+            next_page = get_next_page(resp_headers)
+            while next_page is not None:
+                self._log.debug("following pagination to: %s" % next_page)
+                next_headers, next_json = self._send(
+                    method, next_page, headers, data, files, params, errback
+                )
+                jsonOut = pagination_handler(jsonOut, next_json)
+                next_page = get_next_page(next_headers)
 
         if callback:
             return callback(jsonOut)
-        else:
-            return jsonOut
+        return jsonOut
 
 
 TransportBase.REGISTRY["requests"] = RequestsTransport

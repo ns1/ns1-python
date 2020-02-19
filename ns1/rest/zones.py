@@ -71,7 +71,11 @@ class Zones(resource.BaseResource):
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET", "%s" % self.ROOT, callback=callback, errback=errback
+            "GET",
+            "%s" % self.ROOT,
+            callback=callback,
+            errback=errback,
+            pagination_handler=zone_list_pagination,
         )
 
     def retrieve(self, zone, callback=None, errback=None):
@@ -80,6 +84,7 @@ class Zones(resource.BaseResource):
             "%s/%s" % (self.ROOT, zone),
             callback=callback,
             errback=errback,
+            pagination_handler=zone_retrieve_pagination,
         )
 
     def search(self, zone, q=None, has_geo=False, callback=None, errback=None):
@@ -95,3 +100,15 @@ class Zones(resource.BaseResource):
             callback=callback,
             errback=errback,
         )
+
+
+# successive pages just extend the list of zones
+def zone_list_pagination(curr_json, next_json):
+    curr_json.extend(next_json)
+    return curr_json
+
+
+# successive pages only differ in the "records" list
+def zone_retrieve_pagination(curr_json, next_json):
+    curr_json["records"].extend(next_json["records"])
+    return curr_json

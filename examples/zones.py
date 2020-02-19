@@ -15,6 +15,12 @@ api = NS1()
 # to load an alternate configuration file:
 # api = NS1(configFile='/etc/ns1/api.json')
 
+# turn on "follow pagination". This will handle paginated responses for
+# zone list and the records for a zone retrieve. It's off by default to
+# avoid a breaking change
+config = api.config
+config["follow_pagination"] = True
+
 ######################
 # LOAD / CREATE ZONE #
 ######################
