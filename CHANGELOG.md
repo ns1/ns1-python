@@ -1,4 +1,15 @@
-## 0.15.0 (unreleased)
+## 0.16.0 (unreleased)
+
+## 0.15.0 (February 20, 2020)
+
+ENHANCEMENTS
+
+* Support monitoring regions endpoint [#55](https://github.com/ns1/ns1-python/pull/55)
+* Support job types endpoint [#55](https://github.com/ns1/ns1-python/pull/55)
+* Support for following pagination in the endpoints that have it. Off by
+  default to avoid breaking changes. Enable in config by setting
+  `follow_pagination` to True. [#56](https://github.com/ns1/ns1-python/pull/56)
+* Clarify usage caveats in loadRecord docstring [#58](https://github.com/ns1/ns1-python/pull/58)
 
 ## 0.14.0 (February 03, 2020)
 
