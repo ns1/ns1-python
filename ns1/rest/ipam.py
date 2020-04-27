@@ -149,7 +149,7 @@ class Addresses(resource.BaseResource):
 class Networks(resource.BaseResource):
     ROOT = "ipam/network"
     INT_FIELDS = ["network_id"]
-    PASSTHRU_FIELDS = ["rt", "name", "desc", "kvps", "tags"]
+    PASSTHRU_FIELDS = ["rt", "name", "desc", "tags"]
     BOOL_FIELDS = []
 
     def _buildBody(self, **kwargs):
@@ -218,7 +218,7 @@ class Networks(resource.BaseResource):
 class Scopegroups(resource.BaseResource):
     ROOT = "dhcp/scopegroup"
     INT_FIELDS = ["id", "dhcp_service_id", "valid_lifetime_secs"]
-    PASSTHRU_FIELDS = ["dhcpv4", "dhcpv6", "name"]
+    PASSTHRU_FIELDS = ["dhcpv4", "dhcpv6", "name", "tags"]
     BOOL_FIELDS = ["enabled", "echo_client_id"]
 
     def _buildBody(self, **kwargs):
@@ -281,12 +281,13 @@ class Scopes(resource.BaseResource):
         return None
 
     def create(
-        self, scopegroup_id, address_id, options, callback=None, errback=None
+        self, scopegroup_id, address_id, options, tags, callback=None, errback=None
     ):
         body = {
             "address_id": address_id,
             "scope_group_id": scopegroup_id,
             "options": options,
+            "tags": tags,
         }
 
         return self._make_request(
@@ -302,6 +303,7 @@ class Scopes(resource.BaseResource):
         scope_id,
         address_id,
         options,
+        tags,
         scopegroup_id=None,
         callback=None,
         errback=None,
@@ -309,6 +311,9 @@ class Scopes(resource.BaseResource):
         body = {"address_id": address_id, "options": options}
         if scopegroup_id is not None:
             body["scope_group_id"] = (scopegroup_id,)
+
+        if tags is not None:
+            body["tags"] = tags
 
         return self._make_request(
             "POST",
@@ -426,7 +431,7 @@ class Optiondefs(resource.BaseResource):
 class Reservations(resource.BaseResource):
     ROOT = "dhcp/reservation"
     INT_FIELDS = ["scope_group_id", "address_id"]
-    PASSTHRU_FIELDS = ["mac", "options"]
+    PASSTHRU_FIELDS = ["mac", "options", "tags"]
     BOOL_FIELDS = ["dhcpv6"]
 
     def _buildBody(self, **kwargs):
