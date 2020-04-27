@@ -449,7 +449,7 @@ class NS1:
         return scope_group.load(callback=callback, errback=errback)
 
     def createScopeGroup(
-        self, name, service_def_id, dhcp4, dhcp6, callback=None, errback=None
+        self, name, service_def_id, dhcp4, dhcp6, callback=None, errback=None, **kwargs
     ):
         """
         Create a new Scope Group
@@ -467,7 +467,7 @@ class NS1:
         )
 
         return scope_group.create(
-            dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback
+            dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback, **kwargs
         )
 
     def createReservation(
@@ -478,6 +478,7 @@ class NS1:
         dhcp_options=None,
         callback=None,
         errback=None,
+        **kwargs
     ):
         import ns1.ipam
 
@@ -485,7 +486,7 @@ class NS1:
             self.config, scopegroup_id, address_id, dhcp_options, mac
         )
 
-        return reservation.create(callback=callback, errback=errback)
+        return reservation.create(callback=callback, errback=errback, **kwargs)
 
     def loadReservation(
         self, scopegroup_id, address_id, callback=None, errback=None
@@ -505,6 +506,7 @@ class NS1:
         dhcp_options=None,
         callback=None,
         errback=None,
+        **kwargs
     ):
         import ns1.ipam
 
@@ -512,7 +514,7 @@ class NS1:
             self.config, scopegroup_id, address_id, dhcp_options
         )
 
-        return scope.create(callback=callback, errback=errback)
+        return scope.create(callback=callback, errback=errback, **kwargs)
 
     def loadScope(
         self, scopegroup_id, address_id, callback=None, errback=None
