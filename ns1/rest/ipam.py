@@ -272,6 +272,13 @@ class Scopegroups(resource.BaseResource):
 
 class Scopes(resource.BaseResource):
     ROOT = "dhcp/scope"
+    INT_FIELDS = ["scope_group_id", "address_id", "valid_lifetime_secs"]
+    PASSTHRU_FIELDS = ["options", "tags"]
+
+    def _buildBody(self, **kwargs):
+        body = {}
+        self._buildStdBody(body, kwargs)
+        return body
 
     @classmethod
     def select_from_list(cls, result, scope_id):
@@ -281,14 +288,12 @@ class Scopes(resource.BaseResource):
         return None
 
     def create(
-        self, scopegroup_id, address_id, options, tags, callback=None, errback=None
+        self, scopegroup_id, address_id, options, callback=None, errback=None, **kwargs
     ):
-        body = {
-            "address_id": address_id,
-            "scope_group_id": scopegroup_id,
-            "options": options,
-            "tags": tags,
-        }
+        kwargs["address_id"] = address_id
+        kwargs["scope_group_id"] = scopegroup_id
+        kwargs["options"] = options
+        body = self._buildBody(**kwargs)
 
         return self._make_request(
             "PUT",
@@ -303,17 +308,18 @@ class Scopes(resource.BaseResource):
         scope_id,
         address_id,
         options,
-        tags,
         scopegroup_id=None,
         callback=None,
         errback=None,
+        **kwargs
     ):
-        body = {"address_id": address_id, "options": options}
-        if scopegroup_id is not None:
-            body["scope_group_id"] = (scopegroup_id,)
+        kwargs["address_id"] = address_id
+        kwargs["options"] = options
 
-        if tags is not None:
-            body["tags"] = tags
+        if scopegroup_id is not None:
+            kwargs["scope_group_id"] = scopegroup_id
+
+        body = self._buildBody(**kwargs)
 
         return self._make_request(
             "POST",

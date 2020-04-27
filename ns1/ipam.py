@@ -480,7 +480,7 @@ class Scopegroup(object):
             self.id, callback=success, errback=errback, **kwargs
         )
 
-    def create(self, dhcp4, dhcp6, callback=None, errback=None):
+    def create(self, dhcp4, dhcp6, callback=None, errback=None, **kwargs):
         """
         :param DHCPOptions dhcp4: DHCPOptions object that contains the settings for dhcp4
         :param DHCPOptions dhcp6: DHCPOptions object that contains the settings for dhcp6
@@ -518,6 +518,7 @@ class Scopegroup(object):
             dhcp_service_id=self.dhcp_service_id,
             callback=success,
             errback=errback,
+            **kwargs
         )
 
     def reserve(
@@ -579,6 +580,7 @@ class Reservation(object):
         config,
         scopegroup_id,
         address_id,
+        tags=None,
         reservation_id=None,
         options=None,
         mac=None,
@@ -589,6 +591,7 @@ class Reservation(object):
         :param ns1.config.Config config: config object
         :param int scopegroup_id: id of the scope group
         :param int address_id: id of the address the reservation is associated with
+        :param dict tags: tags of the reservation
         :param int reservation_id: id of the reservation
         :param list options: dhcp options of the reservation
         :param str mac: mac address of the reservation
@@ -597,6 +600,7 @@ class Reservation(object):
         self.config = config
         self.id = reservation_id
         self.scopegroup_id = scopegroup_id
+        self.tags = tags
         self.address_id = address_id
         self.mac = mac
         self.data = None
@@ -641,6 +645,9 @@ class Reservation(object):
             self.address_id = result["address_id"]
             self.mac = result["mac"]
             self.options = result["options"]
+
+            if "tags" in result:
+                self.tags = result["tags"]
 
             if callback:
                 return callback(self)
@@ -919,6 +926,7 @@ class Scope(object):
             self.options,
             callback=success,
             errback=errback,
+            **kwargs
         )
 
     def update(
