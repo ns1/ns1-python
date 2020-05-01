@@ -449,7 +449,7 @@ class Scopegroup(object):
             self.dhcp4 = result["dhcpv4"]
             self.dhcp6 = result["dhcpv6"]
             self.dhcp_service_id = result.get("dhcp_service_id")
-            
+
             if "tags" in result:
                 self.tags = result["tags"]
 
