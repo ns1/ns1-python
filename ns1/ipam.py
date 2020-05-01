@@ -53,7 +53,7 @@ class Network(object):
         :param ns1.config.Config config: config object
         :param str name: network name
         :param int id: id of an existing Network
-        :param dict tags: tags of the reservation
+        :param dict tags: tags of the network
         """
         self._rest = Networks(config)
         self.config = config
@@ -201,7 +201,7 @@ class Address(object):
         :param str status: planned, assigned
         :param Network network: Network Object the address will be part of
         :param Scopegroup scope_group: Scopegroup Object that will be associated with the address
-        :param dict tags: tags of the reservation
+        :param dict tags: tags of the address
         """
         self._rest = Addresses(config)
         self.config = config
@@ -410,7 +410,7 @@ class Scopegroup(object):
         :param str name: Name of the scope group
         :param int service_group_id: id of the service group the scope group is associated with
         :param int id: id of the scope group
-        :param dict tags: tags of the reservation
+        :param dict tags: tags of the scpoegroup
         """
         self._rest = Scopegroups(config)
         self.config = config
@@ -852,7 +852,7 @@ class Scope(object):
         :param int address_id: id of the address the scope is associated with
         :param int scope_id: id of the scope
         :param DHCPOptions options: DHCPOptions object that contains the settings for the scope
-        :param dict tags: tags of the reservation
+        :param dict tags: tags of the scope
         """
         self._rest = Scopes(config)
         self.config = config

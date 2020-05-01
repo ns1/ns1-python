@@ -480,6 +480,15 @@ class NS1:
         errback=None,
         **kwargs
     ):
+        """
+        Create a new Reservation
+        For the list of keywords available, see :attr:`ns1.rest.ipam.Reservation.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservation.PASSTHRU_FIELDS`
+
+        :param int scopegroup_id: id of the scope group
+        :param int address_id: id of the address the reservation is associated with
+        :param str mac: mac address of the reservation
+        :param list options: dhcp options of the reservation
+        """
         import ns1.ipam
 
         reservation = ns1.ipam.Reservation(
@@ -508,6 +517,14 @@ class NS1:
         errback=None,
         **kwargs
     ):
+        """
+        Create a new Scope
+        For the list of keywords available, see :attr:`ns1.rest.ipam.Scope.INT_FIELDS` and :attr:`ns1.rest.ipam.Scope.PASSTHRU_FIELDS`
+
+        :param int scopegroup_id: id of the scope group
+        :param int address_id: id of the address the scope is associated with
+        :param DHCPOptions options: DHCPOptions object that contains the settings for the scope
+        """
         import ns1.ipam
 
         scope = ns1.ipam.Scope(

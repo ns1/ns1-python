@@ -16,7 +16,7 @@ class Addresses(resource.BaseResource):
         " merged_address_id",
         "scope_group_id",
     ]
-    PASSTHRU_FIELDS = ["prefix", "status", "desc", "kvps", "tags", "reserve"]
+    PASSTHRU_FIELDS = ["prefix", "status", "desc", "tags", "reserve"]
     BOOL_FIELDS = ["parent"]
 
     def _buildBody(self, **kwargs):
