@@ -608,7 +608,6 @@ class Reservation(object):
         :param ns1.config.Config config: config object
         :param int scopegroup_id: id of the scope group
         :param int address_id: id of the address the reservation is associated with
-        :param dict tags: tags of the reservation
         :param int reservation_id: id of the reservation
         :param list options: dhcp options of the reservation
         :param str mac: mac address of the reservation
