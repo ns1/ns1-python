@@ -281,8 +281,8 @@ class Address(object):
                         address
                         for address in self._rest.list()
                         if address["prefix"] == self.prefix
-                           and address["status"] == self.status
-                           and address["network_id"] == network_id
+                        and address["status"] == self.status
+                        and address["network_id"] == network_id
                     ][0]["id"]
                 except IndexError:
                     raise AddressException(
