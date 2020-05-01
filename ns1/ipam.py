@@ -410,7 +410,7 @@ class Scopegroup(object):
         :param str name: Name of the scope group
         :param int service_group_id: id of the service group the scope group is associated with
         :param int id: id of the scope group
-        :param dict tags: tags of the scpoegroup
+        :param dict tags: tags of the scopegroup
         """
         self._rest = Scopegroups(config)
         self.config = config
