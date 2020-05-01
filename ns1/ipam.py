@@ -166,7 +166,7 @@ class Network(object):
         )
 
     def new_address(
-            self, prefix, status, callback=None, errback=None, **kwargs
+        self, prefix, status, callback=None, errback=None, **kwargs
     ):
         """
         Create a new address space in this Network
@@ -184,14 +184,14 @@ class Network(object):
 
 class Address(object):
     def __init__(
-            self,
-            config,
-            prefix=None,
-            status=None,
-            network=None,
-            scope_group=None,
-            id=None,
-            tags=None
+        self,
+        config,
+        prefix=None,
+        status=None,
+        network=None,
+        scope_group=None,
+        id=None,
+        tags=None,
     ):
         """
         Create a new high level Address object
@@ -267,9 +267,9 @@ class Address(object):
 
         if self.id is None:
             if (
-                    self.prefix is None
-                    or self.status is None
-                    or self.network is None
+                self.prefix is None
+                or self.status is None
+                or self.network is None
             ):
                 raise AddressException(
                     "Must at least specify an id or prefix, status, and network"
@@ -338,7 +338,7 @@ class Address(object):
         )
 
     def reserve(
-            self, scopegroup_id, mac, options=None, callback=None, errback=None
+        self, scopegroup_id, mac, options=None, callback=None, errback=None
     ):
         """
         Add scope group reservation. Pass a single Address object and a MAC address as a string
@@ -402,7 +402,9 @@ class Address(object):
 
 
 class Scopegroup(object):
-    def __init__(self, config, name=None, service_def_id=None, id=None, tags=None):
+    def __init__(
+        self, config, name=None, service_def_id=None, id=None, tags=None
+    ):
         """
         Create a new high level Scopegroup object
 
@@ -539,7 +541,7 @@ class Scopegroup(object):
         )
 
     def reserve(
-            self, address_id, mac, options=None, callback=None, errback=None
+        self, address_id, mac, options=None, callback=None, errback=None
     ):
         """
         :param int address_id: id of the Address to reserve
@@ -593,14 +595,14 @@ class Scopegroup(object):
 
 class Reservation(object):
     def __init__(
-            self,
-            config,
-            scopegroup_id,
-            address_id,
-            reservation_id=None,
-            options=None,
-            mac=None,
-            tags=None
+        self,
+        config,
+        scopegroup_id,
+        address_id,
+        reservation_id=None,
+        options=None,
+        mac=None,
+        tags=None,
     ):
         """
         Create a new high level Reservation object
@@ -715,7 +717,7 @@ class Reservation(object):
         )
 
     def update(
-            self, options, callback=None, errback=None, parent=True, **kwargs
+        self, options, callback=None, errback=None, parent=True, **kwargs
     ):
         """
         Update reservation configuration. Pass a list of keywords and their values to
@@ -842,7 +844,13 @@ class Optiondef(object):
 
 class Scope(object):
     def __init__(
-            self, config, scopegroup_id, address_id, scope_id=None, options=None, tags=None
+        self,
+        config,
+        scopegroup_id,
+        address_id,
+        scope_id=None,
+        options=None,
+        tags=None,
     ):
         """
         Create a new high level Scope object
@@ -952,7 +960,7 @@ class Scope(object):
         )
 
     def update(
-            self, address_id, options, callback=None, errback=None, **kwargs
+        self, address_id, options, callback=None, errback=None, **kwargs
     ):
         """
         Update Scope configuration. Pass a list of keywords and their values to
@@ -1006,14 +1014,14 @@ class Lease(object):
         return self.load(reload=True, callback=callback, errback=errback)
 
     def load(
-            self,
-            scope_group_id=None,
-            scope_id=None,
-            limit=None,
-            offset=None,
-            callback=None,
-            errback=None,
-            reload=False,
+        self,
+        scope_group_id=None,
+        scope_id=None,
+        limit=None,
+        offset=None,
+        callback=None,
+        errback=None,
+        reload=False,
     ):
         """
         Load Lease data from the API.

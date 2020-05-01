@@ -37,7 +37,7 @@ class Addresses(resource.BaseResource):
         )
 
     def update(
-            self, address_id, callback=None, errback=None, parent=True, **kwargs
+        self, address_id, callback=None, errback=None, parent=True, **kwargs
     ):
         body = self._buildBody(**kwargs)
         params = {"parent": parent}
@@ -288,7 +288,13 @@ class Scopes(resource.BaseResource):
         return None
 
     def create(
-            self, scopegroup_id, address_id, options, callback=None, errback=None, **kwargs
+        self,
+        scopegroup_id,
+        address_id,
+        options,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         kwargs["address_id"] = address_id
         kwargs["scope_group_id"] = scopegroup_id
@@ -304,14 +310,14 @@ class Scopes(resource.BaseResource):
         )
 
     def update(
-            self,
-            scope_id,
-            address_id,
-            options,
-            scopegroup_id=None,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        scope_id,
+        address_id,
+        options,
+        scopegroup_id=None,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         kwargs["address_id"] = address_id
         kwargs["options"] = options
@@ -361,13 +367,13 @@ class Leases(resource.BaseResource):
     BOOL_FIELDS = []
 
     def list(
-            self,
-            scope_group_id=None,
-            scope_id=None,
-            limit=None,
-            offset=None,
-            callback=None,
-            errback=None,
+        self,
+        scope_group_id=None,
+        scope_id=None,
+        limit=None,
+        offset=None,
+        callback=None,
+        errback=None,
     ):
         params = {}
         if scope_group_id is not None:
@@ -453,13 +459,13 @@ class Reservations(resource.BaseResource):
         return None
 
     def create(
-            self,
-            scopegroup_id,
-            address_id,
-            options,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        scopegroup_id,
+        address_id,
+        options,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         kwargs["address_id"] = address_id
         kwargs["scope_group_id"] = scopegroup_id
@@ -472,7 +478,7 @@ class Reservations(resource.BaseResource):
         return reservation
 
     def update(
-            self, reservation_id, options, callback=None, errback=None, **kwargs
+        self, reservation_id, options, callback=None, errback=None, **kwargs
     ):
         kwargs["options"] = options
         body = self._buildBody(**kwargs)
