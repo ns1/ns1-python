@@ -1,4 +1,9 @@
-## 0.16.0 (unreleased)
+## 0.17.0 (Unreleased)
+
+## 0.16.0 (May 18, 2020)
+
+ENHANCEMENTS
+* Added tags to ipam/dhcp resources
 
 ## 0.15.0 (February 20, 2020)
 
