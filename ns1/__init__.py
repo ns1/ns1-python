@@ -449,7 +449,14 @@ class NS1:
         return scope_group.load(callback=callback, errback=errback)
 
     def createScopeGroup(
-        self, name, service_def_id, dhcp4, dhcp6, callback=None, errback=None
+        self,
+        name,
+        service_def_id,
+        dhcp4,
+        dhcp6,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Create a new Scope Group
@@ -467,7 +474,11 @@ class NS1:
         )
 
         return scope_group.create(
-            dhcp4=dhcp4, dhcp6=dhcp6, callback=callback, errback=errback
+            dhcp4=dhcp4,
+            dhcp6=dhcp6,
+            callback=callback,
+            errback=errback,
+            **kwargs
         )
 
     def createReservation(
@@ -478,14 +489,24 @@ class NS1:
         dhcp_options=None,
         callback=None,
         errback=None,
+        **kwargs
     ):
+        """
+        Create a new Reservation
+        For the list of keywords available, see :attr:`ns1.rest.ipam.Reservation.INT_FIELDS` and :attr:`ns1.rest.ipam.Reservation.PASSTHRU_FIELDS`
+
+        :param int scopegroup_id: id of the scope group
+        :param int address_id: id of the address the reservation is associated with
+        :param str mac: mac address of the reservation
+        :param list options: dhcp options of the reservation
+        """
         import ns1.ipam
 
         reservation = ns1.ipam.Reservation(
             self.config, scopegroup_id, address_id, dhcp_options, mac
         )
 
-        return reservation.create(callback=callback, errback=errback)
+        return reservation.create(callback=callback, errback=errback, **kwargs)
 
     def loadReservation(
         self, scopegroup_id, address_id, callback=None, errback=None
@@ -505,14 +526,23 @@ class NS1:
         dhcp_options=None,
         callback=None,
         errback=None,
+        **kwargs
     ):
+        """
+        Create a new Scope
+        For the list of keywords available, see :attr:`ns1.rest.ipam.Scope.INT_FIELDS` and :attr:`ns1.rest.ipam.Scope.PASSTHRU_FIELDS`
+
+        :param int scopegroup_id: id of the scope group
+        :param int address_id: id of the address the scope is associated with
+        :param DHCPOptions options: DHCPOptions object that contains the settings for the scope
+        """
         import ns1.ipam
 
         scope = ns1.ipam.Scope(
             self.config, scopegroup_id, address_id, dhcp_options
         )
 
-        return scope.create(callback=callback, errback=errback)
+        return scope.create(callback=callback, errback=errback, **kwargs)
 
     def loadScope(
         self, scopegroup_id, address_id, callback=None, errback=None

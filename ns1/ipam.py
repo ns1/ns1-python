@@ -46,19 +46,21 @@ class OptiondefException(Exception):
 
 
 class Network(object):
-    def __init__(self, config, name=None, id=None):
+    def __init__(self, config, name=None, id=None, tags=None):
         """
         Create a new high level Network object
 
         :param ns1.config.Config config: config object
         :param str name: network name
         :param int id: id of an existing Network
+        :param dict tags: tags of the network
         """
         self._rest = Networks(config)
         self.config = config
         self.name = name
         self.id = id
         self.report = {}
+        self.tags = tags
         self.data = None
 
     def __repr__(self):
@@ -87,6 +89,9 @@ class Network(object):
             self.id = result["id"]
             self.name = result["name"]
             self.report = self._rest.report(self.id)
+
+            if "tags" in result:
+                self.tags = result["tags"]
 
             if callback:
                 return callback(self)
@@ -186,6 +191,7 @@ class Address(object):
         network=None,
         scope_group=None,
         id=None,
+        tags=None,
     ):
         """
         Create a new high level Address object
@@ -195,6 +201,7 @@ class Address(object):
         :param str status: planned, assigned
         :param Network network: Network Object the address will be part of
         :param Scopegroup scope_group: Scopegroup Object that will be associated with the address
+        :param dict tags: tags of the address
         """
         self._rest = Addresses(config)
         self.config = config
@@ -206,6 +213,7 @@ class Address(object):
         self.children = []
         self.report = {}
         self.data = None
+        self.tags = tags
 
     def __repr__(self):
         return "<Address address=%s>" % self.prefix
@@ -237,6 +245,10 @@ class Address(object):
             # self.scope_group = Scopegroup(config=self.config, id=result['scope_group_id']) NYI
             self.report = self._rest.report(self.id)
             children = self._rest.retrieve_children(self.id)
+
+            if "tags" in result:
+                self.tags = result["tags"]
+
             self.children = [
                 Address(self.config, id=child["id"])
                 for child in children
@@ -390,7 +402,9 @@ class Address(object):
 
 
 class Scopegroup(object):
-    def __init__(self, config, name=None, service_def_id=None, id=None):
+    def __init__(
+        self, config, name=None, service_def_id=None, id=None, tags=None
+    ):
         """
         Create a new high level Scopegroup object
 
@@ -398,6 +412,7 @@ class Scopegroup(object):
         :param str name: Name of the scope group
         :param int service_group_id: id of the service group the scope group is associated with
         :param int id: id of the scope group
+        :param dict tags: tags of the scopegroup
         """
         self._rest = Scopegroups(config)
         self.config = config
@@ -407,6 +422,7 @@ class Scopegroup(object):
         self.name = name
         self.dhcp_service_id = service_def_id
         self.data = None
+        self.tags = tags
 
     def __repr__(self):
         return "<Scopegroup scope_group=%s>" % self.name
@@ -435,6 +451,9 @@ class Scopegroup(object):
             self.dhcp4 = result["dhcpv4"]
             self.dhcp6 = result["dhcpv6"]
             self.dhcp_service_id = result.get("dhcp_service_id")
+
+            if "tags" in result:
+                self.tags = result["tags"]
 
             if callback:
                 return callback(self)
@@ -480,7 +499,7 @@ class Scopegroup(object):
             self.id, callback=success, errback=errback, **kwargs
         )
 
-    def create(self, dhcp4, dhcp6, callback=None, errback=None):
+    def create(self, dhcp4, dhcp6, callback=None, errback=None, **kwargs):
         """
         :param DHCPOptions dhcp4: DHCPOptions object that contains the settings for dhcp4
         :param DHCPOptions dhcp6: DHCPOptions object that contains the settings for dhcp6
@@ -518,6 +537,7 @@ class Scopegroup(object):
             dhcp_service_id=self.dhcp_service_id,
             callback=success,
             errback=errback,
+            **kwargs
         )
 
     def reserve(
@@ -582,6 +602,7 @@ class Reservation(object):
         reservation_id=None,
         options=None,
         mac=None,
+        tags=None,
     ):
         """
         Create a new high level Reservation object
@@ -592,6 +613,7 @@ class Reservation(object):
         :param int reservation_id: id of the reservation
         :param list options: dhcp options of the reservation
         :param str mac: mac address of the reservation
+        :param dict tags: tags of the reservation
         """
         self._rest = Reservations(config)
         self.config = config
@@ -600,6 +622,7 @@ class Reservation(object):
         self.address_id = address_id
         self.mac = mac
         self.data = None
+        self.tags = tags
 
         if options is None:
             options = DHCPOptions("dhcpv4", {})
@@ -641,6 +664,9 @@ class Reservation(object):
             self.address_id = result["address_id"]
             self.mac = result["mac"]
             self.options = result["options"]
+
+            if "tags" in result:
+                self.tags = result["tags"]
 
             if callback:
                 return callback(self)
@@ -818,7 +844,13 @@ class Optiondef(object):
 
 class Scope(object):
     def __init__(
-        self, config, scopegroup_id, address_id, scope_id=None, options=None
+        self,
+        config,
+        scopegroup_id,
+        address_id,
+        scope_id=None,
+        options=None,
+        tags=None,
     ):
         """
         Create a new high level Scope object
@@ -828,12 +860,14 @@ class Scope(object):
         :param int address_id: id of the address the scope is associated with
         :param int scope_id: id of the scope
         :param DHCPOptions options: DHCPOptions object that contains the settings for the scope
+        :param dict tags: tags of the scope
         """
         self._rest = Scopes(config)
         self.config = config
         self.scopegroup_id = scopegroup_id
         self.address_id = address_id
         self.id = scope_id
+        self.tags = tags
 
         if options is None:
             options = DHCPOptions("dhcpv4", {})
@@ -875,6 +909,9 @@ class Scope(object):
             self.data = result
             self.address_id = result["address_id"]
             self.options = result["options"]
+
+            if "tags" in result:
+                self.tags = result["tags"]
 
             if callback:
                 return callback(self)
@@ -919,6 +956,7 @@ class Scope(object):
             self.options,
             callback=success,
             errback=errback,
+            **kwargs
         )
 
     def update(
