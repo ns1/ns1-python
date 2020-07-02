@@ -5,6 +5,7 @@
 import collections
 import sys
 
+from ns1.rest.errors import ResourceException
 from . import resource
 
 
@@ -17,7 +18,7 @@ class Records(resource.BaseResource):
 
     INT_FIELDS = ["ttl"]
     BOOL_FIELDS = ["use_client_subnet", "use_csubnet", "override_ttl"]
-    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link"]
+    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link", "zone_name"]
 
     # answers must be:
     #  1) a single string
@@ -88,11 +89,12 @@ class Records(resource.BaseResource):
 
         return realFilters
 
-    def _buildBody(self, zone, domain, type, **kwargs):
-        body = {}
-        body["zone"] = zone
-        body["domain"] = domain
-        body["type"] = type.upper()
+    def _buildBody(self, zone, domain, record_type, **kwargs):
+        body = {
+             'zone': zone,
+             'domain': domain,
+             'type': record_type.upper()
+        }
 
         if "filters" in kwargs:
             body["filters"] = self._getFiltersForBody(kwargs["filters"])
@@ -107,15 +109,34 @@ class Records(resource.BaseResource):
             body["use_client_subnet"] = body["use_csubnet"]
             del body["use_csubnet"]
 
-        return body
+        zone_name = body['zone_name'] if 'zone_name' in body else zone
+
+        return zone_name, body
 
     def create(
         self, zone, domain, type, callback=None, errback=None, **kwargs
     ):
-        body = self._buildBody(zone, domain, type, **kwargs)
-
+        zone_name, body = self._buildBody(zone, domain, type, **kwargs)
         return self.create_raw(
-            zone,
+            zone_name,
+            domain,
+            type,
+            body,
+            callback=callback,
+            errback=errback,
+            **kwargs
+        )
+
+    def create_named(
+        self, z_name, zone_fqdn, domain, type, callback=None, errback=None, **kwargs
+    ):
+        _, body = self._buildBody(zone_fqdn, domain, type, **kwargs)
+        if 'zone_name' not in body:
+            body['zone_name'] = z_name
+        if body['zone_name'] != z_name:
+            raise ResourceException('body does not match zone name')
+        return self.create_raw(
+            z_name,
             domain,
             type,
             body,
@@ -138,11 +159,26 @@ class Records(resource.BaseResource):
     def update(
         self, zone, domain, type, callback=None, errback=None, **kwargs
     ):
-        body = self._buildBody(zone, domain, type, **kwargs)
-
+        zone_name, body = self._buildBody(zone, domain, type, **kwargs)
         return self._make_request(
             "POST",
-            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            "%s/%s/%s/%s" % (self.ROOT, zone_name, domain, type.upper()),
+            body=body,
+            callback=callback,
+            errback=errback,
+        )
+
+    def update_named(
+        self, z_name, zone_fqdn, domain, type, callback=None, errback=None, **kwargs
+    ):
+        _, body = self._buildBody(zone_fqdn, domain, type, **kwargs)
+        if 'zone_name' not in body:
+            body['zone_name'] = z_name
+        if body['zone_name'] != z_name:
+            raise ResourceException('body does not match zone name')
+        return self._make_request(
+            "POST",
+            "%s/%s/%s/%s" % (self.ROOT, z_name, domain, type.upper()),
             body=body,
             callback=callback,
             errback=errback,
