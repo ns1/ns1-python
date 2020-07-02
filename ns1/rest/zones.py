@@ -4,6 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
+from ns1.rest.errors import ResourceException
 from . import resource
 
 
@@ -18,16 +19,22 @@ class Zones(resource.BaseResource):
         "secondary",
         "hostmaster",
         "meta",
+        "name",
         "networks",
         "link",
+        "views",
+        "zone",
     ]
     BOOL_FIELDS = ["dnssec"]
 
-    def _buildBody(self, zone, **kwargs):
-        body = {}
-        body["zone"] = zone
+    def _buildBody(self, z, **kwargs):
+        if "name" in kwargs and kwargs["name"] != z:
+            raise ResourceException(
+                "Passed names differ: {} != {}".format(z, kwargs["name"])
+            )
+        body = {"name": z}
         self._buildStdBody(body, kwargs)
-        return body
+        return body["name"], body
 
     def import_file(
         self, zone, zoneFile, callback=None, errback=None, **kwargs
@@ -41,21 +48,23 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create(self, zone, callback=None, errback=None, **kwargs):
-        body = self._buildBody(zone, **kwargs)
+    def create(self, z, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, **kwargs)
+        if "zone" not in body:
+            body["zone"] = z
         return self._make_request(
             "PUT",
-            "%s/%s" % (self.ROOT, zone),
+            "%s/%s" % (self.ROOT, zone_name),
             body=body,
             callback=callback,
             errback=errback,
         )
 
-    def update(self, zone, callback=None, errback=None, **kwargs):
-        body = self._buildBody(zone, **kwargs)
+    def update(self, z, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, **kwargs)
         return self._make_request(
             "POST",
-            "%s/%s" % (self.ROOT, zone),
+            "%s/%s" % (self.ROOT, zone_name),
             body=body,
             callback=callback,
             errback=errback,
