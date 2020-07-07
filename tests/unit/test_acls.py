@@ -35,12 +35,12 @@ cases = {
     'basic create': ('create', (['my-acl'], {
         'src_prefixes': [],
         'tsig_keys': [],
-        'gss_tsig_identifiers': []
+        'gss_tsig_identities': []
     }), 'PUT', 'acls/my-acl', ([], {
         'body': {
             'src_prefixes': [],
             'tsig_keys': [],
-            'gss_tsig_identifiers': []
+            'gss_tsig_identities': []
         },
         'callback': None,
         'errback': None
