@@ -13,18 +13,11 @@ class ACLs(resource.BaseResource):
 
     BOOL_FIELDS = []
     INT_FIELDS = []
-    PASSTHRU_FIELDS = [
-        'src_prefixes',
-        'tsig_keys',
-        'gss_tsig_identities'
-    ]
+    PASSTHRU_FIELDS = ["src_prefixes", "tsig_keys", "gss_tsig_identities"]
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET",
-            "%s" % self.ROOT,
-            callback=callback,
-            errback=errback,
+            "GET", "%s" % self.ROOT, callback=callback, errback=errback,
         )
 
     def retrieve(self, name, callback=None, errback=None):

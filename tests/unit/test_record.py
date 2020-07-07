@@ -33,22 +33,22 @@ def test_rest_record_retrieve(records_config):
     r = ns1.rest.records.Records(records_config)
     r._make_request = mock.MagicMock()
 
-    r.retrieve('example.com', 'sub.example.com', 'A')
+    r.retrieve("example.com", "sub.example.com", "A")
     r._make_request.assert_called_once_with(
         "GET",
         "zones/example.com/sub.example.com/A",
         callback=None,
-        errback=None
+        errback=None,
     )
 
     r._make_request.reset_mock()
 
-    r.retrieve('example-handle', 'sub.example.com', 'A')
+    r.retrieve("example-handle", "sub.example.com", "A")
     r._make_request.assert_called_once_with(
         "GET",
         "zones/example-handle/sub.example.com/A",
         callback=None,
-        errback=None
+        errback=None,
     )
 
 
@@ -56,25 +56,36 @@ def test_rest_record_create(records_config):
     r = ns1.rest.records.Records(records_config)
     r._make_request = mock.MagicMock()
 
-    data = {'ttl': 999}
-    r.create('example.com', 'sub.example.com', 'A', **data)
+    data = {"ttl": 999}
+    r.create("example.com", "sub.example.com", "A", **data)
     r._make_request.assert_called_once_with(
         "PUT",
         "zones/example.com/sub.example.com/A",
-        body={'zone': 'example.com', 'domain': 'sub.example.com', 'type': 'A', 'ttl': 999},
+        body={
+            "zone": "example.com",
+            "domain": "sub.example.com",
+            "type": "A",
+            "ttl": 999,
+        },
         callback=None,
-        errback=None
+        errback=None,
     )
     r._make_request.reset_mock()
 
-    data = {'zone_name': 'example-name', 'ttl': 999}
-    r.create('example.com', 'sub.example.com', 'A', **data)
+    data = {"zone_name": "example-name", "ttl": 999}
+    r.create("example.com", "sub.example.com", "A", **data)
     r._make_request.assert_called_once_with(
         "PUT",
         "zones/example-name/sub.example.com/A",
-        body={'zone': 'example.com', 'domain': 'sub.example.com', 'type': 'A', 'zone_name': 'example-name', 'ttl': 999},
+        body={
+            "zone": "example.com",
+            "domain": "sub.example.com",
+            "type": "A",
+            "zone_name": "example-name",
+            "ttl": 999,
+        },
         callback=None,
-        errback=None
+        errback=None,
     )
 
 
@@ -82,19 +93,29 @@ def test_rest_record_create_named(records_config):
     r = ns1.rest.records.Records(records_config)
     r._make_request = mock.MagicMock()
 
-    data = {'zone_name': 'example-name', 'ttl': 999}
+    data = {"zone_name": "example-name", "ttl": 999}
     with pytest.raises(ResourceException) as ex:
-        r.create_named('example-foo', 'example.com', 'sub.example.com', 'A', **data)
-    assert ex.value.message == 'body does not match zone name'
+        r.create_named(
+            "example-foo", "example.com", "sub.example.com", "A", **data
+        )
+    assert ex.value.message == "body does not match zone name"
 
-    data = {'ttl': 999}
-    r.create_named('example-name', 'example.com', 'sub.example.com', 'A', **data)
+    data = {"ttl": 999}
+    r.create_named(
+        "example-name", "example.com", "sub.example.com", "A", **data
+    )
     r._make_request.assert_called_once_with(
         "PUT",
         "zones/example-name/sub.example.com/A",
-        body={'zone': 'example.com', 'domain': 'sub.example.com', 'type': 'A', 'zone_name': 'example-name', 'ttl': 999},
+        body={
+            "zone": "example.com",
+            "domain": "sub.example.com",
+            "type": "A",
+            "zone_name": "example-name",
+            "ttl": 999,
+        },
         callback=None,
-        errback=None
+        errback=None,
     )
 
 
@@ -102,25 +123,36 @@ def test_rest_record_update(records_config):
     r = ns1.rest.records.Records(records_config)
     r._make_request = mock.MagicMock()
 
-    data = {'ttl': 999}
-    r.update('example.com', 'sub.example.com', 'A', **data)
+    data = {"ttl": 999}
+    r.update("example.com", "sub.example.com", "A", **data)
     r._make_request.assert_called_once_with(
         "POST",
         "zones/example.com/sub.example.com/A",
-        body={'zone': 'example.com', 'domain': 'sub.example.com', 'type': 'A', 'ttl': 999},
+        body={
+            "zone": "example.com",
+            "domain": "sub.example.com",
+            "type": "A",
+            "ttl": 999,
+        },
         callback=None,
-        errback=None
+        errback=None,
     )
     r._make_request.reset_mock()
 
-    data = {'zone_name': 'example-name', 'ttl': 999}
-    r.update('example.com', 'sub.example.com', 'A', **data)
+    data = {"zone_name": "example-name", "ttl": 999}
+    r.update("example.com", "sub.example.com", "A", **data)
     r._make_request.assert_called_once_with(
         "POST",
         "zones/example-name/sub.example.com/A",
-        body={'zone': 'example.com', 'domain': 'sub.example.com', 'type': 'A', 'zone_name': 'example-name', 'ttl': 999},
+        body={
+            "zone": "example.com",
+            "domain": "sub.example.com",
+            "type": "A",
+            "zone_name": "example-name",
+            "ttl": 999,
+        },
         callback=None,
-        errback=None
+        errback=None,
     )
 
 
@@ -128,19 +160,29 @@ def test_rest_record_update_named(records_config):
     r = ns1.rest.records.Records(records_config)
     r._make_request = mock.MagicMock()
 
-    data = {'zone_name': 'example-name', 'ttl': 999}
+    data = {"zone_name": "example-name", "ttl": 999}
     with pytest.raises(ResourceException) as ex:
-        r.update_named('example-foo', 'example.com', 'sub.example.com', 'A', **data)
-    assert ex.value.message == 'body does not match zone name'
+        r.update_named(
+            "example-foo", "example.com", "sub.example.com", "A", **data
+        )
+    assert ex.value.message == "body does not match zone name"
 
-    data = {'ttl': 999}
-    r.update_named('example-name', 'example.com', 'sub.example.com', 'A', **data)
+    data = {"ttl": 999}
+    r.update_named(
+        "example-name", "example.com", "sub.example.com", "A", **data
+    )
     r._make_request.assert_called_once_with(
         "POST",
         "zones/example-name/sub.example.com/A",
-        body={'zone': 'example.com', 'domain': 'sub.example.com', 'type': 'A', 'zone_name': 'example-name', 'ttl': 999},
+        body={
+            "zone": "example.com",
+            "domain": "sub.example.com",
+            "type": "A",
+            "zone_name": "example-name",
+            "ttl": 999,
+        },
         callback=None,
-        errback=None
+        errback=None,
     )
 
 
@@ -148,22 +190,22 @@ def test_rest_record_delete(records_config):
     r = ns1.rest.records.Records(records_config)
     r._make_request = mock.MagicMock()
 
-    r.delete('example.com', 'sub.example.com', 'A')
+    r.delete("example.com", "sub.example.com", "A")
     r._make_request.assert_called_once_with(
         "DELETE",
         "zones/example.com/sub.example.com/A",
         callback=None,
-        errback=None
+        errback=None,
     )
 
     r._make_request.reset_mock()
 
-    r.delete('example-handle', 'sub.example.com', 'A')
+    r.delete("example-handle", "sub.example.com", "A")
     r._make_request.assert_called_once_with(
         "DELETE",
         "zones/example-handle/sub.example.com/A",
         callback=None,
-        errback=None
+        errback=None,
     )
 
 
@@ -173,10 +215,16 @@ def test_rest_records_buildbody(records_config):
     name = "test-zone"
     domain = "sub.test.zone"
 
-    kwargs = {'ttl': 900}
-    expected = {'zone': fqdn, 'domain': domain, 'type': 'A', 'ttl': 900}
-    assert z._buildBody(fqdn, domain, 'a', **kwargs) == (fqdn, expected)
+    kwargs = {"ttl": 900}
+    expected = {"zone": fqdn, "domain": domain, "type": "A", "ttl": 900}
+    assert z._buildBody(fqdn, domain, "a", **kwargs) == (fqdn, expected)
 
-    kwargs = {'zone_name': name, 'ttl': 900}
-    expected = {'zone': fqdn, 'zone_name': name, 'domain': domain, 'type': 'A', 'ttl': 900}
-    assert z._buildBody(fqdn, domain, 'a', **kwargs) == (name, expected)
+    kwargs = {"zone_name": name, "ttl": 900}
+    expected = {
+        "zone": fqdn,
+        "zone_name": name,
+        "domain": domain,
+        "type": "A",
+        "ttl": 900,
+    }
+    assert z._buildBody(fqdn, domain, "a", **kwargs) == (name, expected)

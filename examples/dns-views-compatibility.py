@@ -65,82 +65,86 @@ records = client.records()
 
 # ... with existing method. "name" must be passed in kwargs, FQDN is still
 # passed as argument
-data = {'name': 'example-one', 'ttl': 900}
-zone_one = zones.create('example.com', **data)
+data = {"name": "example-one", "ttl": 900}
+zone_one = zones.create("example.com", **data)
 
 # ... with convenience function. name and FQDN are both required arguments.
 # "name" is not required in kwargs, but will be validated against the passed
 # name if present
-data = {'ttl': 900}
-zone_two = zones.create_named('example-two', 'example.com', **data)
+data = {"ttl": 900}
+zone_two = zones.create_named("example-two", "example.com", **data)
 
 
 # add a record ...
 # ================
 
 # ... with existing method
-data = {'name': 'example-one', 'ttl': 888}
-record_one = records.create('example.com', 'sub.example.com', 'A', **data)
+data = {"name": "example-one", "ttl": 888}
+record_one = records.create("example.com", "sub.example.com", "A", **data)
 
 # ... or convenience method
-data = {'ttl': 888}
-record_two = records.create_named('example-two', 'example.com', 'sub.example.com', 'A', **data)
+data = {"ttl": 888}
+record_two = records.create_named(
+    "example-two", "example.com", "sub.example.com", "A", **data
+)
 
 
 # retrieve a record ...
 # =====================
 
 # ... ensure you are passing the "name" and not the FQDN
-record_one = records.retrieve('example-one', 'sub.example.com', 'A')
-record_two = records.retrieve('example-two', 'sub.example.com', 'A')
+record_one = records.retrieve("example-one", "sub.example.com", "A")
+record_two = records.retrieve("example-two", "sub.example.com", "A")
 
 
 # update a record ...
 # ===================
 
 # ... with existing method
-data = {'name': 'example-one', 'ttl': 888}
-record_one = records.update('example.com', 'sub.example.com', 'A', **data)
+data = {"name": "example-one", "ttl": 888}
+record_one = records.update("example.com", "sub.example.com", "A", **data)
 
 # ... or convenience method
-data = {'ttl': 888}
-record_two = records.update_named('example-two', 'example.com', 'sub.example.com', 'A', **data)
+data = {"ttl": 888}
+record_two = records.update_named(
+    "example-two", "example.com", "sub.example.com", "A", **data
+)
 
 
 # delete a record ...
 # ===================
 
 # .. ensure you are passing the "name" and not the FQDN
-for name in ['example-one', 'example-two']:
-    response = records.delete(name, 'sub.example.com', 'A')
+for name in ["example-one", "example-two"]:
+    response = records.delete(name, "sub.example.com", "A")
 
 
 # retrieve zone ....
 # ==================
 
 # ... ensure you are passing the "name" and not the FQDN
-zone_one = zones.retrieve('example-one')
-zone_two = zones.retrieve('example-two')
+zone_one = zones.retrieve("example-one")
+zone_two = zones.retrieve("example-two")
 
 # search is by "name"
-search_results = zones.search('example')
+search_results = zones.search("example")
 
 
 # update named zone ...
 # =====================
 
 # ... with existing method
-data = {'name': 'example-one', 'ttl': 999}
-zone_one = zones.update('example.com', **data)
+data = {"name": "example-one", "ttl": 999}
+zone_one = zones.update("example.com", **data)
 
 # ... or convenience function
-data = {'ttl': 900}
-zone_two = zones.update_named('example-two', 'example.com', **data)
+data = {"ttl": 900}
+zone_two = zones.update_named("example-two", "example.com", **data)
 
 
 # delete named zone ...
 # =====================
 
 # ... ensure you are passing the "name" and not the FQDN
-for name in ['example-one', 'example-two']:
+for name in ["example-one", "example-two"]:
     response = zones.delete(name)

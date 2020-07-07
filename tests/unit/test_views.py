@@ -28,44 +28,70 @@ def client_config(config):
 
 
 cases = {
-    'basic list': ('list', ([], {}), 'GET', 'views', ([], {
-        'callback': None,
-        'errback': None
-    })),
-    'basic create': ('create', (['my-view'], {
-        "read_acls": [],
-        "update_acls": [],
-        "zones": [],
-        "networks": [],
-        "preference": 111
-    }), 'PUT', 'views/my-view', ([], {
-        'body': {
-            "read_acls": [],
-            "update_acls": [],
-            "zones": [],
-            "networks": [],
-            "preference": 111
-        },
-        'callback': None,
-        'errback': None
-    })),
-    'basic retrieve': ('retrieve', (['my-view'], {}), 'GET', 'views/my-view', ([], {
-        'callback': None,
-        'errback': None
-    })),
-    'basic update': ('update', (['my-view'], {
-        "zones": ['my-zone'],
-    }), 'POST', 'views/my-view', ([], {
-        'body': {
-            "zones": ['my-zone'],
-        },
-        'callback': None,
-        'errback': None
-    })),
-    'basic delete': ('delete', (['my-view'], {}), 'DELETE', 'views/my-view', ([], {
-        'callback': None,
-        'errback': None
-    })),
+    "basic list": (
+        "list",
+        ([], {}),
+        "GET",
+        "views",
+        ([], {"callback": None, "errback": None}),
+    ),
+    "basic create": (
+        "create",
+        (
+            ["my-view"],
+            {
+                "read_acls": [],
+                "update_acls": [],
+                "zones": [],
+                "networks": [],
+                "preference": 111,
+            },
+        ),
+        "PUT",
+        "views/my-view",
+        (
+            [],
+            {
+                "body": {
+                    "read_acls": [],
+                    "update_acls": [],
+                    "zones": [],
+                    "networks": [],
+                    "preference": 111,
+                },
+                "callback": None,
+                "errback": None,
+            },
+        ),
+    ),
+    "basic retrieve": (
+        "retrieve",
+        (["my-view"], {}),
+        "GET",
+        "views/my-view",
+        ([], {"callback": None, "errback": None}),
+    ),
+    "basic update": (
+        "update",
+        (["my-view"], {"zones": ["my-zone"]}),
+        "POST",
+        "views/my-view",
+        (
+            [],
+            {
+                "body": {"zones": ["my-zone"]},
+                "callback": None,
+                "errback": None,
+            },
+        ),
+    ),
+    "basic delete": (
+        "delete",
+        (["my-view"], {}),
+        "DELETE",
+        "views/my-view",
+        ([], {"callback": None, "errback": None}),
+    ),
 }
 
 
@@ -79,8 +105,5 @@ def test_rest_views_crud(client_config):
 
         getattr(resource, func)(*in_args[0], **in_args[1])
         resource._make_request.assert_called_once_with(
-            method,
-            route,
-            *out_args[0],
-            **out_args[1]
+            method, route, *out_args[0], **out_args[1]
         )

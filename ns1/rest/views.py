@@ -12,20 +12,17 @@ class Views(resource.BaseResource):
     ROOT = "views"
 
     BOOL_FIELDS = []
-    INT_FIELDS = ['preference']
+    INT_FIELDS = ["preference"]
     PASSTHRU_FIELDS = [
-        'read_acls',
-        'update_acls',
-        'zones',
-        'networks',
+        "read_acls",
+        "update_acls",
+        "zones",
+        "networks",
     ]
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET",
-            "%s" % self.ROOT,
-            callback=callback,
-            errback=errback,
+            "GET", "%s" % self.ROOT, callback=callback, errback=errback,
         )
 
     def retrieve(self, name, callback=None, errback=None):

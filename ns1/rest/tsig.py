@@ -14,16 +14,13 @@ class TSIGs(resource.BaseResource):
     BOOL_FIELDS = []
     INT_FIELDS = []
     PASSTHRU_FIELDS = [
-        'algorithm',
-        'secret',
+        "algorithm",
+        "secret",
     ]
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET",
-            "%s" % self.ROOT,
-            callback=callback,
-            errback=errback,
+            "GET", "%s" % self.ROOT, callback=callback, errback=errback,
         )
 
     def retrieve(self, name, callback=None, errback=None):

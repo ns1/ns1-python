@@ -5,31 +5,9 @@ Settiing up "internal" and "external" views of a zone
 """
 
 from ns1 import NS1
-from ns1.config import Config
 
-import urllib3
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+client = NS1()
 
-conf = Config()
-conf.loadFromString("""{
- "verbosity": 0,
- "port": 443,
- "api_version": "v1",
- "keys": {
-  "default": {
-   "key": "xu6SINPtyl5njohjU7hR",
-   "desc": "imported API key"
-  }
- },
- "endpoint": "localhost",
- "cli": {},
- "default_key": "default",
- "ignore-ssl-errors": true,
- "transport": "requests"
-}""")
-client = NS1(config=conf)
-
-#print(client.tsig().list())
 # The resources we will be using
 zones = client.zones()
 records = client.records()
@@ -87,7 +65,3 @@ external_view = views.create(
     networks=[1],
     preference=20
 )
-
-print(acls.list())
-print(views.list())
-print(zones.list())

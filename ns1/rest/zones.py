@@ -27,9 +27,9 @@ class Zones(resource.BaseResource):
     BOOL_FIELDS = ["dnssec"]
 
     def _buildBody(self, zone, **kwargs):
-        body = {'zone': zone}
+        body = {"zone": zone}
         self._buildStdBody(body, kwargs)
-        zone_name = body['name'] if 'name' in body else zone
+        zone_name = body["name"] if "name" in body else zone
         return zone_name, body
 
     def import_file(
@@ -54,12 +54,14 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create_named(self, zone_name, zone_fqdn, callback=None, errback=None, **kwargs):
+    def create_named(
+        self, zone_name, zone_fqdn, callback=None, errback=None, **kwargs
+    ):
         _, body = self._buildBody(zone_fqdn, **kwargs)
-        if 'name' not in body:
-            body['name'] = zone_name
-        if body['name'] != zone_name:
-            raise ResourceException('body does not match zone name')
+        if "name" not in body:
+            body["name"] = zone_name
+        if body["name"] != zone_name:
+            raise ResourceException("body does not match zone name")
         return self._make_request(
             "PUT",
             "%s/%s" % (self.ROOT, zone_name),
@@ -78,12 +80,14 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def update_named(self, zone_name, zone_fqdn, callback=None, errback=None, **kwargs):
+    def update_named(
+        self, zone_name, zone_fqdn, callback=None, errback=None, **kwargs
+    ):
         _, body = self._buildBody(zone_fqdn, **kwargs)
-        if 'name' not in body:
-            body['name'] = zone_name
-        if body['name'] != zone_name:
-            raise ResourceException('body does not match zone name')
+        if "name" not in body:
+            body["name"] = zone_name
+        if body["name"] != zone_name:
+            raise ResourceException("body does not match zone name")
         return self._make_request(
             "POST",
             "%s/%s" % (self.ROOT, zone_name),

@@ -28,40 +28,62 @@ def client_config(config):
 
 
 cases = {
-    'basic list': ('list', ([], {}), 'GET', 'acls', ([], {
-        'callback': None,
-        'errback': None
-    })),
-    'basic create': ('create', (['my-acl'], {
-        'src_prefixes': [],
-        'tsig_keys': [],
-        'gss_tsig_identities': []
-    }), 'PUT', 'acls/my-acl', ([], {
-        'body': {
-            'src_prefixes': [],
-            'tsig_keys': [],
-            'gss_tsig_identities': []
-        },
-        'callback': None,
-        'errback': None
-    })),
-    'basic retrieve': ('retrieve', (['my-acl'], {}), 'GET', 'acls/my-acl', ([], {
-        'callback': None,
-        'errback': None
-    })),
-    'basic update': ('update', (['my-acl'], {
-        'src_prefixes': ['prefix']
-    }), 'POST', 'acls/my-acl', ([], {
-        'body': {
-            'src_prefixes': ['prefix']
-        },
-        'callback': None,
-        'errback': None
-    })),
-    'basic delete': ('delete', (['my-acl'], {}), 'DELETE', 'acls/my-acl', ([], {
-        'callback': None,
-        'errback': None
-    })),
+    "basic list": (
+        "list",
+        ([], {}),
+        "GET",
+        "acls",
+        ([], {"callback": None, "errback": None}),
+    ),
+    "basic create": (
+        "create",
+        (
+            ["my-acl"],
+            {"src_prefixes": [], "tsig_keys": [], "gss_tsig_identities": []},
+        ),
+        "PUT",
+        "acls/my-acl",
+        (
+            [],
+            {
+                "body": {
+                    "src_prefixes": [],
+                    "tsig_keys": [],
+                    "gss_tsig_identities": [],
+                },
+                "callback": None,
+                "errback": None,
+            },
+        ),
+    ),
+    "basic retrieve": (
+        "retrieve",
+        (["my-acl"], {}),
+        "GET",
+        "acls/my-acl",
+        ([], {"callback": None, "errback": None}),
+    ),
+    "basic update": (
+        "update",
+        (["my-acl"], {"src_prefixes": ["prefix"]}),
+        "POST",
+        "acls/my-acl",
+        (
+            [],
+            {
+                "body": {"src_prefixes": ["prefix"]},
+                "callback": None,
+                "errback": None,
+            },
+        ),
+    ),
+    "basic delete": (
+        "delete",
+        (["my-acl"], {}),
+        "DELETE",
+        "acls/my-acl",
+        ([], {"callback": None, "errback": None}),
+    ),
 }
 
 
@@ -75,8 +97,5 @@ def test_rest_acls_crud(client_config):
 
         getattr(resource, func)(*in_args[0], **in_args[1])
         resource._make_request.assert_called_once_with(
-            method,
-            route,
-            *out_args[0],
-            **out_args[1]
+            method, route, *out_args[0], **out_args[1]
         )

@@ -90,11 +90,7 @@ class Records(resource.BaseResource):
         return realFilters
 
     def _buildBody(self, zone, domain, record_type, **kwargs):
-        body = {
-             'zone': zone,
-             'domain': domain,
-             'type': record_type.upper()
-        }
+        body = {"zone": zone, "domain": domain, "type": record_type.upper()}
 
         if "filters" in kwargs:
             body["filters"] = self._getFiltersForBody(kwargs["filters"])
@@ -109,7 +105,7 @@ class Records(resource.BaseResource):
             body["use_client_subnet"] = body["use_csubnet"]
             del body["use_csubnet"]
 
-        zone_name = body['zone_name'] if 'zone_name' in body else zone
+        zone_name = body["zone_name"] if "zone_name" in body else zone
 
         return zone_name, body
 
@@ -128,13 +124,20 @@ class Records(resource.BaseResource):
         )
 
     def create_named(
-        self, z_name, zone_fqdn, domain, type, callback=None, errback=None, **kwargs
+        self,
+        z_name,
+        zone_fqdn,
+        domain,
+        type,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         _, body = self._buildBody(zone_fqdn, domain, type, **kwargs)
-        if 'zone_name' not in body:
-            body['zone_name'] = z_name
-        if body['zone_name'] != z_name:
-            raise ResourceException('body does not match zone name')
+        if "zone_name" not in body:
+            body["zone_name"] = z_name
+        if body["zone_name"] != z_name:
+            raise ResourceException("body does not match zone name")
         return self.create_raw(
             z_name,
             domain,
@@ -169,13 +172,20 @@ class Records(resource.BaseResource):
         )
 
     def update_named(
-        self, z_name, zone_fqdn, domain, type, callback=None, errback=None, **kwargs
+        self,
+        z_name,
+        zone_fqdn,
+        domain,
+        type,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         _, body = self._buildBody(zone_fqdn, domain, type, **kwargs)
-        if 'zone_name' not in body:
-            body['zone_name'] = z_name
-        if body['zone_name'] != z_name:
-            raise ResourceException('body does not match zone name')
+        if "zone_name" not in body:
+            body["zone_name"] = z_name
+        if body["zone_name"] != z_name:
+            raise ResourceException("body does not match zone name")
         return self._make_request(
             "POST",
             "%s/%s/%s/%s" % (self.ROOT, z_name, domain, type.upper()),

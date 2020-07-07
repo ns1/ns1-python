@@ -28,38 +28,55 @@ def client_config(config):
 
 
 cases = {
-    'basic list': ('list', ([], {}), 'GET', 'tsig', ([], {
-        'callback': None,
-        'errback': None
-    })),
-    'basic create': ('create', (['my-tsig'], {
-        'algorithm': 'my-algorithm',
-        'secret': 'my-secret',
-    }), 'PUT', 'tsig/my-tsig', ([], {
-        'body': {
-            'algorithm': 'my-algorithm',
-            'secret': 'my-secret',
-        },
-        'callback': None,
-        'errback': None
-    })),
-    'basic retrieve': ('retrieve', (['my-tsig'], {}), 'GET', 'tsig/my-tsig', ([], {
-        'callback': None,
-        'errback': None
-    })),
-    'basic update': ('update', (['my-tsig'], {
-        'secret': 'new-secret',
-    }), 'POST', 'tsig/my-tsig', ([], {
-        'body': {
-            'secret': 'new-secret',
-        },
-        'callback': None,
-        'errback': None
-    })),
-    'basic delete': ('delete', (['my-tsig'], {}), 'DELETE', 'tsig/my-tsig', ([], {
-        'callback': None,
-        'errback': None
-    })),
+    "basic list": (
+        "list",
+        ([], {}),
+        "GET",
+        "tsig",
+        ([], {"callback": None, "errback": None}),
+    ),
+    "basic create": (
+        "create",
+        (["my-tsig"], {"algorithm": "my-algorithm", "secret": "my-secret"}),
+        "PUT",
+        "tsig/my-tsig",
+        (
+            [],
+            {
+                "body": {"algorithm": "my-algorithm", "secret": "my-secret"},
+                "callback": None,
+                "errback": None,
+            },
+        ),
+    ),
+    "basic retrieve": (
+        "retrieve",
+        (["my-tsig"], {}),
+        "GET",
+        "tsig/my-tsig",
+        ([], {"callback": None, "errback": None}),
+    ),
+    "basic update": (
+        "update",
+        (["my-tsig"], {"secret": "new-secret"}),
+        "POST",
+        "tsig/my-tsig",
+        (
+            [],
+            {
+                "body": {"secret": "new-secret"},
+                "callback": None,
+                "errback": None,
+            },
+        ),
+    ),
+    "basic delete": (
+        "delete",
+        (["my-tsig"], {}),
+        "DELETE",
+        "tsig/my-tsig",
+        ([], {"callback": None, "errback": None}),
+    ),
 }
 
 
@@ -73,8 +90,5 @@ def test_rest_tsig_crud(client_config):
 
         getattr(resource, func)(*in_args[0], **in_args[1])
         resource._make_request.assert_called_once_with(
-            method,
-            route,
-            *out_args[0],
-            **out_args[1]
+            method, route, *out_args[0], **out_args[1]
         )
