@@ -1,63 +1,76 @@
 """
-
 DNS views allow for <blurb here>
 
 This means an FQDN can now appear in more than one zone. We have implemented
 views in a back-compatible way, so if you do not intend to use them, you can
 largely continue to use the API as you've done before.
 
-# How it works
+COMPATIBILITY
 
-Until now, API calls for a zone have have had the FQDN in the URL, and in the
-'zone' field in the body. If the URL and body don't match, or if it's not a
-valid FQDN, it is an error.
+Until now, the unique identifier of a zone in the API has been the FQDN. This
+appears both in the URL for API requests and in the 'zone' field of zones and
+records. The API throws an error if the URL and field in the body do not match.
 
-For views, the 'zone' field on the body still contains the zone's FQDN, but the
-URL string no longer has to match, or be an FQDN. This field is now a "handle",
-unique within your account, to identify the "view". This identifier is passed
-and appears in the "name" field on zones, and the "zone_name" field on records.
+Going forward, the unique identifier of the zone is "decoupled" from the 'zone'
+field. The reference in the URL can now be an arbitratry string, unique within
+your account. This identifier is passed and returned in the 'name' field for
+zones, and the 'zone_name' field for records. You may of course continue to use
+the FQDN as the identifier - in fact, if you are not using "views", it is
+recommended that you do so. However:
 
-The identifier may "happen" to be an FQDN, but is no longer required to be.
+* Mismatches between the zone name in the URL and the 'zone' field are no
+  longer validated to match, as it is no longer an invalid condition.
+* New field 'name' on zone responses
+* New field 'zone_name' on record responses
 
-Lets say you have an existing "classic" zone:
-/v1/zones/example.com {'zone': 'example.com', 'name': 'example.com'}
+Crucially, if you are NOT using "views", then the 'zone' and 'name' fields on
+the zone will probably have the same value, but the unique identifier for the
+zone is ALWAYS the value in the 'name' field. So in general, code should be
+written or updated to prefer the 'name/zone_name' fields for identification,
+and when using "views" functionality, calling code MUST be
+"name/zone_name aware".
 
-Now you can add a "named zone" with the same FQDN:
-/v1/zones/example-two {'zone': 'example.com', 'name': 'example-two'}
+SDK CHANGES
 
-And you can use the /views and /acl endpoints to configure how you want these
-zones to serve.
+There are some new endpoints for views functionality, which are discusses in
+another example. This note is just about existing methods. Currently, only the
+'rest interface' is ensured to be 'name/zone_name' aware:
 
-# SDK considerations
+* zone GET, zone DELETE, record GET, and record DELETE are unchanged. However,
+  they should always be passed the zone 'name'.
+* for compatibility reasons, the arguments to zone CREATE, zone UPDATE, record
+  CREATE, and record UPDATE are unchanged. The argument remains the zone FQDN.
+  However, a different 'name/zone_name' can be passed in kwargs.
+* since that is somewhat awkward and error prone, 'create_named' and
+  'update_named' methods are provided on zones and records. These explicitly
+  require the name and fqdn arguments
 
-Currently, not all SDK methods are "DNS views aware". For back-compatibily,
-some can't be changed easily. When working with DNS views, care should be taken
-if using SDK methods not shown here, such as the "high level" interfaces. Due
-to compatibility, you may "successfully" end up doing the wrong thing!
-
-Existing methods for create and update are a bit awkward when used with views,
-due to compatibility, so create_named and update_named methods are provided
-
-In general, when working with zones and records in the views paradigm, it's a
-good idea to pass both the "zone" and "name/zone_name" parameters, even when
-not strictly required, as it makes intent explicit.
+As noted, not all SDK "interfaces" are "DNS views aware". When working with DNS
+views, care should be taken if using SDK methods not shown here, such as the
+"high level" interfaces. Due to compatibility, you may "successfully" end up
+doing the wrong thing!
 """
 
-client = {}
+from ns1 import NS1
 
+client = NS1()
+
+# the resources we will be using
 zones = client.zones()
 records = client.records()
 
 
-# create zone ...
-# ===============
+# create a named zone ...
+# =======================
 
-# ... with existing method, "name" is required, FQDN still passed as argument
+# ... with existing method. "name" must be passed in kwargs, FQDN is still
+# passed as argument
 data = {'name': 'example-one', 'ttl': 900}
 zone_one = zones.create('example.com', **data)
 
-# ... with convenience function, name and FQDN are passed as aeguments. "name"
-# is not required in data, but will validate against the passed name if present
+# ... with convenience function. name and FQDN are both required arguments.
+# "name" is not required in kwargs, but will be validated against the passed
+# name if present
 data = {'ttl': 900}
 zone_two = zones.create_named('example-two', 'example.com', **data)
 
