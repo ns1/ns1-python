@@ -16,7 +16,7 @@ class ACLs(resource.BaseResource):
     PASSTHRU_FIELDS = [
         'src_prefixes',
         'tsig_keys',
-        'gss_tsig_identifiers'
+        'gss_tsig_identities'
     ]
 
     def list(self, callback=None, errback=None):
