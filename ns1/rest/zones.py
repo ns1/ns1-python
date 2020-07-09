@@ -23,14 +23,18 @@ class Zones(resource.BaseResource):
         "networks",
         "link",
         "views",
+        "zone",
     ]
     BOOL_FIELDS = ["dnssec"]
 
-    def _buildBody(self, zone, **kwargs):
-        body = {"zone": zone}
+    def _buildBody(self, z, **kwargs):
+        if "name" in kwargs and kwargs["name"] != "zone":
+            raise ResourceException(
+                "Passed names differ: {} != {}".format(z, kwargs["name"])
+            )
+        body = {"name": z}
         self._buildStdBody(body, kwargs)
-        zone_name = body["name"] if "name" in body else zone
-        return zone_name, body
+        return body["name"], body
 
     def import_file(
         self, zone, zoneFile, callback=None, errback=None, **kwargs
@@ -44,8 +48,10 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create(self, zone, callback=None, errback=None, **kwargs):
-        zone_name, body = self._buildBody(zone, **kwargs)
+    def create(self, z, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, **kwargs)
+        if "zone" not in body:
+            body["zone"] = z
         return self._make_request(
             "PUT",
             "%s/%s" % (self.ROOT, zone_name),
@@ -54,40 +60,8 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create_named(
-        self, zone_name, zone_fqdn, callback=None, errback=None, **kwargs
-    ):
-        _, body = self._buildBody(zone_fqdn, **kwargs)
-        if "name" not in body:
-            body["name"] = zone_name
-        if body["name"] != zone_name:
-            raise ResourceException("body does not match zone name")
-        return self._make_request(
-            "PUT",
-            "%s/%s" % (self.ROOT, zone_name),
-            body=body,
-            callback=callback,
-            errback=errback,
-        )
-
-    def update(self, zone, callback=None, errback=None, **kwargs):
-        zone_name, body = self._buildBody(zone, **kwargs)
-        return self._make_request(
-            "POST",
-            "%s/%s" % (self.ROOT, zone_name),
-            body=body,
-            callback=callback,
-            errback=errback,
-        )
-
-    def update_named(
-        self, zone_name, zone_fqdn, callback=None, errback=None, **kwargs
-    ):
-        _, body = self._buildBody(zone_fqdn, **kwargs)
-        if "name" not in body:
-            body["name"] = zone_name
-        if body["name"] != zone_name:
-            raise ResourceException("body does not match zone name")
+    def update(self, z, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, **kwargs)
         return self._make_request(
             "POST",
             "%s/%s" % (self.ROOT, zone_name),

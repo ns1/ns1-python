@@ -51,14 +51,14 @@ def test_rest_zone_create(zones_config):
     z._make_request.assert_called_once_with(
         "PUT",
         "zones/example.com",
-        body={"zone": "example.com", "ttl": 999},
+        body={"zone": "example.com", "name": "example.com", "ttl": 999},
         callback=None,
         errback=None,
     )
     z._make_request.reset_mock()
 
-    data = {"name": "example-name", "ttl": 999}
-    z.create("example.com", **data)
+    data = {"zone": "example.com", "ttl": 999}
+    z.create("example-name", **data)
     z._make_request.assert_called_once_with(
         "PUT",
         "zones/example-name",
@@ -66,23 +66,37 @@ def test_rest_zone_create(zones_config):
         callback=None,
         errback=None,
     )
+    z._make_request.reset_mock()
 
-
-def test_rest_zone_create_named(zones_config):
-    z = ns1.rest.zones.Zones(zones_config)
-    z._make_request = mock.MagicMock()
-
-    data = {"name": "example-name", "ttl": 999}
-    with pytest.raises(ResourceException) as ex:
-        z.create_named("example-foo", "example.com", **data)
-    assert ex.value.message == "body does not match zone name"
-
+    # if "zone" is not specified when name differs, server will reject if
+    # the passed name isn't an FQDN
     data = {"ttl": 999}
-    z.create_named("example-name", "example.com", **data)
+    z.create("example-name", **data)
     z._make_request.assert_called_once_with(
         "PUT",
         "zones/example-name",
-        body={"zone": "example.com", "name": "example-name", "ttl": 999},
+        body={"zone": "example-name", "name": "example-name", "ttl": 999},
+        callback=None,
+        errback=None,
+    )
+    z._make_request.reset_mock()
+
+    # mismatched name
+    data = {"name": "example.com", "ttl": 999}
+    with pytest.raises(ResourceException) as ex:
+        z.create("example-name", **data)
+    assert (
+        ex.value.message == "Passed names differ: example-name != example.com"
+    )
+    z._make_request.assert_not_called()
+
+    # API should reject, zone is not an FQDN
+    data = {"zone": "example-name", "ttl": 999}
+    z.create("example-name", **data)
+    z._make_request.assert_called_once_with(
+        "PUT",
+        "zones/example-name",
+        body={"zone": "example-name", "name": "example-name", "ttl": 999},
         callback=None,
         errback=None,
     )
@@ -111,71 +125,69 @@ def test_rest_zone_update(zones_config):
     z._make_request.assert_called_once_with(
         "POST",
         "zones/example.com",
-        body={"zone": "example.com", "ttl": 999},
+        body={"name": "example.com", "ttl": 999},
         callback=None,
         errback=None,
     )
     z._make_request.reset_mock()
 
-    data = {"name": "example-name", "ttl": 999}
-    z.update("example.com", **data)
-    z._make_request.assert_called_once_with(
-        "POST",
-        "zones/example-name",
-        body={"zone": "example.com", "name": "example-name", "ttl": 999},
-        callback=None,
-        errback=None,
-    )
-
-
-def test_rest_zone_update_named(zones_config):
-    z = ns1.rest.zones.Zones(zones_config)
-    z._make_request = mock.MagicMock()
-
-    data = {"name": "example-name", "ttl": 999}
-    with pytest.raises(ResourceException) as ex:
-        z.update_named("example-foo", "example.com", **data)
-    assert ex.value.message == "body does not match zone name"
-
     data = {"ttl": 999}
-    z.update_named("example-name", "example.com", **data)
+    z.update("example-name", **data)
     z._make_request.assert_called_once_with(
         "POST",
         "zones/example-name",
-        body={"zone": "example.com", "name": "example-name", "ttl": 999},
+        body={"name": "example-name", "ttl": 999},
         callback=None,
         errback=None,
     )
+    z._make_request.reset_mock()
+
+    data = {"zone": "example.com", "ttl": 999}
+    z.update("example-name", **data)
+    z._make_request.assert_called_once_with(
+        "POST",
+        "zones/example-name",
+        body={"name": "example-name", "zone": "example.com", "ttl": 999},
+        callback=None,
+        errback=None,
+    )
+    z._make_request.reset_mock()
+
+    data = {"name": "example.com", "ttl": 999}
+    with pytest.raises(ResourceException) as ex:
+        z.update("example-name", **data)
+    assert (
+        ex.value.message == "Passed names differ: example-name != example.com"
+    )
+    z._make_request.assert_not_called()
 
 
 def test_rest_zone_buildbody(zones_config):
     z = ns1.rest.zones.Zones(zones_config)
-    fqdn = "test.zone"
-    name = "test-zone"
 
     kwargs = {"retry": "0", "refresh": 0, "expiry": 0.0, "nx_ttl": "0"}
     expected = {
-        "zone": fqdn,
+        "name": "example.com",
         "retry": 0,
         "refresh": 0,
         "expiry": 0,
         "nx_ttl": 0,
     }
-    assert z._buildBody(fqdn, **kwargs) == (fqdn, expected)
+    assert z._buildBody("example.com", **kwargs) == ("example.com", expected)
 
     kwargs = {
-        "name": name,
+        "zone": "example.com",
         "retry": "0",
         "refresh": 0,
         "expiry": 0.0,
         "nx_ttl": "0",
     }
     expected = {
-        "zone": fqdn,
-        "name": name,
+        "zone": "example.com",
+        "name": "example-name",
         "retry": 0,
         "refresh": 0,
         "expiry": 0,
         "nx_ttl": 0,
     }
-    assert z._buildBody(fqdn, **kwargs) == (name, expected)
+    assert z._buildBody("example-name", **kwargs) == ("example-name", expected)

@@ -18,7 +18,14 @@ class Records(resource.BaseResource):
 
     INT_FIELDS = ["ttl"]
     BOOL_FIELDS = ["use_client_subnet", "use_csubnet", "override_ttl"]
-    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link", "zone_name"]
+    PASSTHRU_FIELDS = [
+        "networks",
+        "meta",
+        "regions",
+        "link",
+        "zone",
+        "zone_name",
+    ]
 
     # answers must be:
     #  1) a single string
@@ -89,8 +96,12 @@ class Records(resource.BaseResource):
 
         return realFilters
 
-    def _buildBody(self, zone, domain, record_type, **kwargs):
-        body = {"zone": zone, "domain": domain, "type": record_type.upper()}
+    def _buildBody(self, z, domain, record_type, **kwargs):
+        if "zone_name" in kwargs and kwargs["zone_name"] != z:
+            raise ResourceException(
+                "Passed names differ: {} != {}".format(z, kwargs["zone_name"])
+            )
+        body = {"zone_name": z, "domain": domain, "type": record_type.upper()}
 
         if "filters" in kwargs:
             body["filters"] = self._getFiltersForBody(kwargs["filters"])
@@ -105,14 +116,12 @@ class Records(resource.BaseResource):
             body["use_client_subnet"] = body["use_csubnet"]
             del body["use_csubnet"]
 
-        zone_name = body["zone_name"] if "zone_name" in body else zone
+        return body["zone_name"], body
 
-        return zone_name, body
-
-    def create(
-        self, zone, domain, type, callback=None, errback=None, **kwargs
-    ):
-        zone_name, body = self._buildBody(zone, domain, type, **kwargs)
+    def create(self, z, domain, type, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, domain, type, **kwargs)
+        if "zone" not in body:
+            body["zone"] = z
         return self.create_raw(
             zone_name,
             domain,
@@ -123,72 +132,22 @@ class Records(resource.BaseResource):
             **kwargs
         )
 
-    def create_named(
-        self,
-        z_name,
-        zone_fqdn,
-        domain,
-        type,
-        callback=None,
-        errback=None,
-        **kwargs
-    ):
-        _, body = self._buildBody(zone_fqdn, domain, type, **kwargs)
-        if "zone_name" not in body:
-            body["zone_name"] = z_name
-        if body["zone_name"] != z_name:
-            raise ResourceException("body does not match zone name")
-        return self.create_raw(
-            z_name,
-            domain,
-            type,
-            body,
-            callback=callback,
-            errback=errback,
-            **kwargs
-        )
-
     def create_raw(
-        self, zone, domain, type, body, callback=None, errback=None, **kwargs
+        self, z, domain, type, body, callback=None, errback=None, **kwargs
     ):
         return self._make_request(
             "PUT",
-            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            "%s/%s/%s/%s" % (self.ROOT, z, domain, type.upper()),
             body=body,
             callback=callback,
             errback=errback,
         )
 
-    def update(
-        self, zone, domain, type, callback=None, errback=None, **kwargs
-    ):
-        zone_name, body = self._buildBody(zone, domain, type, **kwargs)
+    def update(self, z, domain, type, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, domain, type, **kwargs)
         return self._make_request(
             "POST",
             "%s/%s/%s/%s" % (self.ROOT, zone_name, domain, type.upper()),
-            body=body,
-            callback=callback,
-            errback=errback,
-        )
-
-    def update_named(
-        self,
-        z_name,
-        zone_fqdn,
-        domain,
-        type,
-        callback=None,
-        errback=None,
-        **kwargs
-    ):
-        _, body = self._buildBody(zone_fqdn, domain, type, **kwargs)
-        if "zone_name" not in body:
-            body["zone_name"] = z_name
-        if body["zone_name"] != z_name:
-            raise ResourceException("body does not match zone name")
-        return self._make_request(
-            "POST",
-            "%s/%s/%s/%s" % (self.ROOT, z_name, domain, type.upper()),
             body=body,
             callback=callback,
             errback=errback,
