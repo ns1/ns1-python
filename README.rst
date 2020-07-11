@@ -67,7 +67,20 @@ automate test runs and virtualenv setup, see `tox.ini` for config.
 
 Contributions
 =============
-Pull Requests and issues are welcome. See the [NS1 Contribution Guidelines](https://github.com/ns1/community) for more information.
+Pull Requests and issues are welcome. See the `NS1 Contribution Guidelines <https://github.com/ns1/community>`_ and `reStructuredText Markup <https://thomas-cokelaer.info/tutorials/sphinx/rest_syntax.html>`_.
+
+Editing the docs
+******************
+You can edit NS1-python documentation directly in GitHub or by downloading the repo onto your machine and using an editor such as VSCode or Click the **Edit** icon on the top right corner of the page you want to edit in the NS1-python documentation 
+
+Creating Pull Requests
+**********************
+
+1. When you're ready to submit your changes,Select **Create a new branch for the commit and start a pull request**..
+2. Check the **Propose file change** button.
+3. Compare changes with the original document.
+4. Select **Create pull request**. 
+
 
 Our CI process will lint and check for formatting issues with `flake8` and
 `black`.
