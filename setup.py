@@ -6,7 +6,7 @@ import ns1
 
 cwd = path.abspath(path.dirname(__file__))
 
-with open(path.join(cwd, "README.rst"), encoding="utf-8") as f:
+with open(path.join(cwd, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
@@ -15,6 +15,7 @@ setup(
     version=ns1.version,
     description="Python SDK for the NS1 DNS platform",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     license="MIT",
     # contact information
     author="NS1 Developers",
