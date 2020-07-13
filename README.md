@@ -68,6 +68,18 @@ Pull Requests and issues are welcome. See the
 [NS1 Contribution Guidelines](https://github.com/ns1/community) for more
 information.
 
+### Editing the docs
+
+You can create or edit NS1-python documentation by downloading the repo onto your machine and using an editor such as VSCode.
+
+### Creating Pull Requests
+
+1. When you're ready to submit your changes, add a descriptive title and comments to summarize the changes made.
+2. Select **Create a new branch for this commit and start a pull request**.
+3. Check the **Propose file change** button.
+4. Scroll down to compare changes with the original document.
+5. Select **Create pull request**.
+
 Our CI process will lint and check for formatting issues with `flake8` and
 `black`.
 It is suggested to run these checks prior to submitting a pull request and fix
