@@ -15,6 +15,7 @@ setup(
     version=ns1.version,
     description="Python SDK for the NS1 DNS platform",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     license="MIT",
     # contact information
     author="NS1 Developers",
