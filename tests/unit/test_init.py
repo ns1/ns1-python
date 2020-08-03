@@ -1,3 +1,4 @@
+import mock
 import pytest
 
 from ns1 import NS1
@@ -18,6 +19,7 @@ from ns1.rest.stats import Stats
 from ns1.rest.team import Team
 from ns1.rest.user import User
 from ns1.rest.zones import Zones
+from ns1.zones import Zone
 
 
 @pytest.fixture
@@ -67,3 +69,28 @@ def test_rest_interface(ns1_config, method, want):
     client = NS1(config=ns1_config)
     got = getattr(client, method)()
     assert isinstance(got, want)
+
+
+@mock.patch.object(Zone, "load")
+@mock.patch.object(Zones, "list")
+def test_listZones(zones_list, zone_load, ns1_config):
+    zones_list.return_value = [{"zone": "a.com"}, {"zone": "b.com"}]
+    client = NS1(config=ns1_config)
+
+    result = client.listZones()
+    zones_list.assert_called_once_with()
+    zone_load.assert_not_called()
+    assert sorted([x.zone for x in result]) == ["a.com", "b.com"]
+
+    result[0].load()
+    zone_load.assert_called_once_with()
+
+
+@mock.patch.object(Zone, "load")
+def test_loadZone(zone_load, ns1_config):
+    zone_load.return_value = "LOADED_ZONE_OBJECT"
+    client = NS1(config=ns1_config)
+
+    result = client.loadZone("a.com")
+    zone_load.assert_called_once_with(callback=None, errback=None)
+    assert result == "LOADED_ZONE_OBJECT"

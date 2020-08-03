@@ -22,8 +22,26 @@ config = api.config
 config["follow_pagination"] = True
 
 ######################
+# LISTING ZONES      #
+######################
+
+# The zone list endpoint does not have full information about each zone,
+# so the high-level `listZone` method returns a list of "unloaded" Zone
+# objects, and you need to call the `.load` method on any that you intend
+# use further.
+# It's often easier to use the rest interface directly for list() calls,
+# and/or skip right to loadZone, but this could be a reasonable method to use
+# for actions that require operating on most of all of your zones.
+zone_list = api.listZones()
+
+######################
 # LOAD / CREATE ZONE #
 ######################
+
+# get a zone from the list and load it. this is not a practical way to fetch
+# a single zone
+listed_zone = [x for x in zone_list if x["zone"] == "test.com"][0]
+listed_zone.load()
 
 # to load an existing zone, get a Zone object back
 test_zone = api.loadZone("test.com")
