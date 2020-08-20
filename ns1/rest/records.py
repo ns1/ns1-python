@@ -5,6 +5,7 @@
 import collections
 import sys
 
+from ns1.rest.errors import ResourceException
 from . import resource
 
 
@@ -17,7 +18,14 @@ class Records(resource.BaseResource):
 
     INT_FIELDS = ["ttl"]
     BOOL_FIELDS = ["use_client_subnet", "use_csubnet", "override_ttl"]
-    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link"]
+    PASSTHRU_FIELDS = [
+        "networks",
+        "meta",
+        "regions",
+        "link",
+        "zone",
+        "zone_name",
+    ]
 
     # answers must be:
     #  1) a single string
@@ -88,11 +96,12 @@ class Records(resource.BaseResource):
 
         return realFilters
 
-    def _buildBody(self, zone, domain, type, **kwargs):
-        body = {}
-        body["zone"] = zone
-        body["domain"] = domain
-        body["type"] = type.upper()
+    def _buildBody(self, z, domain, record_type, **kwargs):
+        if "zone_name" in kwargs and kwargs["zone_name"] != z:
+            raise ResourceException(
+                "Passed names differ: {} != {}".format(z, kwargs["zone_name"])
+            )
+        body = {"zone_name": z, "domain": domain, "type": record_type.upper()}
 
         if "filters" in kwargs:
             body["filters"] = self._getFiltersForBody(kwargs["filters"])
@@ -107,15 +116,14 @@ class Records(resource.BaseResource):
             body["use_client_subnet"] = body["use_csubnet"]
             del body["use_csubnet"]
 
-        return body
+        return body["zone_name"], body
 
-    def create(
-        self, zone, domain, type, callback=None, errback=None, **kwargs
-    ):
-        body = self._buildBody(zone, domain, type, **kwargs)
-
+    def create(self, z, domain, type, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, domain, type, **kwargs)
+        if "zone" not in body:
+            body["zone"] = z
         return self.create_raw(
-            zone,
+            zone_name,
             domain,
             type,
             body,
@@ -125,24 +133,21 @@ class Records(resource.BaseResource):
         )
 
     def create_raw(
-        self, zone, domain, type, body, callback=None, errback=None, **kwargs
+        self, z, domain, type, body, callback=None, errback=None, **kwargs
     ):
         return self._make_request(
             "PUT",
-            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            "%s/%s/%s/%s" % (self.ROOT, z, domain, type.upper()),
             body=body,
             callback=callback,
             errback=errback,
         )
 
-    def update(
-        self, zone, domain, type, callback=None, errback=None, **kwargs
-    ):
-        body = self._buildBody(zone, domain, type, **kwargs)
-
+    def update(self, z, domain, type, callback=None, errback=None, **kwargs):
+        zone_name, body = self._buildBody(z, domain, type, **kwargs)
         return self._make_request(
             "POST",
-            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            "%s/%s/%s/%s" % (self.ROOT, zone_name, domain, type.upper()),
             body=body,
             callback=callback,
             errback=errback,
