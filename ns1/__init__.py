@@ -503,7 +503,7 @@ class NS1:
         import ns1.ipam
 
         reservation = ns1.ipam.Reservation(
-            self.config, scopegroup_id, address_id, dhcp_options, mac
+            self.config, scopegroup_id, address_id, options=dhcp_options, mac=mac
         )
 
         return reservation.create(callback=callback, errback=errback, **kwargs)
