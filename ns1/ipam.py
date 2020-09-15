@@ -348,7 +348,7 @@ class Address(object):
             raise ScopegroupException("Scope Group not loaded")
 
         reservation = Reservation(
-            self.config, scopegroup_id, self.id, options, mac
+            self.config, scopegroup_id, self.id, options=options, mac=mac
         )
 
         return reservation.create(callback=callback, errback=errback)
