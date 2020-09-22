@@ -1,5 +1,44 @@
 ## 0.17.0 (Unreleased)
 
+(POTENTIAL) BREAKING CHANGES:
+
+With support for views in v3.x, zone FQDNs are no longer required to be unique
+within the system. The "zone" value for functions and methods, which served as
+both the unique identifier in NS1s system and as the zone's FQDN, becomes a
+unique identifier that may or may not be identical to the FQDN.
+
+This "zone name" is used in the URL for API calls, and is present on Zone
+objects as "name" and as "zone_name" for Records. The "zone" value on Zones and
+Records remains the FQDN.
+
+When we need to uniquely identify a zone, it's important that we use the zone name
+instead of the FQDN, if they are different.
+When creating a zone with an non-FQDN identifier, the FQDN must be provided.
+For compatibility, if an FQDN is not provided, we assume it matches the
+"zone name".
+
+For 2.x, this SDK release should be compatible - the "name" and "fqdn" of the
+zone just have to match.
+
+We've tried to keep this transparent and back-compatible, but some changes have
+a potential to cause problems, depending on how your code uses the SDK.
+
+* "zone" arg is generally renamed to "zone_name". This reflects its use as an
+  identifier.
+* When the zone_name is not the FQDN, rather than change method arguments, we
+  look for the FQDN value in kwargs.
+* When required, an optional "fqdn" argument is added to methods.
+* To help disambiguate error and user intention, we've added some simple
+  client-side validation that:
+  * fqdn args are not invalid
+  * when zone_name == fqdn, they are not invalid
+
+DEPRECATED CONVENIENCES:
+
+For record, the SDK tries to help out if you just pass the subdomain,
+e.g. "foo" instead of "foo.example.com". This is error prone with named zones.
+You should use the full domain name and not rely on this behavior.
+
 ## 0.16.0 (May 18, 2020)
 
 ENHANCEMENTS

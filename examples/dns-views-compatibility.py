@@ -32,24 +32,25 @@ and when using "views" functionality, calling code MUST be
 
 SDK CHANGES
 
-There are some new endpoints for views functionality, which are discusses in
-another example. This note is just about existing methods. Currently, only the
-'rest interface' is ensured to be 'name/zone_name' aware:
+There are some new endpoints for views functionality, which are discussed in
+another example. This note is just about existing methods.
+
+lower level "rest" interface:
 
 * the "zone/z" argument to CRUD methods is always considered the
   "name/zone_name"
 * On create, when the "name" is not the FQDN, the FQDN must be passed in
   the 'zone' field, as we still need to know the FQDN for assignment.
 
-As noted, not all SDK "interfaces" are "DNS views aware". When working with DNS
-views, care should be taken if using SDK methods not shown here, such as the
-"high level" interfaces. Due to compatibility, you may "successfully" end up
-doing the wrong thing!
+similar conceptual changes apply to the "high level" interface.
 """
 
 from ns1 import NS1
 
 client = NS1()
+
+
+# rest interface
 
 # the resources we will be using
 zones = client.zones()
@@ -58,7 +59,7 @@ records = client.records()
 
 # create a named zone
 # ===================
-# "zone" must be passed in args
+# "zone" must be passed in args to provide the FQDN
 data = {"zone": "example.com", "ttl": 900}
 zone_object = zones.create("example-name", **data)
 
@@ -101,3 +102,32 @@ zone_one = zones.update("example-name", **data)
 # delete named zone
 # =================
 delete_response = zones.delete("example-name")
+
+
+# high level interface
+
+# create a named zone
+# ===================
+zone = client.createZone()
+
+# add a record
+# ============
+
+# retrieve a record
+# =================
+
+# update a record
+# ===============
+
+# delete a record
+# ===============
+
+# retrieve zone
+# =============
+zone = client.loadZone()
+
+# update named zone
+# =================
+
+# delete named zone
+# =================

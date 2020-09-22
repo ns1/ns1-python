@@ -20,23 +20,26 @@ class Record(object):
 
     def __init__(self, parentZone, domain, type):
         """
-        Create a new high level Record
+        A high level Record object
 
         :param ns1.zones.Zone parentZone: the high level Zone parent object
         :param str domain: full domain name this record represents. if the \
-          domain does not end with the zone name, it is appended.
+          domain does not end with the zone's FQDN, it is appended.
         :param str type: The DNS record type (A, MX, etc)
         """
         self._rest = Records(parentZone.config)
         self.parentZone = parentZone
+
+        # We can do this here as parentZone.zone is unambigiously an FQDN
         if not domain.endswith(parentZone.zone):
             domain = domain + "." + parentZone.zone
+
         self.domain = domain
         self.type = type
         self.data = None
 
     def __repr__(self):
-        return "<Record domain=%s type=%s>" % (self.domain, self.type)
+        return "<Record zone=%s domain=%s type=%s>" % (self.parentZone.name, self.domain, self.type)
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -67,7 +70,7 @@ class Record(object):
                 return self
 
         return self._rest.retrieve(
-            self.parentZone.zone,
+            self.parentZone.name,
             self.domain,
             self.type,
             callback=success,
@@ -89,7 +92,7 @@ class Record(object):
                 return result
 
         return self._rest.delete(
-            self.parentZone.zone,
+            self.parentZone.name,
             self.domain,
             self.type,
             callback=success,
@@ -115,7 +118,7 @@ class Record(object):
                 return self
 
         return self._rest.update(
-            self.parentZone.zone,
+            self.parentZone.name,
             self.domain,
             self.type,
             callback=success,
@@ -134,6 +137,12 @@ class Record(object):
         if self.data:
             raise RecordException("record already loaded")
 
+        if self.parentZone.zone is None:
+            raise RecordException("zone must be loaded")
+
+        if 'zone' not in kwargs:
+            kwargs['zone'] = self.parentZone.zone
+
         def success(result, *args):
             self._parseModel(result)
             if callback:
@@ -142,7 +151,7 @@ class Record(object):
                 return self
 
         return self._rest.create(
-            self.parentZone.zone,
+            self.parentZone.name,
             self.domain,
             self.type,
             callback=success,
@@ -161,7 +170,7 @@ class Record(object):
             raise RecordException("record not loaded")
         stats = Stats(self.parentZone.config)
         return stats.qps(
-            zone=self.parentZone.zone,
+            zone=self.parentZone.name,
             domain=self.domain,
             type=self.type,
             callback=callback,
@@ -179,7 +188,7 @@ class Record(object):
             raise RecordException("record not loaded")
         stats = Stats(self.parentZone.config)
         return stats.usage(
-            zone=self.parentZone.zone,
+            zone=self.parentZone.name,
             domain=self.domain,
             type=self.type,
             callback=callback,

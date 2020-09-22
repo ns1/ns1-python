@@ -264,7 +264,7 @@ class NS1:
         return ns1.rest.views.Views(self.config)
 
     # HIGH LEVEL INTERFACE
-    def loadZone(self, zone, callback=None, errback=None):
+    def loadZone(self, zone_name, callback=None, errback=None):
         """
         Load an existing zone into a high level Zone object.
 
@@ -273,7 +273,7 @@ class NS1:
         """
         import ns1.zones
 
-        zone = ns1.zones.Zone(self.config, zone)
+        zone = ns1.zones.Zone(self.config, zone_name)
 
         return zone.load(callback=callback, errback=errback)
 
@@ -290,7 +290,7 @@ class NS1:
         return zone.search(q, has_geo, callback=callback, errback=errback)
 
     def createZone(
-        self, zone, zoneFile=None, callback=None, errback=None, **kwargs
+        self, zone_name, zoneFile=None, callback=None, errback=None, **kwargs
     ):
         """
         Create a new zone, and return an associated high level Zone object.
@@ -300,7 +300,8 @@ class NS1:
         If zoneFile is specified, upload the specific zone definition file
         to populate the zone with.
 
-        :param str zone: zone name, like 'example.com'
+        :param str zone_name: zone name, like 'example.com' or 'example-internal'
+        :param str zone_fqdn: if the zone name is not the same as its FQDN, specify the FQDN here
         :param str zoneFile: absolute path of a zone file
         :keyword int retry: retry time
         :keyword int refresh: refresh ttl
@@ -311,14 +312,15 @@ class NS1:
         """
         import ns1.zones
 
-        zone = ns1.zones.Zone(self.config, zone)
+        fqdn = kwargs.get('zone', None)
+        zone = ns1.zones.Zone(self.config, zone_name, fqdn)
 
         return zone.create(
             zoneFile=zoneFile, callback=callback, errback=errback, **kwargs
         )
 
     def loadRecord(
-        self, domain, type, zone=None, callback=None, errback=None, **kwargs
+        self, domain, type, zone_name=None, callback=None, errback=None, **kwargs
     ):
         """
         Load an existing record into a high level Record object.
@@ -326,25 +328,28 @@ class NS1:
         :param str domain: domain name of the record in the zone, for example \
             'myrecord'. You may leave off the zone, if it is specified in the \
             zone parameter. This is recommended. You can pass a fully \
-            qualified domain and not pass the zone argument, but this will \
-            not work as expected if there are any dots in the domain, e.g. \
-            `foo.example.com` is OK, `foo.bar.example.com` will not work as
-            expected.
+            qualified domain and not pass the zone argument, but:
+                1) this will not work as expected if there are any dots in the \
+                   domain, e.g. `foo.example.com` is OK, \
+                   `foo.bar.example.com` will not work as expected.
+                2) this will not find the record if the zone name is not the \
+                   same as its FQDN.
         :param str type: record type, such as 'A', 'MX', 'AAAA', etc.
         :param str zone: zone name, like 'example.com'
         :rtype: :py:class:`ns1.records`
         """
         import ns1.zones
 
-        if zone is None:
+        # this is not compatible with views and should be deprecated
+        if zone_name is None:
             # extract from record string
             parts = domain.split(".")
-
             if len(parts) <= 2:
-                zone = ".".join(parts)
+                zone_name = ".".join(parts)
             else:
-                zone = ".".join(parts[1:])
-        z = ns1.zones.Zone(self.config, zone)
+                zone_name = ".".join(parts[1:])
+
+        z = ns1.zones.Zone(self.config, zone_name)
 
         return z.loadRecord(
             domain, type, callback=callback, errback=errback, **kwargs
