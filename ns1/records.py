@@ -39,7 +39,11 @@ class Record(object):
         self.data = None
 
     def __repr__(self):
-        return "<Record zone=%s domain=%s type=%s>" % (self.parentZone.name, self.domain, self.type)
+        return "<Record zone=%s domain=%s type=%s>" % (
+            self.parentZone.name,
+            self.domain,
+            self.type,
+        )
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -140,8 +144,8 @@ class Record(object):
         if self.parentZone.zone is None:
             raise RecordException("zone must be loaded")
 
-        if 'zone' not in kwargs:
-            kwargs['zone'] = self.parentZone.zone
+        if "zone" not in kwargs:
+            kwargs["zone"] = self.parentZone.zone
 
         def success(result, *args):
             self._parseModel(result)

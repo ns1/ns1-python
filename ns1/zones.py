@@ -63,7 +63,7 @@ class Zone(object):
 
         def success(result, *args):
             self.data = result
-            self.zone = result['zone']
+            self.zone = result["zone"]
             if callback:
                 return callback(self)
             else:
@@ -140,22 +140,32 @@ class Zone(object):
             )
 
         if self.zone is None:
-            if 'zone' in kwargs:
-                self.zone = kwargs['zone']
+            if "zone" in kwargs:
+                self.zone = kwargs["zone"]
             else:
-                raise ZoneException('fqdn is required, set self.zone or pass "zone" argument')
+                raise ZoneException(
+                    'fqdn is required, set self.zone or pass "zone" argument'
+                )
 
-        if 'name' in kwargs:
-            if kwargs['name'] != self.name:
-                raise ZoneException('passed "name" {} does not match zone name'.format(kwargs['name']))
+        if "name" in kwargs:
+            if kwargs["name"] != self.name:
+                raise ZoneException(
+                    'passed "name" {} does not match zone name'.format(
+                        kwargs["name"]
+                    )
+                )
         else:
-            kwargs['name'] = self.name
+            kwargs["name"] = self.name
 
-        if 'zone' in kwargs:
-            if kwargs['zone'] != self.zone:
-                raise ZoneException('passed "zone" {} does not match zone fqdn'.format(kwargs['zone']))
+        if "zone" in kwargs:
+            if kwargs["zone"] != self.zone:
+                raise ZoneException(
+                    'passed "zone" {} does not match zone fqdn'.format(
+                        kwargs["zone"]
+                    )
+                )
         else:
-            kwargs['zone'] = self.zone
+            kwargs["zone"] = self.zone
 
         return self._rest.create(
             self.name, callback=success, errback=errback, **kwargs
@@ -257,7 +267,11 @@ class Zone(object):
 
         # this (amended) convenience feature is not compatible with zone names
         # that aren't FQDN's and will be removed in a future version
-        if is_fqdn(zone_name) and not is_fqdn(new_domain) and not new_domain.endswith(zone_name):
+        if (
+            is_fqdn(zone_name)
+            and not is_fqdn(new_domain)
+            and not new_domain.endswith(zone_name)
+        ):
             new_domain = new_domain + "." + zone_name
 
         def onSaveNewRecord(new_data):

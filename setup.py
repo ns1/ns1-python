@@ -22,16 +22,8 @@ setup(
     author_email="devteam@ns1.com",
     url="https://github.com/ns1/ns1-python",
     packages=find_packages(exclude=["tests", "examples"]),
-    setup_requires=[
-        "pytest-runner",
-        "wheel",
-    ],
-    tests_require=[
-        "pytest",
-        "pytest-pep8",
-        "pytest-cov",
-        "mock",
-    ],
+    setup_requires=["pytest-runner", "wheel",],
+    tests_require=["pytest", "pytest-pep8", "pytest-cov", "mock",],
     keywords="dns development rest sdk ns1 nsone",
     classifiers=[
         "Development Status :: 4 - Beta",

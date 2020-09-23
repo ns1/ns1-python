@@ -2,6 +2,8 @@
 DNS views example
 
 Settiing up "internal" and "external" views of a zone
+
+https://help.ns1.com/hc/en-us/articles/360054071374
 """
 
 from base64 import b64encode

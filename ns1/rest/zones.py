@@ -96,7 +96,9 @@ class Zones(resource.BaseResource):
             pagination_handler=zone_retrieve_pagination,
         )
 
-    def search(self, zone_name, q=None, has_geo=False, callback=None, errback=None):
+    def search(
+        self, zone_name, q=None, has_geo=False, callback=None, errback=None
+    ):
         params = {}
         if q is not None:
             params["q"] = q

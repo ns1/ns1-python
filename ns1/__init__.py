@@ -312,7 +312,7 @@ class NS1:
         """
         import ns1.zones
 
-        fqdn = kwargs.get('zone', None)
+        fqdn = kwargs.get("zone", None)
         zone = ns1.zones.Zone(self.config, zone_name, fqdn)
 
         return zone.create(
@@ -320,7 +320,13 @@ class NS1:
         )
 
     def loadRecord(
-        self, domain, type, zone_name=None, callback=None, errback=None, **kwargs
+        self,
+        domain,
+        type,
+        zone_name=None,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Load an existing record into a high level Record object.
