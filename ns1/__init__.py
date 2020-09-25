@@ -509,7 +509,12 @@ class NS1:
         return reservation.create(callback=callback, errback=errback, **kwargs)
 
     def loadReservation(
-        self, scopegroup_id, address_id, reservation_id=None, callback=None, errback=None
+        self,
+        scopegroup_id,
+        address_id,
+        reservation_id=None,
+        callback=None,
+        errback=None,
     ):
         import ns1.ipam
 
