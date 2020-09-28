@@ -1,6 +1,16 @@
 ## 0.17.0 (Unreleased)
 
+ENHANCEMENTS:
+
+Support for DNS views in API v3.x
+* acls, views, tsig endpoints supported
+* changes to support zone and record model changes (see below)
+* examples added for dns-views and dns-views-compatibility
+
 (POTENTIAL) BREAKING CHANGES:
+
+Some low level changes in the data model may lead to issues, despite efforts
+to keep things back compatible:
 
 With support for views in v3.x, zone FQDNs are no longer required to be unique
 within the system. The "zone" value for functions and methods, which served as
@@ -8,20 +18,19 @@ both the unique identifier in NS1s system and as the zone's FQDN, becomes a
 unique identifier that may or may not be identical to the FQDN.
 
 This "zone name" is used in the URL for API calls, and is present on Zone
-objects as "name" and as "zone_name" for Records. The "zone" value on Zones and
-Records remains the FQDN.
+objects as "name" and as "zone_name" for Records. For compatibility, the "zone"
+value on Zones and Records remains the FQDN.
 
-When we need to uniquely identify a zone, it's important that we use the zone name
-instead of the FQDN, if they are different.
-When creating a zone with an non-FQDN identifier, the FQDN must be provided.
-For compatibility, if an FQDN is not provided, we assume it matches the
-"zone name".
+When we need to uniquely identify a zone, it's important to use the zone name
+and not the FQDN, if they are different. When creating a zone with a non-FQDN
+identifier, the FQDN must be provided. For compatibility, if an FQDN is not
+provided, we assume it matches the "zone name". However, this means we cannot
+validate intent.
 
 For 2.x, this SDK release should be compatible - the "name" and "fqdn" of the
-zone just have to match.
+zone just have to match, and the 2.x API still enforces that they do.
 
-We've tried to keep this transparent and back-compatible, but some changes have
-a potential to cause problems, depending on how your code uses the SDK.
+Highlights:
 
 * "zone" arg is generally renamed to "zone_name". This reflects its use as an
   identifier.
@@ -35,9 +44,10 @@ a potential to cause problems, depending on how your code uses the SDK.
 
 DEPRECATED CONVENIENCES:
 
-For record, the SDK tries to help out if you just pass the subdomain,
-e.g. "foo" instead of "foo.example.com". This is error prone with named zones.
-You should use the full domain name and not rely on this behavior.
+For records, the SDK tries to help out if you just pass the domain, or allow
+you to omit the zone if you pass a fully-qualified domain. This is error prone
+with named zones. Especially in automated code, you should use the full domain,
+and not rely on this behavior.
 
 ## 0.16.0 (May 18, 2020)
 

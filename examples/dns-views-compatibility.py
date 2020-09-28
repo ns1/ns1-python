@@ -1,48 +1,94 @@
 """
-DNS views allow for <blurb here>
-
-This means an FQDN can now appear in more than one zone. We have implemented
-views in a back-compatible way, so if you do not intend to use them, you can
-largely continue to use the API as you've done before.
+DNS views is a means for NS1 to serve one set of data to one group of clients
+(e.g. internal employees), and different sets of data to other groups of
+clients (e.g. public internet). This has been largely exposed by allowing zones
+in the NS1 system to share the same FQDN, and allowing propagation to be
+controlled via ACLs and "views". For existing zones, and users that have no
+need for the added complexity of views, the default behavior is unchanged.
+However, it is important to understand that the requirement that an FQDN be
+unique within the network is removed in v3.x, and the ramifications of that.
 
 COMPATIBILITY
 
-Until now, the unique identifier of a zone in the API has been the FQDN. This
-appears both in the URL for API requests and in the 'zone' field of zones and
-records. The API throws an error if the URL and field in the body do not match.
+Since an FQDN can now appear in more than one "zone", it can no longer uniquely
+identify a zone. Instead, a user-supplied "name", unique within an account,
+is used to uniquely identify the zone.
 
-Going forward, the unique identifier of the zone is "decoupled" from the 'zone'
-field. The reference in the URL can now be an arbitrary string, unique within
-your account. This identifier is passed and returned in the 'name' field for
-zones, and the 'zone_name' field for records. You may of course continue to use
-the FQDN as the identifier - in fact, if you are not using "views", it is
-recommended that you do so. However:
+The zone name can be the same as its FQDN, existing zones transfer to the new
+schema this way. And if not using views, it does serve as a good identifier.
+However, if a second zone is created pointing to same FQDN, it cannot reuse
+the FQDN as an identifier, and queries for the zone FQDN (as an identfier)
+will return the first zone. The following example should help illustrate:
 
-* Mismatches between the zone name in the URL and the 'zone' field are no
-  longer validated to match, as it is no longer an invalid condition.
-* New field 'name' on zone responses. Also a new 'views' array
-* New field 'zone_name' on record responses
+In general, for API requests, the identifier for a zone will appear in the URL.
+They can also be passed or received as fields on an object. In the following
+request to a v2.x system, we use ZONE as an identifier in the URL, and may
+pass the `zone` field as an indicator of the FQDN for the zone.
 
-Crucially, if you are NOT using "views", then the 'zone' and 'name' fields on
-the zone will probably have the same value, but the unique identifier for the
-zone is ALWAYS the value in the 'name' field. So in general, code should be
-written or updated to prefer the 'name/zone_name' fields for identification,
-and when using "views" functionality, calling code MUST be
-"name/zone_name aware".
+$ENDPOINT/v1/zones/example.com -d '{zone: example.com}'
+                   ^                ^
+                   L___ ZONE (id)   L____ ZONE (fqdn)
+
+Note also that it has been an ERROR if the values in the URL and `zone` field
+do not match, and the API would reject.
+
+Going forward, the unique identifier and FQDN of the zone are decoupled. The
+reference in the URL is user-assignable, and is passed and returned using the
+`name` field for zones (and the `zone_name` field for records). In the new
+paradigm, the previous call would look more like:
+
+$ENDPOINT/v1/zones/example.com -d '{zone: example.com, name: example.com}'
+                   ^                ^                  ^
+                   L___ NAME        L____ ZONE         L____ NAME
+
+For compatibility, if `name` isn't present, the API will use the FQDN, so the
+2.x call above should continue to work, and have the same result.
+
+However, in 3.x we are now allowed to make new zones with the same FQDN:
+
+$ENDPOINT/v1/zones/example-internal -d '{zone: example.com, name: example-internal}'
+                   ^                     ^                  ^
+                   L___ NAME             L____ ZONE         L____ NAME
+
+`example-internal` shares the FQDN with `example.com`. API calls using
+`example.com` as the identifier will uniquely identify the first zone, to
+address the second zone, `example-internal` must be used in the identifier
+
+So, you can continue to use the FQDN as an identifier - in fact, if you
+are not using "views", it is recommended that you do so, but other zones using
+the same FQDN will have to choose different names.
+
+Note also that both the example-internal and example.com "zones" can coexist.
+How they are propagated relies on how they are organized with regard to views,
+acls, and networks.
+
+SUMMARY
+
+* As noted, mismatches between the zone name in the URL and the `zone` field
+  are no longer rejected, as it is no longer an invalid condition.
+* Change to zone responses: new field `name`. Also a new `views` array.
+* Change to record responses: new field `zone_name` This holds the identifier
+  for the record's zone
+
+Client code should be updated to prefer the `name/zone_name` fields to the
+`zone` fields, if present, for use as an identifier. In general, this can be
+done without great urgency, however, it is a requirement that you do so if
+exercising views functionality.
 
 SDK CHANGES
 
 There are some new endpoints for views functionality, which are discussed in
-another example. This note is just about existing methods.
+the dns-views example. This note is concerned with existing methods.
 
-lower level "rest" interface:
+"lower level" rest interface:
 
-* the "zone/z" argument to CRUD methods is always considered the
+* the `zone/z` argument to CRUD methods is always considered the
   "name/zone_name"
 * On create, when the "name" is not the FQDN, the FQDN must be passed in
-  the 'zone' field, as we still need to know the FQDN for assignment.
+  the `zone` field, as we still need to know the FQDN for assignment.
 
-similar conceptual changes apply to the "high level" interface.
+Similar conceptual changes apply to the "high level" interface as illustrated
+below.
 """
 
 from ns1 import NS1
@@ -106,28 +152,36 @@ delete_response = zones.delete("example-name")
 
 # high level interface
 
+
 # create a named zone
 # ===================
-zone = client.createZone()
+zone = client.createZone("example-name", zone="example.com")
 
 # add a record
 # ============
+record = zone.add_A("domain.example.com", ["1.2.3.4"])
 
 # retrieve a record
 # =================
+record = zone.loadRecord("domain.example.com", "A")
 
 # update a record
 # ===============
+record.update(answers=["1.2.3.5"])
+record.addAnswers(["2.3.4.5"])
 
 # delete a record
 # ===============
+record.delete()
 
 # retrieve zone
 # =============
-zone = client.loadZone()
+zone = client.loadZone("example-name")
 
 # update named zone
 # =================
+zone.update(ttl="99")
 
 # delete named zone
 # =================
+zone.delete()
