@@ -22,7 +22,10 @@ class Views(resource.BaseResource):
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET", "%s" % self.ROOT, callback=callback, errback=errback,
+            "GET",
+            "%s" % self.ROOT,
+            callback=callback,
+            errback=errback,
         )
 
     def retrieve(self, name, callback=None, errback=None):

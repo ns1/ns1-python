@@ -122,7 +122,10 @@ class JobTypes(resource.BaseResource):
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET", self.ROOT, callback=callback, errback=errback,
+            "GET",
+            self.ROOT,
+            callback=callback,
+            errback=errback,
         )
 
 
@@ -133,5 +136,8 @@ class Regions(resource.BaseResource):
 
     def list(self, callback=None, errback=None):
         return self._make_request(
-            "GET", self.ROOT, callback=callback, errback=errback,
+            "GET",
+            self.ROOT,
+            callback=callback,
+            errback=errback,
         )
