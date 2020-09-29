@@ -30,8 +30,9 @@ class Record(object):
         self._rest = Records(parentZone.config)
         self.parentZone = parentZone
 
-        # We can do this here as parentZone.zone is unambigiously an FQDN
-        if not domain.endswith(parentZone.zone):
+        # parentZone.zone is unambigiously an FQDN, so we _can_ do this,
+        # although we _shouldn't_
+        if parentZone.zone is not None and not domain.endswith(parentZone.zone):
             domain = domain + "." + parentZone.zone
 
         self.domain = domain
