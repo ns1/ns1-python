@@ -301,8 +301,8 @@ class NS1:
         to populate the zone with.
 
         :param str zone_name: zone name, like 'example.com' or 'example-internal'
-        :param str zone_fqdn: if the zone name is not the same as its FQDN, specify the FQDN here
         :param str zoneFile: absolute path of a zone file
+        :keyword str zone: FQDN of the zone (defaults to zone_name)
         :keyword int retry: retry time
         :keyword int refresh: refresh ttl
         :keyword int expiry: expiry ttl
@@ -312,7 +312,7 @@ class NS1:
         """
         import ns1.zones
 
-        fqdn = kwargs.get("zone", None)
+        fqdn = kwargs.get("zone", zone_name)
         zone = ns1.zones.Zone(self.config, zone_name, fqdn)
 
         return zone.create(
