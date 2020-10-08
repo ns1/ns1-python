@@ -153,18 +153,18 @@ class Records(resource.BaseResource):
             errback=errback,
         )
 
-    def delete(self, zone, domain, type, callback=None, errback=None):
+    def delete(self, zone_name, domain, type, callback=None, errback=None):
         return self._make_request(
             "DELETE",
-            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            "%s/%s/%s/%s" % (self.ROOT, zone_name, domain, type.upper()),
             callback=callback,
             errback=errback,
         )
 
-    def retrieve(self, zone, domain, type, callback=None, errback=None):
+    def retrieve(self, zone_name, domain, type, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/%s/%s/%s" % (self.ROOT, zone, domain, type.upper()),
+            "%s/%s/%s/%s" % (self.ROOT, zone_name, domain, type.upper()),
             callback=callback,
             errback=errback,
         )

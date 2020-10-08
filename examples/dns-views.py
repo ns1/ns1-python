@@ -2,6 +2,9 @@
 DNS views example
 
 Settiing up "internal" and "external" views of a zone
+
+See dns-views-compatibility and https://help.ns1.com/hc/en-us/articles/360054071374
+for more information.
 """
 
 from base64 import b64encode
@@ -56,9 +59,10 @@ def run():
     )
     acl_external = acls.create("acl-external", src_prefixes=["0.0.0.0/0"])
 
-    # create views. this associates zones, acls, and networks, and as the networks
-    # are set, triggers propagation
-    # Note: preference reordering is expensive, try to leave space for insertions
+    # Create views. This associates zones, acls, and networks. As networks are
+    # being set, this also triggers propagation.
+    # Note: preference reordering is expensive - it's a good idea leave some
+    #       room for insertions by using BASIC-style numbering
     view_internal = views.create(
         "view-internal",
         read_acls=[acl_internal["name"]],
@@ -73,6 +77,7 @@ def run():
         networks=[1],
         preference=20,
     )
+    # Here's what we created
     return (
         zone_internal,
         zone_external,

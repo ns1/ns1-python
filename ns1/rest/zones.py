@@ -37,12 +37,12 @@ class Zones(resource.BaseResource):
         return body["name"], body
 
     def import_file(
-        self, zone, zoneFile, callback=None, errback=None, **kwargs
+        self, zone_name, zoneFile, callback=None, errback=None, **kwargs
     ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
         return self._make_request(
             "PUT",
-            "import/zonefile/%s" % (zone),
+            "import/zonefile/%s" % (zone_name),
             files=files,
             callback=callback,
             errback=errback,
@@ -70,10 +70,10 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def delete(self, zone, callback=None, errback=None):
+    def delete(self, zone_name, callback=None, errback=None):
         return self._make_request(
             "DELETE",
-            "%s/%s" % (self.ROOT, zone),
+            "%s/%s" % (self.ROOT, zone_name),
             callback=callback,
             errback=errback,
         )
@@ -87,16 +87,18 @@ class Zones(resource.BaseResource):
             pagination_handler=zone_list_pagination,
         )
 
-    def retrieve(self, zone, callback=None, errback=None):
+    def retrieve(self, zone_name, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/%s" % (self.ROOT, zone),
+            "%s/%s" % (self.ROOT, zone_name),
             callback=callback,
             errback=errback,
             pagination_handler=zone_retrieve_pagination,
         )
 
-    def search(self, zone, q=None, has_geo=False, callback=None, errback=None):
+    def search(
+        self, zone_name, q=None, has_geo=False, callback=None, errback=None
+    ):
         params = {}
         if q is not None:
             params["q"] = q
@@ -104,7 +106,7 @@ class Zones(resource.BaseResource):
             params["geo"] = has_geo
         return self._make_request(
             "GET",
-            "%s/zone/%s" % (self.SEARCH_ROOT, zone),
+            "%s/zone/%s" % (self.SEARCH_ROOT, zone_name),
             params=params,
             callback=callback,
             errback=errback,

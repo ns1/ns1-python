@@ -47,3 +47,18 @@ def _parse_header_links(value):
             link[key.strip(replace_chars)] = value.strip(replace_chars)
         links.append(link)
     return links
+
+
+_RE_FQDN = re.compile(
+    r"(?=^.{1,254}$)(^(?:(?!-)[a-zA-Z0-9\-\_]{1,63}"
+    + r"(?<!-)\.)+(?:[a-zA-Z]{2,})$)"
+)
+
+
+def is_fqdn(x):
+    try:
+        if _RE_FQDN.match(x):
+            return True
+    except Exception:
+        pass
+    return False

@@ -4,6 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
+from ns1.helpers import is_fqdn
 from ns1.rest.zones import Zones
 from ns1.records import Record
 from ns1.rest.stats import Stats
@@ -23,20 +24,26 @@ class Zone(object):
     add_A(). See examples for more information.
     """
 
-    def __init__(self, config, zone):
+    def __init__(self, config, zone_name, fqdn=None):
         """
         Create a new high level Zone object
 
         :param ns1.config.Config config: config object
-        :param str zone: zone name
+        :param str name: zone "handle"
+        :param str fqdn: required if name is not the FQDN
         """
         self._rest = Zones(config)
         self.config = config
-        self.zone = zone
+        self.name = zone_name
+        # Allow instantiation without fqdn, if we are loading we can the fqdn
+        # from results. If creating, we will error about it there
+        self.zone = fqdn
         self.data = None
 
     def __repr__(self):
-        return "<Zone zone=%s>" % self.zone
+        if self.name == self.zone:
+            return "<Zone zone=%s>" % self.zone
+        return "<Zone name=%s zone=%s>" % (self.name, self.zone)
 
     def __getitem__(self, item):
         return self.data.get(item, None)
@@ -56,13 +63,14 @@ class Zone(object):
 
         def success(result, *args):
             self.data = result
+            self.zone = result["zone"]
             if callback:
                 return callback(self)
             else:
                 return self
 
         return self._rest.retrieve(
-            self.zone, callback=success, errback=errback
+            self.name, callback=success, errback=errback
         )
 
     def search(self, q=None, has_geo=False, callback=None, errback=None):
@@ -72,13 +80,13 @@ class Zone(object):
         if not self.data:
             raise ZoneException("zone not loaded")
 
-        return self._rest.search(self.zone, q, has_geo, callback, errback)
+        return self._rest.search(self.name, q, has_geo, callback, errback)
 
     def delete(self, callback=None, errback=None):
         """
         Delete the zone and ALL records it contains.
         """
-        return self._rest.delete(self.zone, callback=callback, errback=errback)
+        return self._rest.delete(self.name, callback=callback, errback=errback)
 
     def update(self, callback=None, errback=None, **kwargs):
         """
@@ -98,7 +106,7 @@ class Zone(object):
                 return self
 
         return self._rest.update(
-            self.zone, callback=success, errback=errback, **kwargs
+            self.name, callback=success, errback=errback, **kwargs
         )
 
     def create(self, zoneFile=None, callback=None, errback=None, **kwargs):
@@ -115,6 +123,8 @@ class Zone(object):
 
         def success(result, *args):
             self.data = result
+            self.zone = result["zone"]
+            self.name = result["name"]
             if callback:
                 return callback(self)
             else:
@@ -122,16 +132,44 @@ class Zone(object):
 
         if zoneFile:
             return self._rest.import_file(
-                self.zone,
+                self.name,
                 zoneFile,
                 callback=success,
                 errback=errback,
                 **kwargs
             )
+
+        if self.zone is None:
+            if "zone" in kwargs:
+                self.zone = kwargs["zone"]
+            else:
+                raise ZoneException(
+                    'fqdn is required, set self.zone or pass "zone" argument'
+                )
+
+        if "name" in kwargs:
+            if kwargs["name"] != self.name:
+                raise ZoneException(
+                    'passed "name" {} does not match zone name'.format(
+                        kwargs["name"]
+                    )
+                )
         else:
-            return self._rest.create(
-                self.zone, callback=success, errback=errback, **kwargs
-            )
+            kwargs["name"] = self.name
+
+        if "zone" in kwargs:
+            if kwargs["zone"] != self.zone:
+                raise ZoneException(
+                    'passed "zone" {} does not match zone fqdn'.format(
+                        kwargs["zone"]
+                    )
+                )
+        else:
+            kwargs["zone"] = self.zone
+
+        return self._rest.create(
+            self.name, callback=success, errback=errback, **kwargs
+        )
 
     def __getattr__(self, item):
 
@@ -149,7 +187,7 @@ class Zone(object):
         return add_X
 
     def createLinkToSelf(
-        self, new_zone, callback=None, errback=None, **kwargs
+        self, new_zone_name, callback=None, errback=None, **kwargs
     ):
         """
         Create a new linked zone, linking to ourselves. All records in this
@@ -158,8 +196,9 @@ class Zone(object):
         :param str new_zone: the new zone name to link to this one
         :return: new Zone
         """
-        zone = Zone(self.config, new_zone)
-        kwargs["link"] = self.data["zone"]
+        zone = Zone(self.config, new_zone_name)
+        kwargs["zone"] = self.data["zone"]
+        kwargs["link"] = self.data["name"]
         return zone.create(callback=callback, errback=errback, **kwargs)
 
     def linkRecord(
@@ -203,7 +242,7 @@ class Zone(object):
         existing_domain,
         new_domain,
         rtype,
-        zone=None,
+        zone_name=None,
         callback=None,
         errback=None,
     ):
@@ -212,22 +251,32 @@ class Zone(object):
         identical.
 
         :param str existing_domain: The existing record to clone
-        :param str new_domain: The name of the new cloned record
+        :param str new_domain: The domain name of the new cloned record. Using
+                               the non-fully-qualified domain is not compatible
+                               with views and should be considered deprecated
         :param str rtype: DNS record type
-        :param str zone: Optional zone name, if the new record should exist in\
-            a different zone than the original record.
+        :param str zone_name: Optional zone name, if the new record should
+            exist in a different zone than the original record. This should be
+            the zone name/handle, FQDN is not required as the zone is
+            understood to already exist.
         :rtype: ns1.records.Record
         :return: new Record
         """
-        if zone is None:
-            zone = self.zone
+        if zone_name is None:
+            zone_name = self.name
 
-        if not new_domain.endswith(zone):
-            new_domain = new_domain + "." + zone
+        # this (amended) convenience feature is not compatible with zone names
+        # that aren't FQDN's and will be removed in a future version
+        if (
+            is_fqdn(zone_name)
+            and not is_fqdn(new_domain)
+            and not new_domain.endswith(zone_name)
+        ):
+            new_domain = new_domain + "." + zone_name
 
         def onSaveNewRecord(new_data):
-            if zone != self.zone:
-                pZone = Zone(self.config, zone)
+            if zone_name != self.name:
+                pZone = Zone(self.config, zone_name)
             else:
                 pZone = self
             new_rec = Record(pZone, new_domain, rtype)
@@ -239,11 +288,11 @@ class Zone(object):
 
         def onLoadRecord(old_rec):
             data = old_rec.data
-            data["zone"] = zone
+            data["zone_name"] = zone_name
             data["domain"] = new_domain
             restapi = Records(self.config)
             return restapi.create_raw(
-                zone,
+                zone_name,
                 new_domain,
                 rtype,
                 data,
@@ -275,7 +324,7 @@ class Zone(object):
         :return: QPS information
         """
         stats = Stats(self.config)
-        return stats.qps(zone=self.zone, callback=callback, errback=errback)
+        return stats.qps(zone=self.name, callback=callback, errback=errback)
 
     def usage(self, callback=None, errback=None, **kwargs):
         """
@@ -286,5 +335,5 @@ class Zone(object):
         """
         stats = Stats(self.config)
         return stats.usage(
-            zone=self.zone, callback=callback, errback=errback, **kwargs
+            zone=self.name, callback=callback, errback=errback, **kwargs
         )
