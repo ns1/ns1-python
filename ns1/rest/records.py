@@ -40,7 +40,7 @@ class Records(resource.BaseResource):
         if isinstance(answers, py_str):
             answers = [answers]
         # otherwise, we need an iterable
-        elif not isinstance(answers, collections.Iterable):
+        elif not isinstance(answers, collections.abc.Iterable):
             raise Exception("invalid answers format (must be str or iterable)")
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
