@@ -13,7 +13,7 @@ setup(
     name="ns1-python",
     # flake8: noqa
     version=ns1.version,
-    description="Python SDK for the NS1 DNS platform",
+    description="Python SDK for the NS1 Connect platform",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
@@ -32,7 +32,7 @@ setup(
         "pytest-cov",
         "mock",
     ],
-    keywords="dns development rest sdk ns1 nsone",
+    keywords="dns dhcp ipam development rest sdk ns1 nsone",
     classifiers=[
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
@@ -40,11 +40,15 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Internet :: Name Service (DNS)",
+        "Topic :: Internet :: DHCP (DNS)",
+        "Topic :: Internet :: IPAM",
+        "Topic :: Internet :: DDI"
     ],
 )
