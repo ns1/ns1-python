@@ -15,8 +15,7 @@ and includes both a simple NS1 REST API wrapper as well as a higher level
 interface for managing zones, records, data feeds, and more.
 It supports synchronous and asynchronous transports.
 
-Both python 2.7 and 3.3+ are supported. Automated tests are currently run
-against 2.7 and 3.6.
+Python 3.3+ are supported. Automated tests are currently run against 3.6, 3.7, 3.8, and 3.9.
 
 Installation
 ============
