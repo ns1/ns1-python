@@ -49,6 +49,6 @@ setup(
         "Topic :: Internet :: Name Service (DNS)",
         "Topic :: Internet :: DHCP (DNS)",
         "Topic :: Internet :: IPAM",
-        "Topic :: Internet :: DDI"
+        "Topic :: Internet :: DDI",
     ],
 )
