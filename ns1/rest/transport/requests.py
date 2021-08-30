@@ -26,11 +26,12 @@ class RequestsTransport(TransportBase):
         if not have_requests:
             raise ImportError("requests module required for RequestsTransport")
         TransportBase.__init__(self, config, self.__module__)
+        self.session = requests.Session()
         self.REQ_MAP = {
-            "GET": requests.get,
-            "POST": requests.post,
-            "DELETE": requests.delete,
-            "PUT": requests.put,
+            "GET": self.session.get,
+            "POST": self.session.post,
+            "DELETE": self.session.delete,
+            "PUT": self.session.put,
         }
         self._timeout = self._config.get("timeout", None)
         if isinstance(self._timeout, list) and len(self._timeout) == 2:
