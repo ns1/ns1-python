@@ -1,5 +1,10 @@
 ## 0.17.0 (Unreleased)
 
+## 0.16.1 (September 1, 2021)
+
+ENHANCEMENTS
+* Re-use connections with Session objects in RequestsTransport
+
 ## 0.16.0 (May 18, 2020)
 
 ENHANCEMENTS
