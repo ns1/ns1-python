@@ -72,7 +72,7 @@ class Zone(object):
         if not self.data:
             raise ZoneException("zone not loaded")
 
-        return self._rest.search(self.zone, q, has_geo, callback, errback)
+        return self._rest.search(self.zone, callback, errback)
 
     def delete(self, callback=None, errback=None):
         """

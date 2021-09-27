@@ -8,7 +8,6 @@ from . import resource
 
 
 class Zones(resource.BaseResource):
-
     ROOT = "zones"
     SEARCH_ROOT = "search"
 
@@ -87,16 +86,16 @@ class Zones(resource.BaseResource):
             pagination_handler=zone_retrieve_pagination,
         )
 
-    def search(self, zone, q=None, has_geo=False, callback=None, errback=None):
-        params = {}
-        if q is not None:
-            params["q"] = q
-        if has_geo:
-            params["geo"] = has_geo
+    def search(self, zone, expand=None, max=None, callback=None, errback=None):
+        request = "{}?q={}&type=zone".format(self.SEARCH_ROOT, zone)
+        if max is not None:
+            request += max
+        if expand is not None:
+            request += expand
         return self._make_request(
             "GET",
-            "%s/zone/%s" % (self.SEARCH_ROOT, zone),
-            params=params,
+            request,
+            params={},
             callback=callback,
             errback=errback,
         )

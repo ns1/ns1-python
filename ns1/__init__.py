@@ -257,7 +257,7 @@ class NS1:
         :return:
         """
 
-        return zone.search(q, has_geo, callback=callback, errback=errback)
+        return zone.search(q, callback=callback, errback=errback)
 
     def createZone(
         self, zone, zoneFile=None, callback=None, errback=None, **kwargs
