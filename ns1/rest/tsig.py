@@ -17,15 +17,6 @@ class Tsig(resource.BaseResource):
         "offset",
     ]
 
-    ALGORITHM_FIELDS = [
-        "hmac-sha1",
-        "hmac-sha224",
-        "hmac-sha256",
-        "hmac-sha384",
-        "hmac-sha512",
-        "hmac-md5",
-    ]
-
     def create(
         self,
         key_name,
@@ -35,10 +26,7 @@ class Tsig(resource.BaseResource):
         errback=None,
         **kwargs
     ):
-        print("create")
-        # path_param = "key_name=%s" % key_name
         body = {"algorithm": algorithm, "secret": secret}
-
         if "permissions" not in kwargs:
             if self._config["ddi"]:
                 body["permissions"] = permissions._default_perms_ddi
