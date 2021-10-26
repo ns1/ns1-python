@@ -4,7 +4,6 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 from .config import Config
-from ns1.helpers import deprecated
 
 version = "0.16.1"
 
@@ -248,25 +247,11 @@ class NS1:
 
         return zone.load(callback=callback, errback=errback)
 
-    @deprecated(
-        "searchZone is deprecated and will be removed in future SDK versions. Consider using SearchZoneV2 instead")
     def searchZone(
-            self, zone, q=None, has_geo=False, callback=None, errback=None
-    ):
-        """
-        Warning Deprecated function Consider using SearchZoneV2 instead
-        Search a zone for a given search query (e.g., for geological data, etc)
-
-        :param zone: NOT a string like loadZone - an already loaded ns1.zones.Zone, like one returned from loadZone
-        :return:
-        """
-
-        return zone.search(q, has_geo, callback=callback, errback=errback)
-
-    def searchZoneV2(
             self, query, type="all", expand=True, max=None, callback=None, errback=None,
     ):
         """
+        This method was updated since NS1 deprecated v1/search/zones
         Search a zone record or answers for a given search query (e.g., for geological data, etc)
 
         :param query: query to search zone name or other type name
@@ -277,7 +262,7 @@ class NS1:
         """
         from ns1.rest.zones import Zones
         rest_zone = Zones(self.config)
-        return rest_zone.search_v2(query, type, expand, max, callback, errback)
+        return rest_zone.search(query, type, expand, max, callback, errback)
 
     def createZone(
             self, zone, zoneFile=None, callback=None, errback=None, **kwargs

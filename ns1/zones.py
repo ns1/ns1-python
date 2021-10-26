@@ -3,7 +3,6 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
-from ns1.helpers import deprecated
 from ns1.rest.zones import Zones
 from ns1.records import Record
 from ns1.rest.stats import Stats
@@ -63,16 +62,6 @@ class Zone(object):
         return self._rest.retrieve(
             self.zone, callback=success, errback=errback
         )
-
-    @deprecated
-    def search(self, q=None, has_geo=False, callback=None, errback=None):
-        """
-        Search within a zone for specific metadata. Zone must already be loaded.
-        """
-        if not self.data:
-            raise ZoneException("zone not loaded")
-
-        return self._rest.search(self.zone, q, has_geo, callback, errback)
 
     def delete(self, callback=None, errback=None):
         """
