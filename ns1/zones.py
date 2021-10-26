@@ -3,7 +3,7 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
-
+from ns1.helpers import deprecated
 from ns1.rest.zones import Zones
 from ns1.records import Record
 from ns1.rest.stats import Stats
@@ -15,7 +15,6 @@ class ZoneException(Exception):
 
 
 class Zone(object):
-
     """
     High level object representing a Zone. In addition to the documented
     methods, there are magic methods allowing easy creation of records in this
@@ -65,6 +64,7 @@ class Zone(object):
             self.zone, callback=success, errback=errback
         )
 
+    @deprecated
     def search(self, q=None, has_geo=False, callback=None, errback=None):
         """
         Search within a zone for specific metadata. Zone must already be loaded.
@@ -149,7 +149,7 @@ class Zone(object):
         return add_X
 
     def createLinkToSelf(
-        self, new_zone, callback=None, errback=None, **kwargs
+            self, new_zone, callback=None, errback=None, **kwargs
     ):
         """
         Create a new linked zone, linking to ourselves. All records in this
@@ -163,13 +163,13 @@ class Zone(object):
         return zone.create(callback=callback, errback=errback, **kwargs)
 
     def linkRecord(
-        self,
-        existing_domain,
-        new_domain,
-        rtype,
-        callback=None,
-        errback=None,
-        **kwargs
+            self,
+            existing_domain,
+            new_domain,
+            rtype,
+            callback=None,
+            errback=None,
+            **kwargs
     ):
 
         """
@@ -199,13 +199,13 @@ class Zone(object):
         )
 
     def cloneRecord(
-        self,
-        existing_domain,
-        new_domain,
-        rtype,
-        zone=None,
-        callback=None,
-        errback=None,
+            self,
+            existing_domain,
+            new_domain,
+            rtype,
+            zone=None,
+            callback=None,
+            errback=None,
     ):
         """
         Clone the given record to a new record such that their configs are

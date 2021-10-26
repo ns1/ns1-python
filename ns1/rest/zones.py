@@ -5,10 +5,10 @@
 #
 
 from . import resource
+from ..helpers import deprecated
 
 
 class Zones(resource.BaseResource):
-
     ROOT = "zones"
     SEARCH_ROOT = "search"
 
@@ -30,7 +30,7 @@ class Zones(resource.BaseResource):
         return body
 
     def import_file(
-        self, zone, zoneFile, callback=None, errback=None, **kwargs
+            self, zone, zoneFile, callback=None, errback=None, **kwargs
     ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
         return self._make_request(
@@ -87,6 +87,7 @@ class Zones(resource.BaseResource):
             pagination_handler=zone_retrieve_pagination,
         )
 
+    @deprecated
     def search(self, zone, q=None, has_geo=False, callback=None, errback=None):
         params = {}
         if q is not None:
@@ -97,6 +98,18 @@ class Zones(resource.BaseResource):
             "GET",
             "%s/zone/%s" % (self.SEARCH_ROOT, zone),
             params=params,
+            callback=callback,
+            errback=errback,
+        )
+
+    def search_v2(self, query, type="all", expand=True, max=None, callback=None, errback=None):
+        request = "{}?q={}&type={}&expand={}".format(self.SEARCH_ROOT, query, type, expand)
+        if max is not None:
+            request += "&max=" + str(max)
+        return self._make_request(
+            "GET",
+            request,
+            params={},
             callback=callback,
             errback=errback,
         )
