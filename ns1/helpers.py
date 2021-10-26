@@ -2,6 +2,7 @@ import re
 
 from threading import Lock
 
+
 class SingletonMixin(object):
     """double-locked thread safe singleton"""
 

@@ -29,7 +29,7 @@ class Zones(resource.BaseResource):
         return body
 
     def import_file(
-            self, zone, zoneFile, callback=None, errback=None, **kwargs
+        self, zone, zoneFile, callback=None, errback=None, **kwargs
     ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
         return self._make_request(
@@ -86,8 +86,18 @@ class Zones(resource.BaseResource):
             pagination_handler=zone_retrieve_pagination,
         )
 
-    def search(self, query, type="all", expand=True, max=None, callback=None, errback=None):
-        request = "{}?q={}&type={}&expand={}".format(self.SEARCH_ROOT, query, type, expand)
+    def search(
+        self,
+        query,
+        type="all",
+        expand=True,
+        max=None,
+        callback=None,
+        errback=None,
+    ):
+        request = "{}?q={}&type={}&expand={}".format(
+            self.SEARCH_ROOT, query, type, expand
+        )
         if max is not None:
             request += "&max=" + str(max)
         return self._make_request(

@@ -138,7 +138,7 @@ class Zone(object):
         return add_X
 
     def createLinkToSelf(
-            self, new_zone, callback=None, errback=None, **kwargs
+        self, new_zone, callback=None, errback=None, **kwargs
     ):
         """
         Create a new linked zone, linking to ourselves. All records in this
@@ -152,13 +152,13 @@ class Zone(object):
         return zone.create(callback=callback, errback=errback, **kwargs)
 
     def linkRecord(
-            self,
-            existing_domain,
-            new_domain,
-            rtype,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        existing_domain,
+        new_domain,
+        rtype,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
 
         """
@@ -188,13 +188,13 @@ class Zone(object):
         )
 
     def cloneRecord(
-            self,
-            existing_domain,
-            new_domain,
-            rtype,
-            zone=None,
-            callback=None,
-            errback=None,
+        self,
+        existing_domain,
+        new_domain,
+        rtype,
+        zone=None,
+        callback=None,
+        errback=None,
     ):
         """
         Clone the given record to a new record such that their configs are

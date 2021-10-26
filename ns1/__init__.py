@@ -248,7 +248,13 @@ class NS1:
         return zone.load(callback=callback, errback=errback)
 
     def searchZone(
-            self, query, type="all", expand=True, max=None, callback=None, errback=None,
+        self,
+        query,
+        type="all",
+        expand=True,
+        max=None,
+        callback=None,
+        errback=None,
     ):
         """
         This method was updated since NS1 deprecated v1/search/zones
@@ -261,11 +267,12 @@ class NS1:
         :return: list of zones searched
         """
         from ns1.rest.zones import Zones
+
         rest_zone = Zones(self.config)
         return rest_zone.search(query, type, expand, max, callback, errback)
 
     def createZone(
-            self, zone, zoneFile=None, callback=None, errback=None, **kwargs
+        self, zone, zoneFile=None, callback=None, errback=None, **kwargs
     ):
         """
         Create a new zone, and return an associated high level Zone object.
@@ -293,7 +300,7 @@ class NS1:
         )
 
     def loadRecord(
-            self, domain, type, zone=None, callback=None, errback=None, **kwargs
+        self, domain, type, zone=None, callback=None, errback=None, **kwargs
     ):
         """
         Load an existing record into a high level Record object.
@@ -370,7 +377,7 @@ class NS1:
         return network.load(callback=callback, errback=errback)
 
     def createNetwork(
-            self, name, scope_group_id=None, callback=None, errback=None, **kwargs
+        self, name, scope_group_id=None, callback=None, errback=None, **kwargs
     ):
         """
         Create a new Network
@@ -403,7 +410,7 @@ class NS1:
         return address.load(callback=callback, errback=errback)
 
     def loadAddressbyPrefix(
-            self, prefix, status, network_id, callback=None, errback=None
+        self, prefix, status, network_id, callback=None, errback=None
     ):
         """
         Load an existing address by prefix, status and network into a high level Address object
@@ -422,7 +429,7 @@ class NS1:
         return address.load(callback=callback, errback=errback)
 
     def createAddress(
-            self, prefix, status, network_id, callback=None, errback=None, **kwargs
+        self, prefix, status, network_id, callback=None, errback=None, **kwargs
     ):
         """
         Create a new Address
@@ -454,14 +461,14 @@ class NS1:
         return scope_group.load(callback=callback, errback=errback)
 
     def createScopeGroup(
-            self,
-            name,
-            service_def_id,
-            dhcp4,
-            dhcp6,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        name,
+        service_def_id,
+        dhcp4,
+        dhcp6,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Create a new Scope Group
@@ -487,14 +494,14 @@ class NS1:
         )
 
     def createReservation(
-            self,
-            scopegroup_id,
-            address_id,
-            mac,
-            dhcp_options=None,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        scopegroup_id,
+        address_id,
+        mac,
+        dhcp_options=None,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Create a new Reservation
@@ -518,12 +525,12 @@ class NS1:
         return reservation.create(callback=callback, errback=errback, **kwargs)
 
     def loadReservation(
-            self,
-            scopegroup_id,
-            address_id,
-            reservation_id=None,
-            callback=None,
-            errback=None,
+        self,
+        scopegroup_id,
+        address_id,
+        reservation_id=None,
+        callback=None,
+        errback=None,
     ):
         import ns1.ipam
 
@@ -534,13 +541,13 @@ class NS1:
         return reservation.load(callback=callback, errback=errback)
 
     def createScope(
-            self,
-            scopegroup_id,
-            address_id,
-            dhcp_options=None,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        scopegroup_id,
+        address_id,
+        dhcp_options=None,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Create a new Scope
@@ -559,7 +566,7 @@ class NS1:
         return scope.create(callback=callback, errback=errback, **kwargs)
 
     def loadScope(
-            self, scopegroup_id, address_id, callback=None, errback=None
+        self, scopegroup_id, address_id, callback=None, errback=None
     ):
         import ns1.ipam
 
@@ -568,13 +575,13 @@ class NS1:
         return scope.load(callback=callback, errback=errback)
 
     def loadLeases(
-            self,
-            scope_group_id=None,
-            scope_id=None,
-            limit=None,
-            offset=None,
-            callback=None,
-            errback=None,
+        self,
+        scope_group_id=None,
+        scope_id=None,
+        limit=None,
+        offset=None,
+        callback=None,
+        errback=None,
     ):
         import ns1.ipam
 
