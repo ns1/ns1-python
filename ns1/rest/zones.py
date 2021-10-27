@@ -96,7 +96,7 @@ class Zones(resource.BaseResource):
         errback=None,
     ):
         request = "{}?q={}&type={}&expand={}".format(
-            self.SEARCH_ROOT, query, type, expand
+            self.SEARCH_ROOT, query, type, str.lower(str(expand))
         )
         if max is not None:
             request += "&max=" + str(max)
