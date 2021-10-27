@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.17.0"
+version = "0.17.1"
 
 
 class NS1:
