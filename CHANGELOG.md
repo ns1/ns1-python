@@ -1,4 +1,6 @@
-## 0.17.0 (Unreleased)
+## 0.17.0 (October 27, 2021)
+ENHANCEMENTS
+* Move from deprecated search endpoint to supported search endpoint
 
 ## 0.16.1 (September 1, 2021)
 
