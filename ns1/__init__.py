@@ -248,16 +248,28 @@ class NS1:
         return zone.load(callback=callback, errback=errback)
 
     def searchZone(
-        self, zone, q=None, has_geo=False, callback=None, errback=None
+        self,
+        query,
+        type="all",
+        expand=True,
+        max=None,
+        callback=None,
+        errback=None,
     ):
         """
-        Search a zone for a given search query (e.g., for geological data, etc)
+        This method was updated since NS1 deprecated v1/search/zones
+        Search a zone record or answers for a given search query (e.g., for geological data, etc)
 
-        :param zone: NOT a string like loadZone - an already loaded ns1.zones.Zone, like one returned from loadZone
-        :return:
+        :param query: query to search zone name or other type name
+        :param type: String Filters search results by type. Enum: "zone", "record", "all", "answers"
+        :param expand: Boolean Expands contents of search results.
+        :param max: Integer Maximum number of search results to display
+        :return: list of zones searched
         """
+        from ns1.rest.zones import Zones
 
-        return zone.search(q, has_geo, callback=callback, errback=errback)
+        rest_zone = Zones(self.config)
+        return rest_zone.search(query, type, expand, max, callback, errback)
 
     def createZone(
         self, zone, zoneFile=None, callback=None, errback=None, **kwargs
