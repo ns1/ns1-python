@@ -499,6 +499,7 @@ class Reservations(resource.BaseResource):
             errback=errback,
         )
 
+    #triggering tests
     def list(self, scopegroup_id, callback=None, errback=None):
         return self._make_request(
             "GET",
