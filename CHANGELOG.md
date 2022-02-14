@@ -1,4 +1,15 @@
-## 0.17.0 (Unreleased)
+## 0.17.1 (October 27, 2021)
+BUG FIXES:
+* Fixes a casing issue on a search parameter
+
+## 0.17.0 (October 27, 2021)
+ENHANCEMENTS
+* Move from deprecated search endpoint to supported search endpoint
+
+## 0.16.1 (September 1, 2021)
+
+ENHANCEMENTS
+* Re-use connections with Session objects in RequestsTransport
 
 ## 0.16.0 (May 18, 2020)
 
