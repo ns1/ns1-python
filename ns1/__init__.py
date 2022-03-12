@@ -566,11 +566,13 @@ class NS1:
         return scope.create(callback=callback, errback=errback, **kwargs)
 
     def loadScope(
-        self, scopegroup_id, address_id, callback=None, errback=None
-    ):
+            self,
+            id,
+            callback=None,
+            errback=None):
         import ns1.ipam
-
-        scope = ns1.ipam.Scope(self.config, scopegroup_id, address_id)
+        # pass dummy values for scope group and address id, as these are not used here anyways
+        scope = ns1.ipam.Scope(self.config, None, None, id)
 
         return scope.load(callback=callback, errback=errback)
 
