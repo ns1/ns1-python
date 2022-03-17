@@ -11,6 +11,7 @@ class Tsig(resource.BaseResource):
     ROOT = "tsig"
 
     PASSTHRU_FIELDS = [
+        "key_name",
         "algorithm",
         "secret",
         "limit",
@@ -18,13 +19,13 @@ class Tsig(resource.BaseResource):
     ]
 
     def create(
-        self,
-        key_name,
-        algorithm,
-        secret,
-        callback=None,
-        errback=None,
-        **kwargs
+            self,
+            key_name,
+            algorithm,
+            secret,
+            callback=None,
+            errback=None,
+            **kwargs
     ):
         body = {"algorithm": algorithm, "secret": secret}
         if "permissions" not in kwargs:
@@ -44,20 +45,20 @@ class Tsig(resource.BaseResource):
         )
 
     def update(
-        self,
-        tsgi_name,
-        algorithm,
-        secret,
-        callback=None,
-        errback=None,
-        **kwargs
+            self,
+            key_name,
+            algorithm=None,
+            secret=None,
+            callback=None,
+            errback=None,
+            **kwargs
     ):
         body = {"algorithm": algorithm, "secret": secret}
         self._buildStdBody(body, kwargs)
 
         return self._make_request(
             "POST",
-            "%s/%s" % (self.ROOT, tsgi_name),
+            "%s/%s" % (self.ROOT, key_name),
             body=body,
             callback=callback,
             errback=errback,
