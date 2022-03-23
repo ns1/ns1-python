@@ -223,6 +223,16 @@ class NS1:
 
         return ns1.rest.user.User(self.config)
 
+    def tsig(self):
+        """
+        Return a new raw REST interface to tsgi resources
+
+        :rtype: :py:class:`ns1.rest.tsig.Tsgi`
+        """
+        import ns1.rest.tsig
+
+        return ns1.rest.tsig.Tsig(self.config)
+
     def apikey(self):
         """
         Return a new raw REST interface to API key resources
