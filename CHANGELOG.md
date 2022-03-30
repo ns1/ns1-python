@@ -1,3 +1,7 @@
+## 0.17.1 (March 30, 2022)
+ENHANCEMENTS:
+* Adds support for TSIG
+
 ## 0.17.1 (October 27, 2021)
 BUG FIXES:
 * Fixes a casing issue on a search parameter
