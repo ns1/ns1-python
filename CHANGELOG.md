@@ -1,4 +1,4 @@
-## 0.17.1 (March 30, 2022)
+## 0.17.2 (March 30, 2022)
 ENHANCEMENTS:
 * Adds support for TSIG
 
