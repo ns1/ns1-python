@@ -57,7 +57,6 @@ def test_rest_acl_create(
         },
         callback=None,
         errback=None,
-        
     )
 
 
