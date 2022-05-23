@@ -57,7 +57,6 @@ def test_rest_view_create(
         },
         callback=None,
         errback=None,
-        
     )
 
 
