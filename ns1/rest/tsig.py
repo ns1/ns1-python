@@ -19,13 +19,13 @@ class Tsig(resource.BaseResource):
     ]
 
     def create(
-            self,
-            key_name,
-            algorithm,
-            secret,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        key_name,
+        algorithm,
+        secret,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         body = {"algorithm": algorithm, "secret": secret}
         if "permissions" not in kwargs:
@@ -45,13 +45,13 @@ class Tsig(resource.BaseResource):
         )
 
     def update(
-            self,
-            key_name,
-            algorithm=None,
-            secret=None,
-            callback=None,
-            errback=None,
-            **kwargs
+        self,
+        key_name,
+        algorithm=None,
+        secret=None,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         body = {"algorithm": algorithm, "secret": secret}
         self._buildStdBody(body, kwargs)
