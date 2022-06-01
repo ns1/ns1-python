@@ -38,14 +38,14 @@ def test_rest_acl_retrieve(acl_config, acl_name, url):
 
 @pytest.mark.parametrize(
     "acl_name, url",
-    [(
-        "test_acl",
-        "acls/test_acl",
-    )],
+    [
+        (
+            "test_acl",
+            "acls/test_acl",
+        )
+    ],
 )
-def test_rest_acl_create(
-    acl_config, acl_name, url
-):
+def test_rest_acl_create(acl_config, acl_name, url):
     z = ns1.rest.acls.Acls(acl_config)
     z._make_request = mock.MagicMock()
     z.create(acl_name=acl_name)
@@ -64,9 +64,7 @@ def test_rest_acl_create(
     "acl_name, url",
     [("test_acl", "acls/test_acl")],
 )
-def test_rest_acl_update(
-    acl_config, acl_name, url
-):
+def test_rest_acl_update(acl_config, acl_name, url):
     z = ns1.rest.acls.Acls(acl_config)
     z._make_request = mock.MagicMock()
     z.update(acl_name=acl_name)

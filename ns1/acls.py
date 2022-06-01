@@ -11,7 +11,6 @@ class AclException(Exception):
 
 
 class Acl(object):
-
     def __init__(self, config, acl):
         self._rest = Acls(config)
         self.config = config
@@ -38,9 +37,7 @@ class Acl(object):
             else:
                 return self
 
-        return self._rest.retrieve(
-            self.acl, callback=success, errback=errback
-        )
+        return self._rest.retrieve(self.acl, callback=success, errback=errback)
 
     def delete(self, callback=None, errback=None):
         return self._rest.delete(self.acl, callback=callback, errback=errback)

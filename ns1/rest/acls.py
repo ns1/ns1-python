@@ -9,11 +9,7 @@ from . import resource
 class Acls(resource.BaseResource):
 
     ROOT = "acls"
-    PASSTHRU_FIELDS = [
-        "src_prefixes",
-        "tsig_keys",
-        "gss_tsig_identities"
-    ]
+    PASSTHRU_FIELDS = ["src_prefixes", "tsig_keys", "gss_tsig_identities"]
 
     def _buildBody(self, acl_name, **kwargs):
         body = {}
@@ -21,17 +17,11 @@ class Acls(resource.BaseResource):
         self._buildStdBody(body, kwargs)
         return body
 
-    def create(
-        self, acl_name, callback=None, errback=None, **kwargs
-    ):
+    def create(self, acl_name, callback=None, errback=None, **kwargs):
         body = self._buildBody(acl_name, **kwargs)
 
         return self.create_raw(
-            acl_name,
-            body,
-            callback=callback,
-            errback=errback,
-            **kwargs
+            acl_name, body, callback=callback, errback=errback, **kwargs
         )
 
     def create_raw(
@@ -45,9 +35,7 @@ class Acls(resource.BaseResource):
             errback=errback,
         )
 
-    def update(
-        self, acl_name, callback=None, errback=None, **kwargs
-    ):
+    def update(self, acl_name, callback=None, errback=None, **kwargs):
         body = self._buildBody(acl_name, **kwargs)
 
         return self._make_request(
