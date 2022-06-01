@@ -35,8 +35,8 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = u"NS1 Python SDK"
-copyright = u"2014, NSONE, Inc."
+project = "NS1 Python SDK"
+copyright = "2014, NSONE, Inc."
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -81,8 +81,8 @@ latex_documents = [
     (
         "index",
         "NS1PythonSDK.tex",
-        u"NS1 Python SDK Documentation",
-        u"NSONE, Inc.",
+        "NS1 Python SDK Documentation",
+        "NSONE, Inc.",
         "manual",
     ),
 ]
@@ -95,8 +95,8 @@ man_pages = [
     (
         "index",
         "ns1pythonsdk",
-        u"NS1 Python SDK Documentation",
-        [u"NSONE, Inc."],
+        "NS1 Python SDK Documentation",
+        ["NSONE, Inc."],
         1,
     )
 ]
@@ -111,8 +111,8 @@ texinfo_documents = [
     (
         "index",
         "NS1PythonSDK",
-        u"NS1 Python SDK Documentation",
-        u"NSONE, Inc.",
+        "NS1 Python SDK Documentation",
+        "NSONE, Inc.",
         "NS1PythonSDK",
         "One line description of project.",
         "Miscellaneous",

@@ -25,17 +25,11 @@ class Views(resource.BaseResource):
         self._buildStdBody(body, kwargs)
         return body
 
-    def create(
-        self, view_name, callback=None, errback=None, **kwargs
-    ):
+    def create(self, view_name, callback=None, errback=None, **kwargs):
         body = self._buildBody(view_name, **kwargs)
 
         return self.create_raw(
-            view_name,
-            body,
-            callback=callback,
-            errback=errback,
-            **kwargs
+            view_name, body, callback=callback, errback=errback, **kwargs
         )
 
     def create_raw(
@@ -49,9 +43,7 @@ class Views(resource.BaseResource):
             errback=errback,
         )
 
-    def update(
-        self, view_name, callback=None, errback=None, **kwargs
-    ):
+    def update(self, view_name, callback=None, errback=None, **kwargs):
         body = self._buildBody(view_name, **kwargs)
 
         return self._make_request(

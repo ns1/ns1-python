@@ -38,14 +38,14 @@ def test_rest_view_retrieve(view_config, view_name, url):
 
 @pytest.mark.parametrize(
     "view_name, url",
-    [(
-        "test_view",
-        "views/test_view",
-    )],
+    [
+        (
+            "test_view",
+            "views/test_view",
+        )
+    ],
 )
-def test_rest_view_create(
-    view_config, view_name, url
-):
+def test_rest_view_create(view_config, view_name, url):
     z = ns1.rest.views.Views(view_config)
     z._make_request = mock.MagicMock()
     z.create(view_name=view_name)
@@ -64,9 +64,7 @@ def test_rest_view_create(
     "view_name, url",
     [("test_view", "views/test_view")],
 )
-def test_rest_view_update(
-    view_config, view_name, url
-):
+def test_rest_view_update(view_config, view_name, url):
     z = ns1.rest.views.Views(view_config)
     z._make_request = mock.MagicMock()
     z.update(view_name=view_name)

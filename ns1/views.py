@@ -11,7 +11,6 @@ class ViewException(Exception):
 
 
 class View(object):
-
     def __init__(self, config, view):
         self._rest = Views(config)
         self.config = config
