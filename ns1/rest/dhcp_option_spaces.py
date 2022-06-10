@@ -7,17 +7,14 @@
 from . import resource
 
 
-class DHCPOptions(resource.BaseResource):
+class DHCPOptionSpaces(resource.BaseResource):
     ROOT = "dhcp"
     OPTION_SPACE_ROOT = "optionspace"
 
-    INT_FIELDS = ["code"]
     PASSTHRU_FIELDS = [
         "name",
-        "friendly_name",
-        "description",
-        "schema",
     ]
+    BOOL_FIELDS = ["standard"]
 
     def _buildBody(self, dhcp, **kwargs):
         body = {}
@@ -38,7 +35,8 @@ class DHCPOptions(resource.BaseResource):
     def delete(self, dhcp_option_space_name, callback=None, errback=None):
         return self._make_request(
             "DELETE",
-            "%s/%s/%s" % (self.ROOT, self.OPTION_SPACE_ROOT, dhcp_option_space_name),
+            "%s/%s/%s"
+            % (self.ROOT, self.OPTION_SPACE_ROOT, dhcp_option_space_name),
             callback=callback,
             errback=errback,
         )
@@ -49,18 +47,13 @@ class DHCPOptions(resource.BaseResource):
             "%s/%s" % (self.ROOT, self.OPTION_SPACE_ROOT),
             callback=callback,
             errback=errback,
-            pagination_handler=dhcp_option_space_list_pagination,
         )
 
     def retrieve(self, dhcp_option_space_name, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/%s/%s" % (self.ROOT, self.OPTION_SPACE_ROOT, dhcp_option_space_name),
+            "%s/%s/%s"
+            % (self.ROOT, self.OPTION_SPACE_ROOT, dhcp_option_space_name),
             callback=callback,
             errback=errback,
         )
-
-
-def dhcp_option_space_list_pagination(curr_json, next_json):
-    curr_json.extend(next_json)
-    return curr_json

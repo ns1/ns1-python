@@ -263,6 +263,36 @@ class NS1:
 
         return ns1.rest.views.Views(self.config)
 
+    def client_classes(self):
+        """
+        Return a new raw REST interface to Client Classes resources
+
+        :rtype: :py:class:`ns1.rest.client_classes.ClientClasses`
+        """
+        import ns1.rest.client_classes
+
+        return ns1.rest.client_classes.ClientClasses(self.config)
+
+    def dhcp_option_spaces(self):
+        """
+        Return a new raw REST interface to Client Classes resources
+
+        :rtype: :py:class:`ns1.rest.client_classes.ClientClasses`
+        """
+        import ns1.rest.dhcp_option_spaces
+
+        return ns1.rest.dhcp_option_spaces.DHCPOptionSpaces(self.config)
+
+    def pools(self):
+        """
+        Return a new raw REST interface to Client Classes resources
+
+        :rtype: :py:class:`ns1.rest.client_classes.ClientClasses`
+        """
+        import ns1.rest.pools
+
+        return ns1.rest.pools.Pools(self.config)
+
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         """

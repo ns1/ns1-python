@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 
-from ns1.rest.dhcp_options import DHCPOptions
+from ns1.rest.dhcp_option_spaces import DHCPOptionSpaces
 
 
 class DHCPOptionException(Exception):
@@ -13,7 +13,7 @@ class DHCPOptionException(Exception):
 
 class DHCPOption(object):
     def __init__(self, config, dhcp_option):
-        self._rest = DHCPOptions(config)
+        self._rest = DHCPOptionSpaces(config)
         self.config = config
         self.dhcp_option = dhcp_option
         self.data = None
@@ -43,7 +43,9 @@ class DHCPOption(object):
         )
 
     def delete(self, callback=None, errback=None):
-        return self._rest.delete(self.dhcp_option, callback=callback, errback=errback)
+        return self._rest.delete(
+            self.dhcp_option, callback=callback, errback=errback
+        )
 
     def create(self, callback=None, errback=None, **kwargs):
         if self.data:

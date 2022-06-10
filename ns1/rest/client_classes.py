@@ -63,7 +63,6 @@ class ClientClasses(resource.BaseResource):
             "%s/%s" % (self.ROOT, self.CLIENT_CLASS_ROOT),
             callback=callback,
             errback=errback,
-            pagination_handler=client_class_list_pagination,
         )
 
     def retrieve(self, client_class_id, callback=None, errback=None):
@@ -73,8 +72,3 @@ class ClientClasses(resource.BaseResource):
             callback=callback,
             errback=errback,
         )
-
-
-def client_class_list_pagination(curr_json, next_json):
-    curr_json.extend(next_json)
-    return curr_json
