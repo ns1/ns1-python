@@ -277,7 +277,7 @@ class NS1:
         """
         Return a new raw REST interface to DHCP Option Spaces resources
 
-        :rtype: :py:class:`ns1.rest.client_classes.ClientClasses`
+        :rtype: :py:class:`ns1.rest.dhcp_option_spaces.DHCOptionSpaces`
         """
         import ns1.rest.dhcp_option_spaces
 
@@ -287,7 +287,7 @@ class NS1:
         """
         Return a new raw REST interface to Pools resources
 
-        :rtype: :py:class:`ns1.rest.client_classes.ClientClasses`
+        :rtype: :py:class:`ns1.rest.pools.Pools`
         """
         import ns1.rest.pools
 
