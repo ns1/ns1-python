@@ -53,3 +53,6 @@ doc/_build/
 
 # PyBuilder
 target/
+
+# Virtual environments
+venv/

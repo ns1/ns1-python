@@ -56,6 +56,6 @@ def test_rest_zone_retrieve(zones_config, zone, url):
 def test_rest_zone_buildbody(zones_config):
     z = ns1.rest.zones.Zones(zones_config)
     zone = "test.zone"
-    kwargs = {"retry": "0", "refresh": 0, "expiry": 0.0, "nx_ttl": "0"}
-    body = {"zone": zone, "retry": 0, "refresh": 0, "expiry": 0, "nx_ttl": 0}
+    kwargs = {"retry": "0", "refresh": 0, "expiry": 0.0, "nx_ttl": "0", "primary_master": "a.b.c.com", "tags": {"foo": "bar", "hai": "bai"}}
+    body = {"zone": zone, "retry": 0, "refresh": 0, "expiry": 0, "nx_ttl": 0, "primary_master": "a.b.c.com", "tags": {"foo": "bar", "hai": "bai"}}
     assert z._buildBody(zone, **kwargs) == body
