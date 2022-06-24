@@ -62,7 +62,7 @@ def test_rest_zone_buildbody(zones_config):
         "expiry": 0.0,
         "nx_ttl": "0",
         "primary_master": "a.b.c.com",
-        "tags": {"foo": "bar", "hai": "bai"}
+        "tags": {"foo": "bar", "hai": "bai"},
     }
     body = {
         "zone": zone,
@@ -71,6 +71,6 @@ def test_rest_zone_buildbody(zones_config):
         "expiry": 0,
         "nx_ttl": 0,
         "primary_master": "a.b.c.com",
-        "tags": {"foo": "bar", "hai": "bai"}
+        "tags": {"foo": "bar", "hai": "bai"},
     }
     assert z._buildBody(zone, **kwargs) == body
