@@ -1,3 +1,9 @@
+## 0.17.3 (June 27, 2022)
+ENHANCEMENTS:
+* Add support for DHCP objects
+* Add ability to set `tags` and `primary_master` for DNS zones
+* Add support for DNS Views and ACLs
+
 ## 0.17.2 (March 30, 2022)
 ENHANCEMENTS:
 * Adds support for TSIG
