@@ -44,3 +44,27 @@ def test_qps(stats_config, value, expected):
     s._make_request.assert_called_once_with(
         "GET", expected, callback=None, errback=None
     )
+
+
+@pytest.mark.parametrize(
+    "value, expected",
+    (
+        ({}, "stats/usage"),
+        (
+            {"zone": "test.com", "domain": "foo", "type": "A"},
+            "stats/usage/test.com/foo/A",
+        ),
+        ({"zone": "test.com"}, "stats/usage/test.com"),
+    ),
+)
+def test_usage(stats_config, value, expected):
+    s = ns1.rest.stats.Stats(stats_config)
+    s._make_request = mock.MagicMock()
+    s.usage(**value)
+    s._make_request.assert_called_once_with(
+        "GET",
+        expected,
+        callback=None,
+        errback=None,
+        pagination_handler=ns1.rest.stats.stats_usage_pagination,
+    )
