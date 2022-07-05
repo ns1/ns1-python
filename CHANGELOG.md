@@ -1,3 +1,6 @@
+## 0.17.4 (July 5, 2022)
+* Fix release tag
+
 ## 0.17.3 (June 27, 2022)
 ENHANCEMENTS:
 * Add support for DHCP objects
