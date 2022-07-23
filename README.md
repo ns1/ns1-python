@@ -16,7 +16,7 @@ interface for managing zones, records, data feeds, and more.
 It supports synchronous and asynchronous transports.
 
 Both python 2.7 and 3.3+ are supported. Automated tests are currently run
-against 2.7 and 3.6.
+against 2.7, 3.7, 3.8, 3.9 and 3.10.
 
 Installation
 ============
