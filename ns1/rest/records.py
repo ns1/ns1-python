@@ -2,7 +2,10 @@
 # Copyright (c) 2014 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
-import collections
+try:
+    from collections.abc import Iterable
+except:
+    from collections import Iterable
 import sys
 
 from . import resource
@@ -40,7 +43,7 @@ class Records(resource.BaseResource):
         if isinstance(answers, py_str):
             answers = [answers]
         # otherwise, we need an iterable
-        elif not isinstance(answers, collections.Iterable):
+        elif not isinstance(answers, Iterable):
             raise Exception("invalid answers format (must be str or iterable)")
         # at this point we have a list. loop through and build out the answer
         # entries depending on contents
