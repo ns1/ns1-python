@@ -59,7 +59,14 @@ class Stats(resource.BaseResource):
 
         return self._make_request(
             "GET",
-            "%s?%s" % (url, urlencode(args)),
+            url + ('?' + urlencode(args) if args else ''),
             callback=callback,
             errback=errback,
+            pagination_handler=stats_usage_pagination,
         )
+
+
+# successive pages just extend the usage list
+def stats_usage_pagination(curr_json, next_json):
+    curr_json.extend(next_json)
+    return curr_json
