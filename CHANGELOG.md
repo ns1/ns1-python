@@ -1,3 +1,7 @@
+## 0.18.0 (August 23, 2022)
+* Add usage stats pagination support
+* Drop support for EOL Python 3.6, add support for Python 3.7 to 3.10
+
 ## 0.17.4 (July 5, 2022)
 * Fix release tag
 
