@@ -103,7 +103,7 @@ class Records(resource.BaseResource):
             body["filters"] = self._getFiltersForBody(kwargs["filters"])
 
         if "answers" in kwargs:
-            body["answers"] = Records.coerce_answers(kwargs["answers"])
+            body["answers"] = coerce_answers(kwargs["answers"])
 
         self._buildStdBody(body, kwargs)
 

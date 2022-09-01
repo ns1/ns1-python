@@ -45,9 +45,15 @@ class Zones(resource.BaseResource):
         )
 
     def create(self, zone, callback=None, errback=None, **kwargs):
+        new_records = []
         if "records" in kwargs:
-            kwargs["records"] = coerce_answers(kwargs["records"].copy())
+            for r in kwargs["records"]:
+                r["answers"] = coerce_answers(r["answers"])
+                new_records.append(r)
 
+        kwargs["records"] = new_records
+        print(kwargs)
+        
         body = self._buildBody(zone, **kwargs)
         return self._make_request(
             "PUT",
