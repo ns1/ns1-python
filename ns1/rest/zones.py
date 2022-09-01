@@ -21,6 +21,7 @@ class Zones(resource.BaseResource):
         "link",
         "primary_master",
         "tags",
+        "records",
     ]
     BOOL_FIELDS = ["dnssec"]
 
