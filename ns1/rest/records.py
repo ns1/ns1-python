@@ -14,15 +14,7 @@ from . import resource
 py_str = str if sys.version_info[0] == 3 else basestring  # noqa: F821
 
 
-class Records(resource.BaseResource):
-
-    ROOT = "zones"
-
-    INT_FIELDS = ["ttl"]
-    BOOL_FIELDS = ["use_client_subnet", "use_csubnet", "override_ttl"]
-    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link"]
-
-    # answers must be:
+# answers must be:
     #  1) a single string
     #     we coerce to a single answer with no other fields e.g. meta
     #  2) an iterable of single strings
@@ -36,32 +28,42 @@ class Records(resource.BaseResource):
     #  4) an iterable of dicts
     #     we assume the full rest model and pass it in unchanged. must use this
     #     form for any advanced record config like meta data or data feeds
-    def _getAnswersForBody(self, answers):
-        realAnswers = []
-        # simplest: they specify a single string ip
 
-        if isinstance(answers, py_str):
-            answers = [answers]
-        # otherwise, we need an iterable
-        elif not isinstance(answers, Iterable):
-            raise Exception("invalid answers format (must be str or iterable)")
-        # at this point we have a list. loop through and build out the answer
-        # entries depending on contents
+def coerce_answers(answers):
+    realAnswers = []
+    # simplest: they specify a single string ip
 
-        for a in answers:
-            if isinstance(a, py_str):
-                realAnswers.append({"answer": [a]})
-            elif isinstance(a, (list, tuple)):
-                realAnswers.append({"answer": a})
-            elif isinstance(a, dict):
-                realAnswers.append(a)
-            else:
-                raise Exception(
-                    "invalid answers format: list must contain "
-                    "only str, list, or dict"
-                )
+    if isinstance(answers, py_str):
+        answers = [answers]
+    # otherwise, we need an iterable
+    elif not isinstance(answers, Iterable):
+        raise Exception("invalid answers format (must be str or iterable)")
+    # at this point we have a list. loop through and build out the answer
+    # entries depending on contents
 
-        return realAnswers
+    for a in answers:
+        if isinstance(a, py_str):
+            realAnswers.append({"answer": [a]})
+        elif isinstance(a, (list, tuple)):
+            realAnswers.append({"answer": a})
+        elif isinstance(a, dict):
+            realAnswers.append(a)
+        else:
+            raise Exception(
+                "invalid answers format: list must contain "
+                "only str, list, or dict"
+            )
+
+    return realAnswers
+
+
+class Records(resource.BaseResource):
+
+    ROOT = "zones"
+
+    INT_FIELDS = ["ttl"]
+    BOOL_FIELDS = ["use_client_subnet", "use_csubnet", "override_ttl"]
+    PASSTHRU_FIELDS = ["networks", "meta", "regions", "link"]
 
     # filters must be a list of dict which can have two forms:
     # 1) simple: each item in list is a dict with a single key and value. the
@@ -101,7 +103,7 @@ class Records(resource.BaseResource):
             body["filters"] = self._getFiltersForBody(kwargs["filters"])
 
         if "answers" in kwargs:
-            body["answers"] = self._getAnswersForBody(kwargs["answers"])
+            body["answers"] = Records.coerce_answers(kwargs["answers"])
 
         self._buildStdBody(body, kwargs)
 

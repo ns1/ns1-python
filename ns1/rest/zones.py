@@ -5,6 +5,7 @@
 #
 
 from . import resource
+from .records import coerce_answers
 
 
 class Zones(resource.BaseResource):
@@ -44,6 +45,9 @@ class Zones(resource.BaseResource):
         )
 
     def create(self, zone, callback=None, errback=None, **kwargs):
+        if "records" in kwargs:
+            kwargs["records"] = coerce_answers(kwargs["records"].copy())
+
         body = self._buildBody(zone, **kwargs)
         return self._make_request(
             "PUT",
