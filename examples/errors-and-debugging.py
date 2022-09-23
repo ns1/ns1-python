@@ -11,7 +11,7 @@ from ns1 import NS1, Config
 # the standard python logging system
 
 config = Config()
-config.createFromAPIKey("qACMD09OJXBxT7XOwv9v")
+config.createFromAPIKey("<<CLEARTEXT API KEY>>")
 config["verbosity"] = 5
 logging.basicConfig(level=logging.DEBUG)
 print(config)

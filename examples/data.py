@@ -13,7 +13,7 @@ api = NS1()
 
 # from ns1 import Config
 # config = Config()
-# config.createFromAPIKey('qACMD09OJXBxT7XOuRs8')
+# config.createFromAPIKey('<<CLEARTEXT API KEY>>')
 # api = NS1(config=config)
 
 # create a zone to play in

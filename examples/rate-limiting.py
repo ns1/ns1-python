@@ -59,7 +59,7 @@ def _get_config():
     # load default config
     config.loadFromFile(Config.DEFAULT_CONFIG_FILE)
     # to load directly from apikey instead, use
-    # config.createFromAPIKey('qACMD09OJXBxT7XOuRs8')
+    # config.createFromAPIKey('<<CLEARTEXT API KEY>>')
 
     return config
 

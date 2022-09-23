@@ -13,12 +13,12 @@ Sample:
        "verbosity": 5,
        "keys": {
             "account1": {
-                "key": "qACMD09OJXBxT7XOuRs8",
+                "key": "<<CLEARTEXT API KEY>>",
                 "desc": "account number 1",
                 "writeLock": true
             },
             "account2": {
-                "key": "qACMD09OJXBxT7XOwv9v",
+                "key": "<<ANOTHER CLEARTEXT API KEY>>",
                 "desc": "account number 2",
                 "writeLock": false
             }

@@ -13,7 +13,7 @@ from ns1 import NS1, Config
 api = NS1()
 
 # to specify an apikey here instead, use:
-api = NS1(apiKey="qACMD09OJXBxT7XOuRs8")
+api = NS1(apiKey="<<CLEARTEXT API KEY>>")
 
 # to load an alternate configuration file:
 api = NS1(configFile="/etc/ns1/api.json")
@@ -26,7 +26,7 @@ api = NS1(keyID="all-access")
 # if you have special needs, build your own Config object and pass it to
 # NS1:
 config = Config()
-config.createFromAPIKey("qACMD09OJXBxT7XOwv9v")
+config.createFromAPIKey("<<CLEARTEXT API KEY>>")
 config["verbosity"] = 5
 config["transport"] = "twisted"
 api = NS1(config=config)
