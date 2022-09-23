@@ -10,7 +10,7 @@ from ns1 import NS1
 api = NS1()
 
 # to specify an apikey here instead, use:
-# api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
+# api = NS1(apiKey='<<CLEARTEXT API KEY>>')
 
 # to load an alternate configuration file:
 # api = NS1(configFile='/etc/ns1/api.json')

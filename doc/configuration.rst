@@ -23,7 +23,7 @@ From an API Key
 .. code-block:: python
 
     # to generate a configuration based on an api key
-    api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
+    api = NS1(apiKey='<<CLEARTEXT API KEY>>')
 
 JSON File Format
 ----------------
@@ -37,12 +37,12 @@ This example shows two different API keys. Which to use can be selected at runti
        "verbosity": 5,
        "keys": {
             "account1": {
-                "key": "qACMD09OJXBxT7XOuRs8",
+                "key": "<<CLEARTEXT API KEY>>",
                 "desc": "account number 1",
                 "writeLock": true
             },
             "account2": {
-                "key": "qACMD09OJXBxT7XOwv9v",
+                "key": "<<ANOTHER CLEARTEXT API KEY>>",
                 "desc": "account number 2",
                 "writeLock": false
             },

@@ -34,7 +34,7 @@ Simple example:
 
     from ns1 import NS1
 
-    api = NS1(apiKey='qACMD09OJXBxT7XOuRs8')
+    api = NS1(apiKey='<<CLEARTEXT API KEY>>')
     zone = api.createZone('example.com', nx_ttl=3600)
     print(zone)
     record = zone.add_A('honey', ['1.2.3.4', '5.6.7.8'])
