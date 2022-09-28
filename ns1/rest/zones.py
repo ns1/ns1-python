@@ -52,7 +52,6 @@ class Zones(resource.BaseResource):
                 new_records.append(r)
 
         kwargs["records"] = new_records
-        print(kwargs)
         
         body = self._buildBody(zone, **kwargs)
         return self._make_request(
