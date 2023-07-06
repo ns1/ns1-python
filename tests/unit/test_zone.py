@@ -53,6 +53,61 @@ def test_rest_zone_retrieve(zones_config, zone, url):
     )
 
 
+@pytest.mark.parametrize("zone, url", [("test.zone", "zones/test.zone/versions")])
+def test_rest_zone_version_list(zones_config, zone, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.list_versions(zone)
+    z._make_request.assert_called_once_with(
+        "GET",
+        url,
+        params={},
+        callback=None,
+        errback=None
+    )
+
+
+@pytest.mark.parametrize("zone, url", [("test.zone", "zones/test.zone/versions?force=false")])
+def test_rest_zone_version_create(zones_config, zone, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.create_version(zone)
+    z._make_request.assert_called_once_with(
+        "PUT",
+        url,
+        params={},
+        callback=None,
+        errback=None
+    )
+
+
+@pytest.mark.parametrize("zone, id, url", [("test.zone", 15, "zones/test.zone/versions/15/activate")])
+def test_rest_zone_version_activate(zones_config, zone, id, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.activate_version(zone, id)
+    z._make_request.assert_called_once_with(
+        "POST",
+        url,
+        params={},
+        callback=None,
+        errback=None
+    )
+
+
+@pytest.mark.parametrize("zone, id, url", [("test.zone", 15, "zones/test.zone/versions/15")])
+def test_rest_zone_version_delete(zones_config, zone, id, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.delete_version(zone, id)
+    z._make_request.assert_called_once_with(
+        "DELETE",
+        url,
+        params={},
+        callback=None,
+        errback=None
+    )
+
 def test_rest_zone_buildbody(zones_config):
     z = ns1.rest.zones.Zones(zones_config)
     zone = "test.zone"
