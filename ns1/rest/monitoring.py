@@ -22,7 +22,7 @@ class Monitors(resource.BaseResource):
         "notify_list",
     ]
     INT_FIELDS = ["frequency"]
-    BOOL_FIELDS = ["active", "rapid_recheck", "notify_regional"]
+    BOOL_FIELDS = ["active", "rapid_recheck", "notify_regional", "notify_repeat"]
 
     def list(self, callback=None, errback=None):
         return self._make_request(
