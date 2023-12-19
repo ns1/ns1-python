@@ -1,5 +1,6 @@
 * Drop support for EOL Python 2.7 and 3.7. Add support for Python 3.11
   and 3.12.
+* Deprecate "writeLocked" keys, which did not actually do anything.
 
 ## 0.18.0 (August 23, 2022)
 * Add usage stats pagination support
