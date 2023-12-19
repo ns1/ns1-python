@@ -1,3 +1,6 @@
+* Drop support for EOL Python 2.7 and 3.7. Add support for Python 3.11
+  and 3.12.
+
 ## 0.18.0 (August 23, 2022)
 * Add usage stats pagination support
 * Drop support for EOL Python 3.6, add support for Python 3.7 to 3.10
