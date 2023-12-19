@@ -8,7 +8,6 @@ from . import resource
 
 
 class Team(resource.BaseResource):
-
     ROOT = "account/teams"
     PASSTHRU_FIELDS = ["name", "ip_whitelist", "permissions"]
 

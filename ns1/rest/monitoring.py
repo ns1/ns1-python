@@ -7,7 +7,6 @@ from . import resource
 
 
 class Monitors(resource.BaseResource):
-
     ROOT = "monitoring/jobs"
     PASSTHRU_FIELDS = [
         "name",
@@ -69,7 +68,6 @@ class Monitors(resource.BaseResource):
 
 
 class NotifyLists(resource.BaseResource):
-
     ROOT = "lists"
     PASSTHRU_FIELDS = []
 
@@ -116,7 +114,6 @@ class NotifyLists(resource.BaseResource):
 
 
 class JobTypes(resource.BaseResource):
-
     ROOT = "monitoring/jobtypes"
     PASSTHRU_FIELDS = []
 
@@ -130,7 +127,6 @@ class JobTypes(resource.BaseResource):
 
 
 class Regions(resource.BaseResource):
-
     ROOT = "monitoring/regions"
     PASSTHRU_FIELDS = []
 

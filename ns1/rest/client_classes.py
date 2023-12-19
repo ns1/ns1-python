@@ -7,7 +7,6 @@ from . import resource
 
 
 class ClientClasses(resource.BaseResource):
-
     ROOT = "dhcp"
     CLIENT_CLASS_ROOT = "clientclass"
 

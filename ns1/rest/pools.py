@@ -7,7 +7,6 @@ from . import resource
 
 
 class Pools(resource.BaseResource):
-
     ROOT = "ipam"
     ADDRESS_ROOT = "address"
     POOL_ROOT = "pool"

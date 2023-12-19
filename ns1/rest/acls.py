@@ -7,7 +7,6 @@ from . import resource
 
 
 class Acls(resource.BaseResource):
-
     ROOT = "acls"
     PASSTHRU_FIELDS = ["src_prefixes", "tsig_keys", "gss_tsig_identities"]
 
