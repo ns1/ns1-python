@@ -10,6 +10,7 @@ try:
     from warnings import deprecated
 except ImportError:
     import warnings
+
     def deprecated(reason="deprecated"):
         def decorator(func):
             def wrapper_func():
