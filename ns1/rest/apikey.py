@@ -8,7 +8,6 @@ from . import resource
 
 
 class APIKey(resource.BaseResource):
-
     ROOT = "account/apikeys"
     PASSTHRU_FIELDS = [
         "name",

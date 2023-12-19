@@ -7,7 +7,6 @@ from . import resource
 
 
 class Source(resource.BaseResource):
-
     ROOT = "data/sources"
     PASSTHRU_FIELDS = ["name", "config"]
 
@@ -76,7 +75,6 @@ class Source(resource.BaseResource):
 
 
 class Feed(resource.BaseResource):
-
     ROOT = "data/feeds"
     PASSTHRU_FIELDS = ["name", "config"]
 

@@ -15,7 +15,6 @@ py_str = str if sys.version_info[0] == 3 else basestring  # noqa: F821
 
 
 class Records(resource.BaseResource):
-
     ROOT = "zones"
 
     INT_FIELDS = ["ttl"]

@@ -16,8 +16,11 @@ except ImportError:
             def wrapper_func():
                 warnings.warn(reason, DeprecationWarning)
                 func()
+
             return wrapper_func
+
         return deprecated
+
 
 from ns1.rest.rate_limiting import default_rate_limit_func
 from ns1.rest.rate_limiting import rate_limit_strategy_concurrent

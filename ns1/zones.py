@@ -123,7 +123,6 @@ class Zone(object):
             )
 
     def __getattr__(self, item):
-
         if not item.startswith("add_"):
             raise AttributeError(item)
 
@@ -160,7 +159,6 @@ class Zone(object):
         errback=None,
         **kwargs
     ):
-
         """
         Create a new linked record in this zone. These records use the
         configuration (answers, ttl, filters, etc) from an existing record

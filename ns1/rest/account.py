@@ -7,7 +7,6 @@ from . import resource
 
 
 class Plan(resource.BaseResource):
-
     ROOT = "account/plan"
     PASSTHRU_FIELDS = ["type", "period", "notes"]
 

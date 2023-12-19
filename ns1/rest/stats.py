@@ -12,7 +12,6 @@ except:  # noqa
 
 
 class Stats(resource.BaseResource):
-
     ROOT = "stats"
 
     def qps(
@@ -59,7 +58,7 @@ class Stats(resource.BaseResource):
 
         return self._make_request(
             "GET",
-            url + ('?' + urlencode(args) if args else ''),
+            url + ("?" + urlencode(args) if args else ""),
             callback=callback,
             errback=errback,
             pagination_handler=stats_usage_pagination,
