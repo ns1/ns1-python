@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 try:
     from collections.abc import Iterable
-except:
+except ImportError:
     from collections import Iterable
 import sys
 
