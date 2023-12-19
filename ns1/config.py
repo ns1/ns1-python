@@ -181,6 +181,7 @@ class Config:
 
         return self._data["keys"][k]
 
+    @warning.deprecated("write locked keys are not implemented")
     def isKeyWriteLocked(self, keyID=None):
         """
         Determine if a key config is write locked.
