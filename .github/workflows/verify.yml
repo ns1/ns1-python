@@ -22,7 +22,7 @@ jobs:
       run: |
         # Ignore the line length rule because black will handle that
         # and flake8 doesn't allow long comment lines.
-        flake8 . --exclude=.tox --count --show-source --statistics --extend-ignore=E501
+        flake8 . --exclude=.tox --exclude=.eggs --count --show-source --statistics --extend-ignore=E501
     - name: Lint with black
       run: |
         black . --check -l 79 --diff

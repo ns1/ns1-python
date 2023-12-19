@@ -176,6 +176,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
+
 # successive pages just extend the list of zones
 def zone_list_pagination(curr_json, next_json):
     curr_json.extend(next_json)

@@ -108,6 +108,7 @@ def test_rest_zone_version_delete(zones_config, zone, id, url):
         errback=None
     )
 
+
 def test_rest_zone_buildbody(zones_config):
     z = ns1.rest.zones.Zones(zones_config)
     zone = "test.zone"
