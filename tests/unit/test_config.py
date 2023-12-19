@@ -29,7 +29,6 @@ def test_writeread(tmpdir, config):
                 "test1": {
                     "key": "key-1",
                     "desc": "test key number 1",
-                    "writeLock": True,
                 }
             },
         }
@@ -44,7 +43,6 @@ def test_writeread(tmpdir, config):
     assert cfg_read is not config
     assert cfg_read.getEndpoint() == config.getEndpoint()
     assert cfg_read.getCurrentKeyID() == config.getCurrentKeyID()
-    assert cfg_read.isKeyWriteLocked() == config.isKeyWriteLocked()
 
 
 def test_str_repr(config):
@@ -61,37 +59,11 @@ def test_dodefaults(config):
     assert config._data == defaults
 
 
-def test_apikey_writelock(config):
-    key_cfg = {
-        "default_key": "readonly",
-        "keys": {
-            "readonly": {
-                "key": "key-1",
-                "desc": "test key number 1",
-                "writeLock": True,
-            },
-            "readwrite": {
-                "key": "key-2",
-                "desc": "test key number 2",
-                "writeLock": False,
-            },
-        },
-    }
-
-    config.loadFromString(json.dumps(key_cfg))
-    assert config.getCurrentKeyID() == "readonly"
-    assert config.isKeyWriteLocked()
-
-    config.useKeyID("readwrite")
-    assert not config.isKeyWriteLocked()
-
-
 def test_create_from_apikey(config):
     apikey = "apikey"
     config.createFromAPIKey(apikey)
     assert config.getAPIKey() == apikey
     assert config.getCurrentKeyID() == "default"
-    assert not config.isKeyWriteLocked()
 
 
 def test_load_from_str(config):
@@ -101,7 +73,6 @@ def test_load_from_str(config):
             "test1": {
                 "key": "key-1",
                 "desc": "test key number 1",
-                "writeLock": True,
             }
         },
     }

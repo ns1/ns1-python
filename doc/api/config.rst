@@ -15,12 +15,10 @@ Sample:
             "account1": {
                 "key": "<<CLEARTEXT API KEY>>",
                 "desc": "account number 1",
-                "writeLock": true
             },
             "account2": {
                 "key": "<<ANOTHER CLEARTEXT API KEY>>",
                 "desc": "account number 2",
-                "writeLock": false
             }
        },
        "cli": {

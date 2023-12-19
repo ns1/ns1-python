@@ -39,12 +39,10 @@ This example shows two different API keys. Which to use can be selected at runti
             "account1": {
                 "key": "<<CLEARTEXT API KEY>>",
                 "desc": "account number 1",
-                "writeLock": true
             },
             "account2": {
                 "key": "<<ANOTHER CLEARTEXT API KEY>>",
                 "desc": "account number 2",
-                "writeLock": false
             },
        },
        "cli": {
