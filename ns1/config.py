@@ -6,6 +6,18 @@
 import json
 import os
 
+try:
+    from warnings import deprecated
+except ImportError:
+    import warnings
+    def deprecated(reason="deprecated"):
+        def decorator(func):
+            def wrapper_func():
+                warnings.warn(reason, DeprecationWarning)
+                func()
+            return wrapper_func
+        return deprecated
+
 from ns1.rest.rate_limiting import default_rate_limit_func
 from ns1.rest.rate_limiting import rate_limit_strategy_concurrent
 from ns1.rest.rate_limiting import rate_limit_strategy_solo
@@ -181,7 +193,7 @@ class Config:
 
         return self._data["keys"][k]
 
-    @warning.deprecated("write locked keys are not implemented")
+    @deprecated("write locked keys are not implemented")
     def isKeyWriteLocked(self, keyID=None):
         """
         Determine if a key config is write locked.
