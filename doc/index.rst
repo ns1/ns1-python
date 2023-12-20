@@ -13,7 +13,7 @@ and includes both a simple NS1 REST API wrapper as well as a higher level
 interface for managing zones, records, data feeds, and more.
 It supports synchronous and asynchronous transports.
 
-Python 3.8 to 3.12 are supported.
+Python versions 3.8 to 3.12 are supported.
 
 Install with::
 
