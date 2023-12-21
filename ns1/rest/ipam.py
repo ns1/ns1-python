@@ -502,7 +502,7 @@ class Reservations(resource.BaseResource):
     def list(self, scopegroup_id, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s?scopeGroupId=%d" % (self.ROOT, int(scopegroup_id)),
+            "%s?scope_group_id=%d" % (self.ROOT, int(scopegroup_id)),
             callback=callback,
             errback=errback,
         )
