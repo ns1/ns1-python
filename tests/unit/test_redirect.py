@@ -1,5 +1,4 @@
 from ns1 import NS1
-from ns1.redirect import Redirect, RedirectCertificate, listRedirects
 import ns1.rest.redirect
 import pytest
 
@@ -41,7 +40,15 @@ def test_rest_redirect_list(redirect_config):
     )
 
 
-@pytest.mark.parametrize("cfgId, url", [("96529d62-fb0c-4150-b5ad-6e5b8b2736f6", "redirect/96529d62-fb0c-4150-b5ad-6e5b8b2736f6")])
+@pytest.mark.parametrize(
+    "cfgId, url",
+    [
+        (
+            "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+            "redirect/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
+)
 def test_rest_redirect_retrieve(redirect_config, cfgId, url):
     z = NS1(config=redirect_config).redirects()
     z._make_request = mock.MagicMock()
@@ -61,7 +68,7 @@ def test_rest_redirect_create(redirect_config):
     z._make_request.assert_called_once_with(
         "PUT",
         "redirect",
-        body = {
+        body={
             "domain": "www.test.com",
             "path": "/",
             "target": "http://localhost",
@@ -71,7 +78,15 @@ def test_rest_redirect_create(redirect_config):
     )
 
 
-@pytest.mark.parametrize("cfgId, url", [("96529d62-fb0c-4150-b5ad-6e5b8b2736f6", "redirect/96529d62-fb0c-4150-b5ad-6e5b8b2736f6")])
+@pytest.mark.parametrize(
+    "cfgId, url",
+    [
+        (
+            "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+            "redirect/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
+)
 def test_rest_redirect_update(redirect_config, cfgId, url):
     z = NS1(config=redirect_config).redirects()
     z._make_request = mock.MagicMock()
@@ -85,7 +100,7 @@ def test_rest_redirect_update(redirect_config, cfgId, url):
     z._make_request.assert_called_once_with(
         "POST",
         url,
-        body = {
+        body={
             "id": cfgId,
             "domain": "www.test.com",
             "path": "/",
@@ -96,7 +111,15 @@ def test_rest_redirect_update(redirect_config, cfgId, url):
     )
 
 
-@pytest.mark.parametrize("cfgId, url", [("96529d62-fb0c-4150-b5ad-6e5b8b2736f6", "redirect/96529d62-fb0c-4150-b5ad-6e5b8b2736f6")])
+@pytest.mark.parametrize(
+    "cfgId, url",
+    [
+        (
+            "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+            "redirect/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
+)
 def test_rest_redirect_delete(redirect_config, cfgId, url):
     z = NS1(config=redirect_config).redirects()
     z._make_request = mock.MagicMock()
@@ -137,7 +160,15 @@ def test_rest_certificate_list(redirect_config):
     )
 
 
-@pytest.mark.parametrize("cfgId, url", [("96529d62-fb0c-4150-b5ad-6e5b8b2736f6", "redirect/certificates/96529d62-fb0c-4150-b5ad-6e5b8b2736f6")])
+@pytest.mark.parametrize(
+    "cfgId, url",
+    [
+        (
+            "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+            "redirect/certificates/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
+)
 def test_rest_certificate_retrieve(redirect_config, cfgId, url):
     z = NS1(config=redirect_config).redirect_certificates()
     z._make_request = mock.MagicMock()
@@ -157,7 +188,7 @@ def test_rest_certificate_create(redirect_config):
     z._make_request.assert_called_once_with(
         "PUT",
         "redirect/certificates",
-        body = {
+        body={
             "domain": "www.test.com",
         },
         callback=None,
@@ -165,7 +196,15 @@ def test_rest_certificate_create(redirect_config):
     )
 
 
-@pytest.mark.parametrize("certId, url", [("96529d62-fb0c-4150-b5ad-6e5b8b2736f6", "redirect/certificates/96529d62-fb0c-4150-b5ad-6e5b8b2736f6")])
+@pytest.mark.parametrize(
+    "certId, url",
+    [
+        (
+            "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+            "redirect/certificates/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
+)
 def test_rest_certificate_update(redirect_config, certId, url):
     z = NS1(config=redirect_config).redirect_certificates()
     z._make_request = mock.MagicMock()
@@ -178,7 +217,15 @@ def test_rest_certificate_update(redirect_config, certId, url):
     )
 
 
-@pytest.mark.parametrize("certId, url", [("96529d62-fb0c-4150-b5ad-6e5b8b2736f6", "redirect/certificates/96529d62-fb0c-4150-b5ad-6e5b8b2736f6")])
+@pytest.mark.parametrize(
+    "certId, url",
+    [
+        (
+            "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+            "redirect/certificates/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
+)
 def test_rest_certificate_delete(redirect_config, certId, url):
     z = NS1(config=redirect_config).redirect_certificates()
     z._make_request = mock.MagicMock()
@@ -192,7 +239,7 @@ def test_rest_certificate_delete(redirect_config, certId, url):
 
 
 def test_rest_certificate_buildbody(redirect_config):
-    z = ns1.rest.redirect.Redirects(redirect_config)
+    z = ns1.rest.redirect.RedirectCertificates(redirect_config)
     kwargs = {
         "domain": "www.test.com",
     }
@@ -200,4 +247,3 @@ def test_rest_certificate_buildbody(redirect_config):
         "domain": "www.test.com",
     }
     assert z._buildBody(**kwargs) == body
-

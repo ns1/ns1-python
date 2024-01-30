@@ -36,7 +36,9 @@ class Redirects(resource.BaseResource):
             errback=errback,
         )
 
-    def create(self, domain, path, target, callback=None, errback=None, **kwargs):
+    def create(
+        self, domain, path, target, callback=None, errback=None, **kwargs
+    ):
         body = self._buildBody(domain, path, target, **kwargs)
         return self._make_request(
             "PUT",

@@ -22,7 +22,11 @@ class Redirect(object):
         self.data = None
 
     def __repr__(self):
-        return "<Redirect [%s:%s]=%s>" % (self.__getitem__("domain"), self.__getitem__("path"), self.__getitem__("target"))
+        return "<Redirect [%s:%s]=%s>" % (
+            self.__getitem__("domain"),
+            self.__getitem__("path"),
+            self.__getitem__("target"),
+        )
 
     def __getitem__(self, item):
         if not self.data:
@@ -42,9 +46,9 @@ class Redirect(object):
         """
         if not reload and self.data:
             raise RedirectException("redirect already loaded")
-        if id == None and self.data:
+        if id is None and self.data:
             id = self.__getitem__("id")
-        if id == None:
+        if id is None:
             raise RedirectException("no redirect id: did you mean to create?")
 
         def success(result, *args):
@@ -61,7 +65,9 @@ class Redirect(object):
         Load redirect data from a dictionary.
         :param dict cfg: dictionary containing *at least* either an id or domain/path/target
         """
-        if "id" in cfg or ("domain" in cfg and "path" in cfg and "target" in cfg):
+        if "id" in cfg or (
+            "domain" in cfg and "path" in cfg and "target" in cfg
+        ):
             self.data = cfg
             return self
         else:
@@ -95,7 +101,9 @@ class Redirect(object):
             self.data, callback=success, errback=errback, **kwargs
         )
 
-    def create(self, domain, path, target, callback=None, errback=None, **kwargs):
+    def create(
+        self, domain, path, target, callback=None, errback=None, **kwargs
+    ):
         """
         Create a new redirect. Pass a list of keywords and their values to
         configure. For the list of keywords available for zone configuration,
@@ -115,14 +123,18 @@ class Redirect(object):
             else:
                 return self
 
-        return self._rest.create(domain, path, target, callback=success, errback=errback, **kwargs)
+        return self._rest.create(
+            domain, path, target, callback=success, errback=errback, **kwargs
+        )
 
     def retrieveCertificate(self, callback=None, errback=None):
         """
         Retrieve the certificate associated to this redirect.
         :return: the RedirectCertificate object
         """
-        return RedirectCertificate(self.config).load(self.__getitem__("certificate_id"))
+        return RedirectCertificate(self.config).load(
+            self.__getitem__("certificate_id")
+        )
 
 
 def listRedirects(config, callback=None, errback=None):
@@ -130,6 +142,7 @@ def listRedirects(config, callback=None, errback=None):
     Lists all redirects currently configured.
     :return: a list of Redirect objects
     """
+
     def success(result, *args):
         ret = []
         cfgs = result.get("results", None)
@@ -179,10 +192,12 @@ class RedirectCertificate(object):
         """
         if not reload and self.data:
             raise RedirectException("redirect certificate already loaded")
-        if id == None and self.data:
+        if id is None and self.data:
             id = self.__getitem__("id")
-        if id == None:
-            raise RedirectException("no redirect certificate id: did you mean to create?")
+        if id is None:
+            raise RedirectException(
+                "no redirect certificate id: did you mean to create?"
+            )
 
         def success(result, *args):
             self.data = result
@@ -241,6 +256,7 @@ def listRedirectCertificates(config, callback=None, errback=None):
     Lists all redirects certificates currently configured.
     :return: a list of RedirectCertificate objects
     """
+
     def success(result, *args):
         ret = []
         cfgs = result.get("results", None)
