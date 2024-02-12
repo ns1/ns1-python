@@ -68,12 +68,12 @@ class Dataset(object):
         :param dict dt: dictionary containing *at least* either an id or domain/path/target
         """
         if "id" in dt or (
-                "name" in dt
-                and "datatype" in dt
-                and "repeat" in dt
-                and "timeframe" in dt
-                and "export_type" in dt
-                and "recipient_emails" in dt
+            "name" in dt
+            and "datatype" in dt
+            and "repeat" in dt
+            and "timeframe" in dt
+            and "export_type" in dt
+            and "recipient_emails" in dt
         ):
             self.data = dt
             return self
@@ -88,8 +88,16 @@ class Dataset(object):
         return self._rest.delete(id, callback=callback, errback=errback)
 
     def create(
-            self, name, datatype, repeat, timeframe, export_type, recipient_emails, callback=None, errback=None,
-            **kwargs
+        self,
+        name,
+        datatype,
+        repeat,
+        timeframe,
+        export_type,
+        recipient_emails,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Create a new dataset. Pass a list of keywords and their values to
@@ -106,7 +114,15 @@ class Dataset(object):
             raise DatasetException("dataset already loaded")
 
         return self._rest.create(
-            name, datatype, repeat, timeframe, export_type, recipient_emails, callback=None, errback=None, **kwargs
+            name,
+            datatype,
+            repeat,
+            timeframe,
+            export_type,
+            recipient_emails,
+            callback=None,
+            errback=None,
+            **kwargs
         )
 
     def listDatasets(self, callback=None, errback=None):
@@ -137,4 +153,6 @@ class Dataset(object):
         if dt_id is None:
             raise DatasetException("no dataset id: did you mean to create?")
 
-        return Datasets(self.config).retrieveReport(dt_id, rp_id, callback=callback, errback=errback)
+        return Datasets(self.config).retrieveReport(
+            dt_id, rp_id, callback=callback, errback=errback
+        )

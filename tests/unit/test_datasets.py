@@ -28,12 +28,7 @@ def datasets_config(config):
     return config
 
 
-@pytest.mark.parametrize(
-    "url",
-    [(
-            "datasets"
-    )]
-)
+@pytest.mark.parametrize("url", [("datasets")])
 def test_rest_datasets_list(datasets_config, url):
     z = NS1(config=datasets_config).datasets()
     z._make_request = mock.MagicMock()
@@ -48,10 +43,12 @@ def test_rest_datasets_list(datasets_config, url):
 
 @pytest.mark.parametrize(
     "dtId, url",
-    [(
+    [
+        (
             "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
-            "datasets/96529d62-fb0c-4150-b5ad-6e5b8b2736f6"
-    )]
+            "datasets/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
 )
 def test_rest_dataset_retrieve(datasets_config, dtId, url):
     z = NS1(config=datasets_config).datasets()
@@ -65,12 +62,7 @@ def test_rest_dataset_retrieve(datasets_config, dtId, url):
     )
 
 
-@pytest.mark.parametrize(
-    "url",
-    [(
-            "datasets"
-    )]
-)
+@pytest.mark.parametrize("url", [("datasets")])
 def test_rest_dataset_create(datasets_config, url):
     z = NS1(config=datasets_config).datasets()
     z._make_request = mock.MagicMock()
@@ -81,10 +73,7 @@ def test_rest_dataset_create(datasets_config, url):
             "scope": "account",
         },
         repeat=None,
-        timeframe={
-            "aggregation": "monthly",
-            "cycles": 1
-        },
+        timeframe={"aggregation": "monthly", "cycles": 1},
         export_type="csv",
         recipient_emails=None,
     )
@@ -98,10 +87,7 @@ def test_rest_dataset_create(datasets_config, url):
                 "type": "num_queries",
                 "scope": "account",
             },
-            "timeframe": {
-                "aggregation": "monthly",
-                "cycles": 1
-            },
+            "timeframe": {"aggregation": "monthly", "cycles": 1},
             "repeat": None,
             "export_type": "csv",
             "recipient_emails": None,
@@ -113,10 +99,12 @@ def test_rest_dataset_create(datasets_config, url):
 
 @pytest.mark.parametrize(
     "dtId, url",
-    [(
+    [
+        (
             "96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
-            "datasets/96529d62-fb0c-4150-b5ad-6e5b8b2736f6"
-    )]
+            "datasets/96529d62-fb0c-4150-b5ad-6e5b8b2736f6",
+        )
+    ],
 )
 def test_rest_datasets_delete(datasets_config, dtId, url):
     z = NS1(config=datasets_config).datasets()
@@ -138,10 +126,7 @@ def test_rest_datasets_buildbody(datasets_config):
             "type": "num_queries",
             "scope": "account",
         },
-        "timeframe": {
-            "aggregation": "monthly",
-            "cycles": 1
-        },
+        "timeframe": {"aggregation": "monthly", "cycles": 1},
         "repeat": None,
         "recipient_emails": None,
         "export_type": "csv",
@@ -152,10 +137,7 @@ def test_rest_datasets_buildbody(datasets_config):
             "type": "num_queries",
             "scope": "account",
         },
-        "timeframe": {
-            "aggregation": "monthly",
-            "cycles": 1
-        },
+        "timeframe": {"aggregation": "monthly", "cycles": 1},
         "repeat": None,
         "recipient_emails": None,
         "export_type": "csv",

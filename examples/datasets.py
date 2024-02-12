@@ -32,10 +32,7 @@ dt = api.datasets().create(
         "scope": "account",
     },
     repeat=None,
-    timeframe={
-        "aggregation": "monthly",
-        "cycles": 1
-    },
+    timeframe={"aggregation": "monthly", "cycles": 1},
     export_type="csv",
     recipient_emails=None,
 )
