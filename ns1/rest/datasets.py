@@ -14,7 +14,14 @@ class Datasets(resource.BaseResource):
     ]
 
     def _buildBody(
-        self, name, datatype, repeat, timeframe, export_type, recipient_emails, **kwargs
+        self,
+        name,
+        datatype,
+        repeat,
+        timeframe,
+        export_type,
+        recipient_emails,
+        **kwargs
     ):
         body = {
             "name": name,
@@ -40,7 +47,13 @@ class Datasets(resource.BaseResource):
         **kwargs
     ):
         body = self._buildBody(
-            name, datatype, repeat, timeframe, export_type, recipient_emails, **kwargs
+            name,
+            datatype,
+            repeat,
+            timeframe,
+            export_type,
+            recipient_emails,
+            **kwargs
         )
         return self._make_request(
             "PUT",

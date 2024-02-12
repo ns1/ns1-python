@@ -46,7 +46,15 @@ class RequestsTransport(TransportBase):
         }
 
     def _send(
-        self, method, url, headers, data, files, params, errback, skip_json_parsing
+        self,
+        method,
+        url,
+        headers,
+        data,
+        files,
+        params,
+        errback,
+        skip_json_parsing,
     ):
         resp = self.REQ_MAP[method](
             url,
@@ -94,7 +102,9 @@ class RequestsTransport(TransportBase):
                     errback(resp)
                     return
                 else:
-                    raise ResourceException("invalid json in response", resp, resp.text)
+                    raise ResourceException(
+                        "invalid json in response", resp, resp.text
+                    )
         else:
             return response_headers, None
 
@@ -114,7 +124,14 @@ class RequestsTransport(TransportBase):
         self._logHeaders(headers)
 
         resp_headers, jsonOut = self._send(
-            method, url, headers, data, files, params, errback, skip_json_parsing
+            method,
+            url,
+            headers,
+            data,
+            files,
+            params,
+            errback,
+            skip_json_parsing,
         )
         if self._follow_pagination and pagination_handler is not None:
             next_page = get_next_page(resp_headers)
