@@ -45,7 +45,9 @@ class RequestsTransport(TransportBase):
             "remaining": int(headers.get("X-RateLimit-Remaining", 100)),
         }
 
-    def _send(self, method, url, headers, data, files, params, errback, skip_json_parsing):
+    def _send(
+        self, method, url, headers, data, files, params, errback, skip_json_parsing
+    ):
         resp = self.REQ_MAP[method](
             url,
             headers=headers,
@@ -92,9 +94,7 @@ class RequestsTransport(TransportBase):
                     errback(resp)
                     return
                 else:
-                    raise ResourceException(
-                        "invalid json in response", resp, resp.text
-                    )
+                    raise ResourceException("invalid json in response", resp, resp.text)
         else:
             return response_headers, None
 
@@ -121,7 +121,14 @@ class RequestsTransport(TransportBase):
             while next_page is not None:
                 self._log.debug("following pagination to: %s" % next_page)
                 next_headers, next_json = self._send(
-                    method, next_page, headers, data, files, params, errback, skip_json_parsing
+                    method,
+                    next_page,
+                    headers,
+                    data,
+                    files,
+                    params,
+                    errback,
+                    skip_json_parsing,
                 )
                 jsonOut = pagination_handler(jsonOut, next_json)
                 next_page = get_next_page(next_headers)
