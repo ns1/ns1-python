@@ -293,6 +293,15 @@ class NS1:
 
         return ns1.rest.pools.Pools(self.config)
 
+    def datasets(self):
+        """
+        Return a new raw REST interface to Datasets resources
+        :rtype: :py:class:`ns1.rest.datasets.Datasets`
+        """
+        import ns1.rest.datasets
+
+        return ns1.rest.datasets.Datasets(self.config)
+
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         """
