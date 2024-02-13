@@ -87,7 +87,9 @@ class Datasets(resource.BaseResource):
             errback=errback,
         )
 
-    def retrieveReport(self, dtId: str, rpId: str, callback=None, errback=None):
+    def retrieveReport(
+        self, dtId: str, rpId: str, callback=None, errback=None
+    ):
         return self._make_request(
             "GET",
             "%s/%s/reports/%s" % (self.ROOT, dtId, rpId),

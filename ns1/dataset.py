@@ -152,7 +152,9 @@ class Dataset(object):
 
         return Datasets(self.config).list(callback=success, errback=errback)
 
-    def retrieveReport(self, rp_id: str, dt_id: str = None, callback=None, errback=None):
+    def retrieveReport(
+        self, rp_id: str, dt_id: str = None, callback=None, errback=None
+    ):
         """
         Retrieves a generated report given a dataset id and a report id
         :param str rp_id: the id of the generated report to download
