@@ -15,12 +15,12 @@ class Datasets(resource.BaseResource):
 
     def _buildBody(
         self,
-        name,
-        datatype,
-        repeat,
-        timeframe,
-        export_type,
-        recipient_emails,
+        name: str,
+        datatype: dict,
+        repeat: dict,
+        timeframe: dict,
+        export_type: str,
+        recipient_emails: list,
         **kwargs
     ):
         body = {
@@ -36,12 +36,12 @@ class Datasets(resource.BaseResource):
 
     def create(
         self,
-        name,
-        datatype,
-        repeat,
-        timeframe,
-        export_type,
-        recipient_emails,
+        name: str,
+        datatype: dict,
+        repeat: dict,
+        timeframe: dict,
+        export_type: str,
+        recipient_emails: list,
         callback=None,
         errback=None,
         **kwargs
@@ -63,7 +63,7 @@ class Datasets(resource.BaseResource):
             errback=errback,
         )
 
-    def delete(self, dtId, callback=None, errback=None):
+    def delete(self, dtId: str, callback=None, errback=None):
         return self._make_request(
             "DELETE",
             "%s/%s" % (self.ROOT, dtId),
@@ -79,7 +79,7 @@ class Datasets(resource.BaseResource):
             errback=errback,
         )
 
-    def retrieve(self, dtId, callback=None, errback=None):
+    def retrieve(self, dtId: str, callback=None, errback=None):
         return self._make_request(
             "GET",
             "%s/%s" % (self.ROOT, dtId),
@@ -87,7 +87,7 @@ class Datasets(resource.BaseResource):
             errback=errback,
         )
 
-    def retrieveReport(self, dtId, rpId, callback=None, errback=None):
+    def retrieveReport(self, dtId: str, rpId: str, callback=None, errback=None):
         return self._make_request(
             "GET",
             "%s/%s/reports/%s" % (self.ROOT, dtId, rpId),

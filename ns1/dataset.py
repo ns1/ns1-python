@@ -30,7 +30,7 @@ class Dataset(object):
             self.__getitem__("recipient_emails"),
         )
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: str):
         if not self.data:
             raise DatasetException("dataset not loaded")
         return self.data.get(item, None)
@@ -38,22 +38,26 @@ class Dataset(object):
     def reload(self, callback=None, errback=None):
         """
         Reload dataset data from the API.
+        :param callback: function call back once the call has completed
+        :param errback: function call back if the call fails
         """
         return self.load(reload=True, callback=callback, errback=errback)
 
-    def load(self, id=None, callback=None, errback=None, reload=False):
+    def load(self, id: str = None, callback=None, errback=None, reload=False):
         """
         Load dataset data from the API.
         :param str id: dataset id to load
+        :param callback: function call back once the call has completed
+        :param bool reload: whether to reuse the instance data instead of fetching it from the server
         """
         if not reload and self.data:
-            raise DatasetException("dataset already loaded")
+            return self.data
         if id is None and self.data:
             id = self.__getitem__("id")
         if id is None:
             raise DatasetException("no dataset id: did you mean to create?")
 
-        def success(result, *args):
+        def success(result: dict, *args):
             self.data = result
             if callback:
                 return callback(self)
@@ -62,7 +66,7 @@ class Dataset(object):
 
         return self._rest.retrieve(id, callback=success, errback=errback)
 
-    def loadFromDict(self, dt):
+    def loadFromDict(self, dt: dict):
         """
         Load dataset data from a dictionary.
         :param dict dt: dictionary containing *at least* either an id or domain/path/target
@@ -83,18 +87,20 @@ class Dataset(object):
     def delete(self, callback=None, errback=None):
         """
         Delete the dataset.
+        :param callback: function call back once the call has completed
+        :param errback: function call back if the call fails
         """
         id = self.__getitem__("id")
         return self._rest.delete(id, callback=callback, errback=errback)
 
     def create(
         self,
-        name,
-        datatype,
-        repeat,
-        timeframe,
-        export_type,
-        recipient_emails,
+        name: str,
+        datatype: dict,
+        repeat: dict,
+        timeframe: dict,
+        export_type: str,
+        recipient_emails: list,
         callback=None,
         errback=None,
         **kwargs
@@ -109,6 +115,8 @@ class Dataset(object):
         :param str timeframe: timeframe settings for the data to be pulled
         :param str export_type: output format of the report
         :param str recipient_emails: list of user emails that will receive a copy of the report
+        :param callback: function call back once the call has completed
+        :param errback: function call back if the call fails
         """
         if self.data:
             raise DatasetException("dataset already loaded")
@@ -120,14 +128,16 @@ class Dataset(object):
             timeframe,
             export_type,
             recipient_emails,
-            callback=None,
-            errback=None,
+            callback=callback,
+            errback=errback,
             **kwargs
         )
 
     def listDatasets(self, callback=None, errback=None):
         """
         Lists all datasets currently configured.
+        :param callback: function call back once the call has completed
+        :param errback: function call back if the call fails
         :return: a list of Dataset objects
         """
 
@@ -142,9 +152,13 @@ class Dataset(object):
 
         return Datasets(self.config).list(callback=success, errback=errback)
 
-    def retrieveReport(self, rp_id, dt_id=None, callback=None, errback=None):
+    def retrieveReport(self, rp_id: str, dt_id: str = None, callback=None, errback=None):
         """
         Retrieves a generated report given a dataset id and a report id
+        :param str rp_id: the id of the generated report to download
+        :param str dt_id: the id of the dataset that the above report belongs to
+        :param callback: function call back once the call has completed
+        :param errback: function call back if the call fails
         :return: generated report
         """
 
