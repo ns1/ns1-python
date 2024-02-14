@@ -1,3 +1,9 @@
+## 0.18.1 (February 14th, 2024)
+
+ENHANCEMENTS:
+* Adds support for Datasets
+
+BUG FIXES:
 * Drop support for EOL Python 2.7 and 3.7. Add support for Python 3.11
   and 3.12.
 * Deprecate "writeLocked" keys, which did not actually do anything.
