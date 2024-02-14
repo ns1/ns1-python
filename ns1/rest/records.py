@@ -4,7 +4,7 @@
 # License under The MIT License (MIT). See LICENSE in project root.
 try:
     from collections.abc import Iterable
-except:
+except ImportError:
     from collections import Iterable
 import sys
 
@@ -15,7 +15,6 @@ py_str = str if sys.version_info[0] == 3 else basestring  # noqa: F821
 
 
 class Records(resource.BaseResource):
-
     ROOT = "zones"
 
     INT_FIELDS = ["ttl"]

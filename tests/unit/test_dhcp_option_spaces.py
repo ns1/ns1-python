@@ -18,7 +18,6 @@ def dhcp_option_space_config(config):
                 "test1": {
                     "key": "key-1",
                     "desc": "test key number 1",
-                    "writeLock": True,
                 }
             },
         }

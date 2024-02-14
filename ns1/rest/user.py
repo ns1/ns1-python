@@ -8,7 +8,6 @@ from . import resource
 
 
 class User(resource.BaseResource):
-
     ROOT = "account/users"
     PASSTHRU_FIELDS = [
         "name",

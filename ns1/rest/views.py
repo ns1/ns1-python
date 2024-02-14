@@ -7,7 +7,6 @@ from . import resource
 
 
 class Views(resource.BaseResource):
-
     ROOT = "views"
     INT_FIELDS = [
         "preference",

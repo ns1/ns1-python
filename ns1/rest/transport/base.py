@@ -8,7 +8,6 @@ import logging
 
 
 class TransportBase(object):
-
     REGISTRY = {}
 
     def __init__(self, config, module):

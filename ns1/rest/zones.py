@@ -110,12 +110,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def list_versions(
-            self,
-            zone,
-            callback=None,
-            errback=None
-    ):
+    def list_versions(self, zone, callback=None, errback=None):
         request = "{}/{}/versions".format(self.ROOT, zone)
         return self._make_request(
             "GET",
@@ -125,12 +120,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create_version(
-            self,
-            zone,
-            force=False,
-            callback=None,
-            errback=None):
+    def create_version(self, zone, force=False, callback=None, errback=None):
         request = "{}/{}/versions?force={}".format(
             self.ROOT, zone, str.lower(str(force))
         )
@@ -142,12 +132,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def activate_version(
-            self,
-            zone,
-            version_id,
-            callback=None,
-            errback=None):
+    def activate_version(self, zone, version_id, callback=None, errback=None):
         request = "{}/{}/versions/{}/activate".format(
             self.ROOT, zone, str(version_id)
         )
@@ -159,15 +144,8 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def delete_version(
-            self,
-            zone,
-            version_id,
-            callback=None,
-            errback=None):
-        request = "{}/{}/versions/{}".format(
-            self.ROOT, zone, str(version_id)
-        )
+    def delete_version(self, zone, version_id, callback=None, errback=None):
+        request = "{}/{}/versions/{}".format(self.ROOT, zone, str(version_id))
         return self._make_request(
             "DELETE",
             request,
@@ -175,6 +153,7 @@ class Zones(resource.BaseResource):
             callback=callback,
             errback=errback,
         )
+
 
 # successive pages just extend the list of zones
 def zone_list_pagination(curr_json, next_json):

@@ -13,7 +13,6 @@ from ns1.rest.errors import ResourceException
 
 
 class BaseResource:
-
     DEFAULT_TRANSPORT = "requests"
 
     INT_FIELDS = []
