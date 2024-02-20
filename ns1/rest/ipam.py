@@ -11,12 +11,11 @@ class Addresses(resource.BaseResource):
     ROOT = "ipam/address"
     INT_FIELDS = [
         "network_id",
-        "address_id",
-        "root_address_id",
-        " merged_address_id",
+        "parent_id",
         "scope_group_id",
     ]
-    PASSTHRU_FIELDS = ["prefix", "status", "desc", "tags", "reserve"]
+    PASSTHRU_FIELDS = ["name", "prefix", "status", "desc", "tags", "reserve", "hostname", "forward_zone_handle",
+                       "reverse_zone_handle", ]
     BOOL_FIELDS = ["parent"]
 
     def _buildBody(self, **kwargs):
@@ -137,12 +136,15 @@ class Addresses(resource.BaseResource):
     #                               callback=callback,
     #                               errback=errback)
 
-    def search(self, network_id, prefix, callback=None, errback=None):
+    def search(self, callback=None, errback=None, **kwargs):
+        params = {k: v for k, v in kwargs if
+                  k in ['network_id', 'asc_desc', 'mask', 'max', 'name', 'order_by', 'prefix', 'tag', 'status']}
         return self._make_request(
             "GET",
-            "%s/search/%s/%s" % (self.ROOT, network_id, prefix),
+            "%s/search" % (self.ROOT),
             callback=callback,
             errback=errback,
+            params=params,
         )
 
 
@@ -218,7 +220,7 @@ class Networks(resource.BaseResource):
 class Scopegroups(resource.BaseResource):
     ROOT = "dhcp/scopegroup"
     INT_FIELDS = ["id", "dhcp_service_id", "valid_lifetime_secs"]
-    PASSTHRU_FIELDS = ["dhcpv4", "dhcpv6", "name", "tags"]
+    PASSTHRU_FIELDS = ["dhcpv4", "dhcpv6", "name", "tags", "template", "options", ]
     BOOL_FIELDS = ["enabled", "echo_client_id"]
 
     def _buildBody(self, **kwargs):
@@ -267,6 +269,15 @@ class Scopegroups(resource.BaseResource):
             "%s/%s" % (self.ROOT, scope_group_id),
             callback=callback,
             errback=errback,
+        )
+
+    def expand(self, scope_group_id, callback=None, errback=None):
+        return self._make_request(
+            "GET",
+            "%s/%s" % (self.ROOT, scope_group_id),
+            callback=callback,
+            errback=errback,
+            params={'expand': True}
         )
 
 

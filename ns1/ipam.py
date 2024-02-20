@@ -907,6 +907,7 @@ class Scope(object):
 
         def success(result, *args):
             self.data = result
+            self.scopegroup_id = result["scope_group_id"]
             self.address_id = result["address_id"]
             self.options = result["options"]
 
