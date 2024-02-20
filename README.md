@@ -3,20 +3,20 @@
 NS1 Python SDK
 ==============
 
-> This project is in [active development](https://github.com/ns1/community/blob/master/project_status/ACTIVE_DEVELOPMENT.md).
+> This project is in [maintenance development](https://github.com/ns1/community/blob/master/project_status/MAINTENANCE.md).
 
 A Python SDK for accessing NS1, the Data Driven DNS platform.
 
 About
 =====
 
-This package provides a python SDK for accessing the NS1 DNS platform
+This package provides a Python SDK for accessing the NS1 DNS platform
 and includes both a simple NS1 REST API wrapper as well as a higher level
 interface for managing zones, records, data feeds, and more.
 It supports synchronous and asynchronous transports.
 
-Both python 2.7 and 3.3+ are supported. Automated tests are currently run
-against 2.7, 3.7, 3.8, 3.9 and 3.10.
+Python versions 3.8+ are supported. Automated tests are currently run
+against 3.8, 3.9, 3.10, 3.11, and 3.12.
 
 Installation
 ============
@@ -31,7 +31,7 @@ None, but supports different transport backends. Currently supported:
 * [requests](http://docs.python-requests.org/en/latest/) (synchronous, the
   default if available)
 * urllib (synchronous, the default if requests isn't available)
-* [twisted](https://twistedmatrix.com/) (asynchronous, requires 2.7 or 3.5+)
+* [twisted](https://twistedmatrix.com/) (asynchronous)
 
 Other transports are easy to add, see
 [transport](https://github.com/ns1/ns1-python/tree/master/ns1/rest/transport)
@@ -56,11 +56,10 @@ add a new API Key at the bottom.
 Tests
 =====
 
-Unit tests use `pytest` (`pip install pytest`). 2.7 also requires `mock` to be
-installed (`pip install mock`).
+Unit tests use `pytest` (`pip install pytest`).
 
-Tests should, of course, run and pass under python 2 and 3. We use tox to
-automate test runs and virtualenv setup, see `tox.ini` for config.
+Tests should, of course, run and pass. We use tox to automate test
+runs and virtualenv setup, see `tox.ini` for config.
 
 Contributions
 =============
@@ -70,20 +69,22 @@ information.
 
 ### Editing the docs
 
-You can create or edit NS1-python documentation by downloading the repo onto your machine and using an editor such as VSCode.
+You can create or edit NS1-python documentation by downloading the
+repo onto your machine and using an editor such as VSCode.
 
 ### Creating Pull Requests
 
-1. When you're ready to submit your changes, add a descriptive title and comments to summarize the changes made.
+1. When you're ready to submit your changes, add a descriptive title
+   and comments to summarize the changes made.
 2. Select **Create a new branch for this commit and start a pull request**.
 3. Check the **Propose file change** button.
 4. Scroll down to compare changes with the original document.
 5. Select **Create pull request**.
 
-Our CI process will lint and check for formatting issues with `flake8` and
-`black`.
-It is suggested to run these checks prior to submitting a pull request and fix
-any issues:
+Our CI process will lint and check for formatting issues with `flake8`
+and `black`.
+It is suggested to run these checks prior to submitting a pull request
+and fix any issues:
 ```
 pip install flake8 black
 flake8 . --count --show-source --statistics --extend-ignore=E501
