@@ -15,7 +15,8 @@ class Redirects(resource.BaseResource):
         "forwarding_mode",
         "forwarding_type",
     ]
-    BOOL_FIELDS = ["ssl_enabled", "force_redirect", "query_forwarding"]
+    BOOL_FIELDS = ["https_enabled", "https_forced", "query_forwarding"]
+    INT_FIELDS = ["last_updated"]
 
     def _buildBody(self, domain, path, target, **kwargs):
         body = {
@@ -149,6 +150,11 @@ class RedirectCertificates(resource.BaseResource):
         "errors",
     ]
     BOOL_FIELDS = ["processing"]
+    INT_FIELDS = [
+        "valid_from",
+        "valid_until",
+        "last_updated",
+    ]
 
     def _buildBody(self, domain, **kwargs):
         body = {
