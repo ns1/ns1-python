@@ -45,7 +45,17 @@ class RequestsTransport(TransportBase):
             "remaining": int(headers.get("X-RateLimit-Remaining", 100)),
         }
 
-    def _send(self, method, url, headers, data, files, params, errback):
+    def _send(
+        self,
+        method,
+        url,
+        headers,
+        data,
+        files,
+        params,
+        errback,
+        skip_json_parsing,
+    ):
         resp = self.REQ_MAP[method](
             url,
             headers=headers,
@@ -80,6 +90,9 @@ class RequestsTransport(TransportBase):
                 else:
                     raise ResourceException("server error", resp, resp.text)
 
+        if resp.text and skip_json_parsing:
+            return response_headers, resp.text
+
         # TODO make sure json is valid if a body is returned
         if resp.text:
             try:
@@ -106,18 +119,33 @@ class RequestsTransport(TransportBase):
         callback=None,
         errback=None,
         pagination_handler=None,
+        skip_json_parsing=False,
     ):
         self._logHeaders(headers)
 
         resp_headers, jsonOut = self._send(
-            method, url, headers, data, files, params, errback
+            method,
+            url,
+            headers,
+            data,
+            files,
+            params,
+            errback,
+            skip_json_parsing,
         )
         if self._follow_pagination and pagination_handler is not None:
             next_page = get_next_page(resp_headers)
             while next_page is not None:
                 self._log.debug("following pagination to: %s" % next_page)
                 next_headers, next_json = self._send(
-                    method, next_page, headers, data, files, params, errback
+                    method,
+                    next_page,
+                    headers,
+                    data,
+                    files,
+                    params,
+                    errback,
+                    skip_json_parsing,
                 )
                 jsonOut = pagination_handler(jsonOut, next_json)
                 next_page = get_next_page(next_headers)

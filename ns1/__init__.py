@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.18.0"
+version = "0.19.0"
 
 
 class NS1:
@@ -292,6 +292,15 @@ class NS1:
         import ns1.rest.pools
 
         return ns1.rest.pools.Pools(self.config)
+
+    def datasets(self):
+        """
+        Return a new raw REST interface to Datasets resources
+        :rtype: :py:class:`ns1.rest.datasets.Datasets`
+        """
+        import ns1.rest.datasets
+
+        return ns1.rest.datasets.Datasets(self.config)
 
     def redirects(self):
         """
