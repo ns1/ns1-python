@@ -302,6 +302,26 @@ class NS1:
 
         return ns1.rest.datasets.Datasets(self.config)
 
+    def redirects(self):
+        """
+        Return a new raw REST interface to Redirect resources
+
+        :rtype: :py:class:`ns1.rest.redirect.Redirects`
+        """
+        import ns1.rest.redirect
+
+        return ns1.rest.redirect.Redirects(self.config)
+
+    def redirect_certificates(self):
+        """
+        Return a new raw REST interface to RedirectCertificate resources
+
+        :rtype: :py:class:`ns1.rest.redirect.RedirectCertificates`
+        """
+        import ns1.rest.redirect
+
+        return ns1.rest.redirect.RedirectCertificates(self.config)
+
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         """
