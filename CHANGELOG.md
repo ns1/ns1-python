@@ -1,3 +1,8 @@
+## 0.19.1 (May 15th, 2024)
+
+BUG FIXES:
+* Fixed twisted transport to pass correct encoding on the body.
+
 ## 0.19.0 (February 14th, 2024)
 
 ENHANCEMENTS:
