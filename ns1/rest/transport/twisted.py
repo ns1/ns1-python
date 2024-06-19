@@ -14,8 +14,9 @@ from ns1.rest.errors import RateLimitException
 from ns1.rest.errors import ResourceException
 from ns1.rest.transport.base import TransportBase
 
-
+IS_PY3 = False
 if sys.version_info[0] == 3:
+    IS_PY3 = True
     from io import StringIO
     from urllib.parse import urlencode
 else:
@@ -230,7 +231,10 @@ class TwistedTransport(TransportBase):
         """
         bProducer = None
         if data:
-            bProducer = StringProducer(data)
+            if IS_PY3:
+                bProducer = StringProducer(data.encode("utf-8"))
+            else:
+                bProducer = StringProducer(data)
         elif files:
             if len(files) > 1:
                 raise Exception(
