@@ -1,3 +1,8 @@
+## 0.20.0 (June 19th, 2024)
+
+ENHANCEMENTS:
+* Adds support for Redirects
+
 ## 0.19.1 (May 15th, 2024)
 
 BUG FIXES:
