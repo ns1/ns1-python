@@ -1,5 +1,6 @@
 import ns1.rest.zones
 import pytest
+import os
 
 try:  # Python 3.3 +
     import unittest.mock as mock
@@ -98,7 +99,8 @@ def test_rest_zone_import_file(zones_config, zone, name, url, networks, views):
     if name is not None:
         params['name'] = name
 
-    z.import_file(zone,  "../examples/importzone.db", name=name, networks=networks, views=views)
+    zoneFilePath = "{}/../../examples/importzone.db".format(os.path.dirname(os.path.abspath(__file__)))
+    z.import_file(zone,  zoneFilePath, name=name, networks=networks, views=views)
 
     z._make_request.assert_called_once_with(
         "PUT", url, files=mock.ANY, params=params, callback=None, errback=None
