@@ -94,10 +94,15 @@ class Zone(object):
         """
         Create a new zone. Pass a list of keywords and their values to
         configure. For the list of keywords available for zone configuration,
-        see :attr:`ns1.rest.zones.Zones.INT_FIELDS` and
+        see :attr:`ns1.rest.zones.Zones.INT_FIELDS`,
+        :attr:`ns1.rest.zones.Zones.BOOL_FIELDS` and
         :attr:`ns1.rest.zones.Zones.PASSTHRU_FIELDS`
-        If zoneFile is passed, it should be a zone text file on the local disk
-        that will be used to populate the created zone file.
+        Use `name` to pass a unique name for the zone otherwise this will
+        default to the zone FQDN.
+        If zoneFile is passed, it should be a zone text file on the local
+        disk that will be used to populate the created zone file. When a
+        zoneFile is passed only `name` and
+        :attr:`ns1.rest.zones.Zones.ZONEFILE_FIELDS` are supported.
         """
         if self.data:
             raise ZoneException("zone already loaded")
