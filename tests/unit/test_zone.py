@@ -74,23 +74,24 @@ def test_rest_zone_create(zones_config, zone, name, url):
     z._make_request = mock.MagicMock()
     z.create(zone, name=name)
     z._make_request.assert_called_once_with(
-        "PUT", url, body={"zone":zone}, callback=None, errback=None
+        "PUT", url, body={"zone": zone}, callback=None, errback=None
     )
 
+
 @pytest.mark.parametrize(
-    "zone, name, url, networks, views",[
+    "zone, name, url, networks, views", [
         ("test.zone", None, "import/zonefile/test.zone", None, None),
         ("test.zone", "test.name", "import/zonefile/test.zone", None, None),
-        ("test.zone", "test.name", "import/zonefile/test.zone", [1,2,99], None),
+        ("test.zone", "test.name", "import/zonefile/test.zone", [1, 2, 99], None),
         ("test.zone", "test.name", "import/zonefile/test.zone", None, ["view1", "view2"]),
-        ("test.zone", "test.name", "import/zonefile/test.zone", [3,4,99], ["viewA", "viewB"]),
+        ("test.zone", "test.name", "import/zonefile/test.zone", [3, 4, 99], ["viewA", "viewB"]),
     ]
 )
 def test_rest_zone_import_file(zones_config, zone, name, url, networks, views):
     z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
     params = {}
-    networksStrs=None
+    networksStrs = None
     if networks is not None:
         networksStrs = map(str, networks)
         params['networks'] = ",".join(networksStrs)
@@ -105,6 +106,7 @@ def test_rest_zone_import_file(zones_config, zone, name, url, networks, views):
     z._make_request.assert_called_once_with(
         "PUT", url, files=mock.ANY, params=params, callback=None, errback=None
     )
+
 
 @pytest.mark.parametrize(
     "zone, url", [("test.zone", "zones/test.zone/versions?force=false")]

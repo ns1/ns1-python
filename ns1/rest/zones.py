@@ -25,6 +25,11 @@ class Zones(resource.BaseResource):
     ]
     BOOL_FIELDS = ["dnssec"]
 
+    ZONEFILE_FIELDS = [
+        "networks",
+        "views",
+    ]
+
     def _buildBody(self, zone, **kwargs):
         body = {}
         body["zone"] = zone
