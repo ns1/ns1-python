@@ -90,7 +90,7 @@ class Zone(object):
             self.zone, callback=success, errback=errback, **kwargs
         )
 
-    def create(self, zoneFile=None, callback=None, errback=None, **kwargs):
+    def create(self, name=None, zoneFile=None, callback=None, errback=None, **kwargs):
         """
         Create a new zone. Pass a list of keywords and their values to
         configure. For the list of keywords available for zone configuration,
@@ -113,13 +113,14 @@ class Zone(object):
             return self._rest.import_file(
                 self.zone,
                 zoneFile,
+                name=name,
                 callback=success,
                 errback=errback,
                 **kwargs
             )
         else:
             return self._rest.create(
-                self.zone, callback=success, errback=errback, **kwargs
+                self.zone, name=name, callback=success, errback=errback, **kwargs
             )
 
     def __getattr__(self, item):

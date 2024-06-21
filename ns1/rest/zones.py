@@ -21,6 +21,7 @@ class Zones(resource.BaseResource):
         "link",
         "primary_master",
         "tags",
+        "views",
     ]
     BOOL_FIELDS = ["dnssec"]
 
@@ -31,22 +32,43 @@ class Zones(resource.BaseResource):
         return body
 
     def import_file(
-        self, zone, zoneFile, callback=None, errback=None, **kwargs
+        self, zone, zoneFile, name=None, callback=None, errback=None, **kwargs
     ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
+        params = self._buildImportParams(kwargs, name=name)
         return self._make_request(
             "PUT",
             "import/zonefile/%s" % (zone),
             files=files,
+            params=params,
             callback=callback,
             errback=errback,
         )
 
-    def create(self, zone, callback=None, errback=None, **kwargs):
+    # Extra import args are specified as query parameters not fields in a JSON object.
+    def _buildImportParams(self, fields, name=None):
+        params = {}
+        # Arrays of values should be passed as multiple instances of the same
+        # parameter but the zonefile API expects parameters containing comma
+        # seperated values.
+        if fields.get("networks") is not None:
+            networksStrs = map(str, fields["networks"])
+            networksParam = ",".join(networksStrs)
+            params["networks"] = networksParam
+        if fields.get("views") is not None:
+            viewsParam = ",".join(fields["views"])
+            params["views"] = viewsParam
+        if name is not None:
+            params["name"] = name
+        return params
+
+    def create(self, zone, name=None, callback=None, errback=None, **kwargs):
         body = self._buildBody(zone, **kwargs)
+        if name is None:
+            name = zone
         return self._make_request(
             "PUT",
-            "%s/%s" % (self.ROOT, zone),
+            "%s/%s" % (self.ROOT, name),
             body=body,
             callback=callback,
             errback=errback,
