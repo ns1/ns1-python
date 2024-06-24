@@ -271,7 +271,13 @@ class NS1:
         return rest_zone.search(query, type, expand, max, callback, errback)
 
     def createZone(
-        self, zone, name=None, zoneFile=None, callback=None, errback=None, **kwargs
+        self,
+        zone,
+        name=None,
+        zoneFile=None,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         """
         Create a new zone, and return an associated high level Zone object.
@@ -296,7 +302,11 @@ class NS1:
         zone = ns1.zones.Zone(self.config, zone)
 
         return zone.create(
-            zoneFile=zoneFile, name=name, callback=callback, errback=errback, **kwargs
+            zoneFile=zoneFile,
+            name=name,
+            callback=callback,
+            errback=errback,
+            **kwargs
         )
 
     def loadRecord(
