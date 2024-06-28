@@ -91,7 +91,7 @@ class Zone(object):
         )
 
     def create(
-        self, name=None, zoneFile=None, callback=None, errback=None, **kwargs
+        self, zoneFile=None, callback=None, errback=None, name=None, **kwargs
     ):
         """
         Create a new zone. Pass a list of keywords and their values to
@@ -120,17 +120,17 @@ class Zone(object):
             return self._rest.import_file(
                 self.zone,
                 zoneFile,
-                name=name,
                 callback=success,
                 errback=errback,
+                name=name,
                 **kwargs
             )
         else:
             return self._rest.create(
                 self.zone,
-                name=name,
                 callback=success,
                 errback=errback,
+                name=name,
                 **kwargs
             )
 

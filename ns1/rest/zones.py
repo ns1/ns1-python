@@ -37,10 +37,10 @@ class Zones(resource.BaseResource):
         return body
 
     def import_file(
-        self, zone, zoneFile, name=None, callback=None, errback=None, **kwargs
+        self, zone, zoneFile, callback=None, errback=None, **kwargs
     ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
-        params = self._buildImportParams(kwargs, name=name)
+        params = self._buildImportParams(kwargs)
         return self._make_request(
             "PUT",
             "import/zonefile/%s" % (zone),
@@ -51,23 +51,23 @@ class Zones(resource.BaseResource):
         )
 
     # Extra import args are specified as query parameters not fields in a JSON object.
-    def _buildImportParams(self, fields, name=None):
+    def _buildImportParams(self, fields):
         params = {}
         # Arrays of values should be passed as multiple instances of the same
         # parameter but the zonefile API expects parameters containing comma
         # seperated values.
         if fields.get("networks") is not None:
-            networksStrs = map(str, fields["networks"])
-            networksParam = ",".join(networksStrs)
-            params["networks"] = networksParam
+            networks_strs = map(str, fields["networks"])
+            networks_param = ",".join(networks_strs)
+            params["networks"] = networks_param
         if fields.get("views") is not None:
-            viewsParam = ",".join(fields["views"])
-            params["views"] = viewsParam
-        if name is not None:
-            params["name"] = name
+            views_param = ",".join(fields["views"])
+            params["views"] = views_param
+        if fields.get("name") is not None:
+            params["name"] = fields.get("name")
         return params
 
-    def create(self, zone, name=None, callback=None, errback=None, **kwargs):
+    def create(self, zone, callback=None, errback=None, name=None, **kwargs):
         body = self._buildBody(zone, **kwargs)
         if name is None:
             name = zone
