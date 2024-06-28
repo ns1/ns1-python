@@ -361,7 +361,13 @@ class NS1:
         return rest_zone.search(query, type, expand, max, callback, errback)
 
     def createZone(
-        self, zone, zoneFile=None, callback=None, errback=None, **kwargs
+        self,
+        zone,
+        zoneFile=None,
+        callback=None,
+        errback=None,
+        name=None,
+        **kwargs
     ):
         """
         Create a new zone, and return an associated high level Zone object.
@@ -371,8 +377,9 @@ class NS1:
         If zoneFile is specified, upload the specific zone definition file
         to populate the zone with.
 
-        :param str zone: zone name, like 'example.com'
+        :param str zone: zone FQDN, like 'example.com'
         :param str zoneFile: absolute path of a zone file
+        :param str name: zone name override, name will be zone FQDN if omitted
         :keyword int retry: retry time
         :keyword int refresh: refresh ttl
         :keyword int expiry: expiry ttl
@@ -385,7 +392,11 @@ class NS1:
         zone = ns1.zones.Zone(self.config, zone)
 
         return zone.create(
-            zoneFile=zoneFile, callback=callback, errback=errback, **kwargs
+            zoneFile=zoneFile,
+            name=name,
+            callback=callback,
+            errback=errback,
+            **kwargs
         )
 
     def loadRecord(
