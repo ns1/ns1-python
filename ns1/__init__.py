@@ -273,10 +273,10 @@ class NS1:
     def createZone(
         self,
         zone,
-        name=None,
         zoneFile=None,
         callback=None,
         errback=None,
+        name=None,
         **kwargs
     ):
         """
@@ -288,8 +288,8 @@ class NS1:
         to populate the zone with.
 
         :param str zone: zone FQDN, like 'example.com'
-        :param str zone: zone name override, name will be zone FQDN if omitted
         :param str zoneFile: absolute path of a zone file
+        :param str name: zone name override, name will be zone FQDN if omitted
         :keyword int retry: retry time
         :keyword int refresh: refresh ttl
         :keyword int expiry: expiry ttl
