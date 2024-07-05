@@ -43,7 +43,7 @@ class Zones(resource.BaseResource):
         params = self._buildImportParams(kwargs)
         return self._make_request(
             "PUT",
-            "import/zonefile/%s" % (zone),
+            "import/zonefile/{}".format(zone),
             files=files,
             params=params,
             callback=callback,
@@ -73,7 +73,7 @@ class Zones(resource.BaseResource):
             name = zone
         return self._make_request(
             "PUT",
-            "%s/%s" % (self.ROOT, name),
+            "{}/{}".format(self.ROOT, name),
             body=body,
             callback=callback,
             errback=errback,
