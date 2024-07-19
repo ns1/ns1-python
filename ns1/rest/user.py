@@ -21,7 +21,7 @@ class User(resource.BaseResource):
     ]
 
     def create(
-            self, name, username, email, callback=None, errback=None, **kwargs
+        self, name, username, email, callback=None, errback=None, **kwargs
     ):
         body = {"name": name, "username": username, "email": email}
 

@@ -66,12 +66,14 @@ class TestApiKeyCreate:
 
         z.create(name, permissions={"monitoring": {"manage_jobs": True}})
 
-        expected_perms = {"monitoring": {
-            "manage_jobs": False,
-            "create_jobs": True,
-            "update_jobs": True,
-            "delete_jobs": True,
-        }}
+        expected_perms = {
+            "monitoring": {
+                "manage_jobs": False,
+                "create_jobs": True,
+                "update_jobs": True,
+                "delete_jobs": True,
+            }
+        }
         z._make_request.assert_called_once_with(
             "PUT",
             url,
@@ -140,12 +142,14 @@ class TestApiKeyUpdate:
             ip_whitelist=ip_whitelist,
             permissions=perms,
         )
-        expected_perms = {"monitoring": {
-            "manage_jobs": False,
-            "create_jobs": True,
-            "update_jobs": True,
-            "delete_jobs": True,
-        }}
+        expected_perms = {
+            "monitoring": {
+                "manage_jobs": False,
+                "create_jobs": True,
+                "update_jobs": True,
+                "delete_jobs": True,
+            }
+        }
         z._make_request.assert_called_once_with(
             "POST",
             url,

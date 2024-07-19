@@ -71,17 +71,26 @@ class TestUserCreate:
         "name, username, email, url",
         [("test-user", "test-username", "test-email@ns1.io", "account/users")],
     )
-    def test_manage_jobs_set_to_true(self, user_config, name, username, email, url):
+    def test_manage_jobs_set_to_true(
+        self, user_config, name, username, email, url
+    ):
         z = ns1.rest.user.User(user_config)
         z._make_request = mock.MagicMock()
-        z.create(name, username, email, permissions={"monitoring": {"manage_jobs": True}})
+        z.create(
+            name,
+            username,
+            email,
+            permissions={"monitoring": {"manage_jobs": True}},
+        )
 
-        expected_perms = {"monitoring": {
-            "manage_jobs": False,
-            "create_jobs": True,
-            "update_jobs": True,
-            "delete_jobs": True,
-        }}
+        expected_perms = {
+            "monitoring": {
+                "manage_jobs": False,
+                "create_jobs": True,
+                "update_jobs": True,
+                "delete_jobs": True,
+            }
+        }
         z._make_request.assert_called_once_with(
             "PUT",
             url,
@@ -150,12 +159,14 @@ class TestUserUpdate:
         z.update(
             username, name=name, ip_whitelist=ip_whitelist, permissions=perms
         )
-        expected_perms = {"monitoring": {
-            "manage_jobs": False,
-            "create_jobs": True,
-            "update_jobs": True,
-            "delete_jobs": True,
-        }}
+        expected_perms = {
+            "monitoring": {
+                "manage_jobs": False,
+                "create_jobs": True,
+                "update_jobs": True,
+                "delete_jobs": True,
+            }
+        }
         z._make_request.assert_called_once_with(
             "POST",
             url,
