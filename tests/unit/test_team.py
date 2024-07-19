@@ -45,52 +45,114 @@ def test_rest_team_retrieve(team_config, team_id, url):
     )
 
 
-@pytest.mark.parametrize("name, url", [("test-team", "account/teams")])
-def test_rest_team_create(team_config, name, url):
-    z = ns1.rest.team.Team(team_config)
-    z._make_request = mock.MagicMock()
-    z.create(name)
-    z._make_request.assert_called_once_with(
-        "PUT",
-        url,
-        callback=None,
-        errback=None,
-        body={"name": name, "permissions": permissions._default_perms},
-    )
-
-
-@pytest.mark.parametrize(
-    "team_id, name, ip_whitelist, permissions, url",
-    [
-        (
-            "1",
-            "test-team",
-            [{"name": "Test Whitelist", "values": ["1.1.1.1"]}],
-            {"data": {"push_to_datafeeds": True}},
-            "account/teams/1",
+class TestTeamsCreat:
+    @pytest.mark.parametrize("name, url", [("test-team", "account/teams")])
+    def test_no_perms_set_uses_default_perms(self, team_config, name, url):
+        z = ns1.rest.team.Team(team_config)
+        z._make_request = mock.MagicMock()
+        z.create(name)
+        z._make_request.assert_called_once_with(
+            "PUT",
+            url,
+            callback=None,
+            errback=None,
+            body={"name": name, "permissions": permissions._default_perms},
         )
-    ],
-)
-def test_rest_team_update(
-    team_config, team_id, name, ip_whitelist, permissions, url
-):
-    z = ns1.rest.team.Team(team_config)
-    z._make_request = mock.MagicMock()
-    z.update(
-        team_id, name=name, ip_whitelist=ip_whitelist, permissions=permissions
+
+    @pytest.mark.parametrize("name, url", [("test-team", "account/teams")])
+    def test_manage_jobs_set_to_true(self, team_config, name, url):
+        z = ns1.rest.team.Team(team_config)
+        z._make_request = mock.MagicMock()
+
+        z.create(name, permissions={"monitoring": {"manage_jobs": True}})
+
+        expected_perms = {"monitoring": {
+            "manage_jobs": False,
+            "create_jobs": True,
+            "update_jobs": True,
+            "delete_jobs": True,
+        }}
+        z._make_request.assert_called_once_with(
+            "PUT",
+            url,
+            callback=None,
+            errback=None,
+            body={"name": name, "permissions": expected_perms},
+        )
+
+
+class TestTeamsUpdate:
+    @pytest.mark.parametrize(
+        "team_id, name, ip_whitelist, perms, url",
+        [
+            (
+                "1",
+                "test-team",
+                [{"name": "Test Whitelist", "values": ["1.1.1.1"]}],
+                {"data": {"push_to_datafeeds": True}},
+                "account/teams/1",
+            )
+        ],
     )
-    z._make_request.assert_called_once_with(
-        "POST",
-        url,
-        callback=None,
-        errback=None,
-        body={
-            "id": team_id,
-            "name": name,
-            "ip_whitelist": ip_whitelist,
-            "permissions": permissions,
-        },
+    def test_manage_jobs_not_set(
+        self, team_config, team_id, name, ip_whitelist, perms, url
+    ):
+        z = ns1.rest.team.Team(team_config)
+        z._make_request = mock.MagicMock()
+        z.update(
+            team_id, name=name, ip_whitelist=ip_whitelist, permissions=perms
+        )
+        z._make_request.assert_called_once_with(
+            "POST",
+            url,
+            callback=None,
+            errback=None,
+            body={
+                "id": team_id,
+                "name": name,
+                "ip_whitelist": ip_whitelist,
+                "permissions": perms,
+            },
+        )
+
+    @pytest.mark.parametrize(
+        "team_id, name, ip_whitelist, perms, url",
+        [
+            (
+                "1",
+                "test-team",
+                [{"name": "Test Whitelist", "values": ["1.1.1.1"]}],
+                {"monitoring": {"manage_jobs": True}},
+                "account/teams/1",
+            )
+        ],
     )
+    def test_manage_jobs_set_to_true(
+        self, team_config, team_id, name, ip_whitelist, perms, url
+    ):
+        z = ns1.rest.team.Team(team_config)
+        z._make_request = mock.MagicMock()
+        z.update(
+            team_id, name=name, ip_whitelist=ip_whitelist, permissions=perms
+        )
+        expected_perms = {"monitoring": {
+            "manage_jobs": False,
+            "create_jobs": True,
+            "update_jobs": True,
+            "delete_jobs": True,
+        }}
+        z._make_request.assert_called_once_with(
+            "POST",
+            url,
+            callback=None,
+            errback=None,
+            body={
+                "id": team_id,
+                "name": name,
+                "ip_whitelist": ip_whitelist,
+                "permissions": expected_perms,
+            },
+        )
 
 
 @pytest.mark.parametrize("team_id, url", [("1", "account/teams/1")])

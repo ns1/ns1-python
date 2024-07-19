@@ -28,6 +28,13 @@ class APIKey(resource.BaseResource):
 
         self._buildStdBody(body, kwargs)
 
+        # Replace `manage_jobs` with the new split permissions
+        if body["permissions"].get("monitoring", {}).get("manage_jobs", False):
+            body["permissions"]["monitoring"]["manage_jobs"] = False
+            body["permissions"]["monitoring"]["create_jobs"] = True
+            body["permissions"]["monitoring"]["update_jobs"] = True
+            body["permissions"]["monitoring"]["delete_jobs"] = True
+
         return self._make_request(
             "PUT",
             "%s" % (self.ROOT),
@@ -39,6 +46,13 @@ class APIKey(resource.BaseResource):
     def update(self, apikey_id, callback=None, errback=None, **kwargs):
         body = {}
         self._buildStdBody(body, kwargs)
+
+        # Replace `manage_jobs` with the new split permissions
+        if body["permissions"].get("monitoring", {}).get("manage_jobs", False):
+            body["permissions"]["monitoring"]["manage_jobs"] = False
+            body["permissions"]["monitoring"]["create_jobs"] = True
+            body["permissions"]["monitoring"]["update_jobs"] = True
+            body["permissions"]["monitoring"]["delete_jobs"] = True
 
         return self._make_request(
             "POST",

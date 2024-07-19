@@ -45,54 +45,118 @@ def test_rest_apikey_retrieve(apikey_config, apikey_id, url):
     )
 
 
-@pytest.mark.parametrize("name, url", [("test-apikey", "account/apikeys")])
-def test_rest_apikey_create(apikey_config, name, url):
-    z = ns1.rest.apikey.APIKey(apikey_config)
-    z._make_request = mock.MagicMock()
-    z.create(name)
-    z._make_request.assert_called_once_with(
-        "PUT",
-        url,
-        callback=None,
-        errback=None,
-        body={"name": name, "permissions": permissions._default_perms},
-    )
-
-
-@pytest.mark.parametrize(
-    "apikey_id, name, ip_whitelist, permissions, url",
-    [
-        (
-            "test-apikey_id",
-            "test-apikey",
-            ["1.1.1.1", "2.2.2.2"],
-            {"data": {"push_to_datafeeds": True}},
-            "account/apikeys/test-apikey_id",
+class TestApiKeyCreate:
+    @pytest.mark.parametrize("name, url", [("test-apikey", "account/apikeys")])
+    def test_no_manage_jobs_set(self, apikey_config, name, url):
+        z = ns1.rest.apikey.APIKey(apikey_config)
+        z._make_request = mock.MagicMock()
+        z.create(name)
+        z._make_request.assert_called_once_with(
+            "PUT",
+            url,
+            callback=None,
+            errback=None,
+            body={"name": name, "permissions": permissions._default_perms},
         )
-    ],
-)
-def test_rest_apikey_update(
-    apikey_config, apikey_id, name, ip_whitelist, permissions, url
-):
-    z = ns1.rest.apikey.APIKey(apikey_config)
-    z._make_request = mock.MagicMock()
-    z.update(
-        apikey_id,
-        name=name,
-        ip_whitelist=ip_whitelist,
-        permissions=permissions,
+
+    @pytest.mark.parametrize("name, url", [("test-apikey", "account/apikeys")])
+    def test_manage_jobs_set_to_true(self, apikey_config, name, url):
+        z = ns1.rest.apikey.APIKey(apikey_config)
+        z._make_request = mock.MagicMock()
+
+        z.create(name, permissions={"monitoring": {"manage_jobs": True}})
+
+        expected_perms = {"monitoring": {
+            "manage_jobs": False,
+            "create_jobs": True,
+            "update_jobs": True,
+            "delete_jobs": True,
+        }}
+        z._make_request.assert_called_once_with(
+            "PUT",
+            url,
+            callback=None,
+            errback=None,
+            body={"name": name, "permissions": expected_perms},
+        )
+
+
+class TestApiKeyUpdate:
+    @pytest.mark.parametrize(
+        "apikey_id, name, ip_whitelist, perms, url",
+        [
+            (
+                "test-apikey_id",
+                "test-apikey",
+                ["1.1.1.1", "2.2.2.2"],
+                {"data": {"push_to_datafeeds": True}},
+                "account/apikeys/test-apikey_id",
+            )
+        ],
     )
-    z._make_request.assert_called_once_with(
-        "POST",
-        url,
-        callback=None,
-        errback=None,
-        body={
-            "name": name,
-            "ip_whitelist": ip_whitelist,
-            "permissions": permissions,
-        },
+    def test_no_manage_jobs_set(
+        self, apikey_config, apikey_id, name, ip_whitelist, perms, url
+    ):
+        z = ns1.rest.apikey.APIKey(apikey_config)
+        z._make_request = mock.MagicMock()
+        z.update(
+            apikey_id,
+            name=name,
+            ip_whitelist=ip_whitelist,
+            permissions=perms,
+        )
+        z._make_request.assert_called_once_with(
+            "POST",
+            url,
+            callback=None,
+            errback=None,
+            body={
+                "name": name,
+                "ip_whitelist": ip_whitelist,
+                "permissions": perms,
+            },
+        )
+
+    @pytest.mark.parametrize(
+        "apikey_id, name, ip_whitelist, perms, url",
+        [
+            (
+                "test-apikey_id",
+                "test-apikey",
+                ["1.1.1.1", "2.2.2.2"],
+                {"monitoring": {"manage_jobs": True}},
+                "account/apikeys/test-apikey_id",
+            )
+        ],
     )
+    def test_mange_jobs_set_to_true(
+        self, apikey_config, apikey_id, name, ip_whitelist, perms, url
+    ):
+        z = ns1.rest.apikey.APIKey(apikey_config)
+        z._make_request = mock.MagicMock()
+        z.update(
+            apikey_id,
+            name=name,
+            ip_whitelist=ip_whitelist,
+            permissions=perms,
+        )
+        expected_perms = {"monitoring": {
+            "manage_jobs": False,
+            "create_jobs": True,
+            "update_jobs": True,
+            "delete_jobs": True,
+        }}
+        z._make_request.assert_called_once_with(
+            "POST",
+            url,
+            callback=None,
+            errback=None,
+            body={
+                "name": name,
+                "ip_whitelist": ip_whitelist,
+                "permissions": expected_perms,
+            },
+        )
 
 
 @pytest.mark.parametrize(
