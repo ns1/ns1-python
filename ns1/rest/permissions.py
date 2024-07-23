@@ -53,6 +53,9 @@ _default_perms_ddi = {
     },
     "monitoring": {
         "manage_jobs": False,
+        "create_jobs": False,
+        "update_jobs": False,
+        "delete_jobs": False,
         "manage_lists": False,
         "view_jobs": False,
     },

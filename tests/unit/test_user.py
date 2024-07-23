@@ -45,140 +45,60 @@ def test_rest_user_retrieve(user_config, username, url):
     )
 
 
-class TestUserCreate:
-    @pytest.mark.parametrize(
-        "name, username, email, url",
-        [("test-user", "test-username", "test-email@ns1.io", "account/users")],
+@pytest.mark.parametrize(
+    "name, username, email, url",
+    [("test-user", "test-username", "test-email@ns1.io", "account/users")],
+)
+def test_rest_user_create(user_config, name, username, email, url):
+    z = ns1.rest.user.User(user_config)
+    z._make_request = mock.MagicMock()
+    z.create(name, username, email)
+    z._make_request.assert_called_once_with(
+        "PUT",
+        url,
+        callback=None,
+        errback=None,
+        body={
+            "name": name,
+            "username": username,
+            "email": email,
+            "permissions": permissions._default_perms,
+        },
     )
-    def test_no_permissions_set(self, user_config, name, username, email, url):
-        z = ns1.rest.user.User(user_config)
-        z._make_request = mock.MagicMock()
-        z.create(name, username, email)
-        z._make_request.assert_called_once_with(
-            "PUT",
-            url,
-            callback=None,
-            errback=None,
-            body={
-                "name": name,
-                "username": username,
-                "email": email,
-                "permissions": permissions._default_perms,
-            },
-        )
 
-    @pytest.mark.parametrize(
-        "name, username, email, url",
-        [("test-user", "test-username", "test-email@ns1.io", "account/users")],
+
+@pytest.mark.parametrize(
+    "username, name, ip_whitelist, permissions, url",
+    [
+        (
+            "test-username",
+            "test-user",
+            ["1.1.1.1", "2.2.2.2"],
+            {"data": {"push_to_datafeeds": True}},
+            "account/users/test-username",
+        )
+    ],
+)
+def test_rest_user_update(
+    user_config, username, name, ip_whitelist, permissions, url
+):
+    z = ns1.rest.user.User(user_config)
+    z._make_request = mock.MagicMock()
+    z.update(
+        username, name=name, ip_whitelist=ip_whitelist, permissions=permissions
     )
-    def test_manage_jobs_set_to_true(
-        self, user_config, name, username, email, url
-    ):
-        z = ns1.rest.user.User(user_config)
-        z._make_request = mock.MagicMock()
-        z.create(
-            name,
-            username,
-            email,
-            permissions={"monitoring": {"manage_jobs": True}},
-        )
-
-        expected_perms = {
-            "monitoring": {
-                "manage_jobs": False,
-                "create_jobs": True,
-                "update_jobs": True,
-                "delete_jobs": True,
-            }
-        }
-        z._make_request.assert_called_once_with(
-            "PUT",
-            url,
-            callback=None,
-            errback=None,
-            body={
-                "name": name,
-                "username": username,
-                "email": email,
-                "permissions": expected_perms,
-            },
-        )
-
-
-class TestUserUpdate:
-    @pytest.mark.parametrize(
-        "username, name, ip_whitelist, pers, url",
-        [
-            (
-                "test-username",
-                "test-user",
-                ["1.1.1.1", "2.2.2.2"],
-                {"data": {"push_to_datafeeds": True}},
-                "account/users/test-username",
-            )
-        ],
+    z._make_request.assert_called_once_with(
+        "POST",
+        url,
+        callback=None,
+        errback=None,
+        body={
+            "username": username,
+            "name": name,
+            "ip_whitelist": ip_whitelist,
+            "permissions": permissions,
+        },
     )
-    def test_manage_jobs_not_set(
-        self, user_config, username, name, ip_whitelist, pers, url
-    ):
-        z = ns1.rest.user.User(user_config)
-        z._make_request = mock.MagicMock()
-        z.update(
-            username, name=name, ip_whitelist=ip_whitelist, permissions=pers
-        )
-        z._make_request.assert_called_once_with(
-            "POST",
-            url,
-            callback=None,
-            errback=None,
-            body={
-                "username": username,
-                "name": name,
-                "ip_whitelist": ip_whitelist,
-                "permissions": pers,
-            },
-        )
-
-    @pytest.mark.parametrize(
-        "username, name, ip_whitelist, perms, url",
-        [
-            (
-                "test-username",
-                "test-user",
-                ["1.1.1.1", "2.2.2.2"],
-                {"monitoring": {"manage_jobs": True}},
-                "account/users/test-username",
-            )
-        ],
-    )
-    def test_manage_jobs_set_to_true(
-        self, user_config, username, name, ip_whitelist, perms, url
-    ):
-        z = ns1.rest.user.User(user_config)
-        z._make_request = mock.MagicMock()
-        z.update(
-            username, name=name, ip_whitelist=ip_whitelist, permissions=perms
-        )
-        expected_perms = {
-            "monitoring": {
-                "manage_jobs": False,
-                "create_jobs": True,
-                "update_jobs": True,
-                "delete_jobs": True,
-            }
-        }
-        z._make_request.assert_called_once_with(
-            "POST",
-            url,
-            callback=None,
-            errback=None,
-            body={
-                "username": username,
-                "name": name,
-                "ip_whitelist": ip_whitelist,
-                "permissions": expected_perms,
-            },
-        )
 
 
 @pytest.mark.parametrize(
