@@ -2,6 +2,7 @@
 
 ENHANCEMENTS:
 * Adds support for new split monitoring permissions create_jobs, update_jobs and delete_jobs
+* Remove DDI (DHCP & IPAM) code
 
 ## 0.20.0 (June 19th, 2024)
 
