@@ -15,10 +15,7 @@ class Team(resource.BaseResource):
         body = {"name": name}
 
         if "permissions" not in kwargs:
-            if self._config["ddi"]:
-                body["permissions"] = permissions._default_perms_ddi
-            else:
-                body["permissions"] = permissions._default_perms
+            body["permissions"] = permissions._default_perms
 
         self._buildStdBody(body, kwargs)
 

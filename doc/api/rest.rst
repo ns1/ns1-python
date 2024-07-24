@@ -33,11 +33,6 @@ A thin layer over the NS1 REST API
     :undoc-members:
     :show-inheritance:
 
-.. automodule:: ns1.rest.ipam
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 .. automodule:: ns1.rest.team
     :members:
     :undoc-members:

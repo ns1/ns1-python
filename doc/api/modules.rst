@@ -8,5 +8,4 @@ ns1 package
    config
    zones
    records
-   ipam
    rest

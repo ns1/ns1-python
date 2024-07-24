@@ -4,14 +4,6 @@ from ns1 import NS1
 from ns1.rest.account import Plan
 from ns1.rest.apikey import APIKey
 from ns1.rest.data import Feed, Source
-from ns1.rest.ipam import (
-    Addresses,
-    Networks,
-    Reservations,
-    Scopegroups,
-    Scopes,
-    Optiondefs,
-)
 from ns1.rest.monitoring import JobTypes, Monitors, NotifyLists, Regions
 from ns1.rest.records import Records
 from ns1.rest.stats import Stats
@@ -43,12 +35,6 @@ def ns1_config(config):
     [
         ("zones", Zones),
         ("records", Records),
-        ("addresses", Addresses),
-        ("networks", Networks),
-        ("scope_groups", Scopegroups),
-        ("reservations", Reservations),
-        ("scopes", Scopes),
-        ("optiondefs", Optiondefs),
         ("stats", Stats),
         ("datasource", Source),
         ("datafeed", Feed),

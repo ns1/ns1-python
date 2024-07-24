@@ -26,10 +26,7 @@ class User(resource.BaseResource):
         body = {"name": name, "username": username, "email": email}
 
         if "permissions" not in kwargs:
-            if self._config["ddi"]:
-                body["permissions"] = permissions._default_perms_ddi
-            else:
-                body["permissions"] = permissions._default_perms
+            body["permissions"] = permissions._default_perms
 
         self._buildStdBody(body, kwargs)
 
