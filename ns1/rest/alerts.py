@@ -24,7 +24,9 @@ class Alerts(resource.BaseResource):
 
     def list(self, callback=None, errback=None):
         data = self._make_request(
-            "GET", "%s" % (self.ROOT), callback=callback,
+            "GET",
+            "%s" % (self.ROOT),
+            callback=callback,
             errback=errback,
             pagination_handler=alert_list_pagination,
         )
@@ -41,7 +43,9 @@ class Alerts(resource.BaseResource):
             errback=errback,
         )
 
-    def create(self, name, type, subtype, callback=None, errback=None, **kwargs):
+    def create(
+        self, name, type, subtype, callback=None, errback=None, **kwargs
+    ):
         body = {
             "name": name,
             "type": type,
