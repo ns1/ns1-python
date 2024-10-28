@@ -1,3 +1,8 @@
+## 0.22.0 (Oct 28th, 2024)
+
+ENHANCEMENTS:
+* Adds support for Alerts
+
 ## 0.21.0 (July 19th, 2024)
 
 ENHANCEMENTS:
