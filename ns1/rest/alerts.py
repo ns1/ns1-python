@@ -80,6 +80,7 @@ class Alerts(resource.BaseResource):
             errback=errback,
         )
 
+
 # successive pages contain the next alerts in the results list
 def alert_list_pagination(curr_json, next_json):
     curr_json["results"].extend(next_json["results"])
