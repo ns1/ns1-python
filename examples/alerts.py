@@ -35,14 +35,14 @@ print("Created zone: %s" % zone['name'])
 
 # Create a notifier list.
 nl = api.notifylists().create(body={
-    "name":"example",
+    "name": "example",
     "notify_list": [{
-			"type": "email",
-			"config": {
-				"email": "user@example.com"
-			}
-		}
-	]
+            "type": "email",
+            "config": {
+                "email": "user@example.com"
+            }
+        }
+    ]
 })
 print("Created notifier list with id: %s" % nl['id'])
 nl_id = nl['id']

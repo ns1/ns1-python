@@ -62,13 +62,13 @@ def test_rest_alert_list(alerts_config):
             "transfer_failed",
             "../alerting/v1beta1/alerts",
             {
-                "zone_names":["example-secondary.com"],
-                "notifier_list_ids":["6707da567cd4f300012cd7e4"]
+                "zone_names": ["example-secondary.com"],
+                "notifier_list_ids": ["6707da567cd4f300012cd7e4"]
             }
         )
     ],
 )
-def test_rest_alert_create(alerts_config, name, type, subtype, url, alert_params ):
+def test_rest_alert_create(alerts_config, name, type, subtype, url, alert_params):
     a = ns1.rest.alerts.Alerts(alerts_config)
     a._make_request = mock.MagicMock()
     a.create(name=name, type=type, subtype=subtype, **alert_params)
@@ -83,6 +83,7 @@ def test_rest_alert_create(alerts_config, name, type, subtype, url, alert_params
         callback=None,
         errback=None,
     )
+
 
 @pytest.mark.parametrize(
     "alert_id, url",
@@ -104,6 +105,7 @@ def test_rest_alert_update(alerts_config, alert_id, url):
         body=expectedBody,
     )
 
+
 @pytest.mark.parametrize("alert_id, url", [("9d51efb4-a012-43b0-bcd9-6fad45227baf", "../alerting/v1beta1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf")])
 def test_rest_alert_delete(alerts_config, alert_id, url):
     a = ns1.rest.alerts.Alerts(alerts_config)
@@ -112,6 +114,7 @@ def test_rest_alert_delete(alerts_config, alert_id, url):
     a._make_request.assert_called_once_with(
         "DELETE", url, callback=None, errback=None
     )
+
 
 # Alerts have a alerts/<id>/test endpoint to verify the attached notifiers work
 @pytest.mark.parametrize("alert_id, url", [("9d51efb4-a012-43b0-bcd9-6fad45227baf", "../alerting/v1beta1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf/test")])
@@ -123,22 +126,23 @@ def test_rest_alert_do_test(alerts_config, alert_id, url):
         "POST", url, callback=None, errback=None
     )
 
+
 def test_rest_alerts_buildbody(alerts_config):
     a = ns1.rest.alerts.Alerts(alerts_config)
     alert_id = "9d51efb4-a012-43b0-bcd9-6fad45227baf"
     kwargs = {
         "data": {"max": 80, "min": 20},
         "name": "newName",
-        "notifier_list_ids": ["6707da567cd4f300012cd7e4","6707da567cd4f300012cd7e6"],
-        "record_ids": ["6707da567cd4f300012cd7d4","6707da567cd4f300012cd7d9"],
-        "zone_names":["www.example.com", "mail.example.com"],
+        "notifier_list_ids": ["6707da567cd4f300012cd7e4", "6707da567cd4f300012cd7e6"],
+        "record_ids": ["6707da567cd4f300012cd7d4", "6707da567cd4f300012cd7d9"],
+        "zone_names": ["www.example.com", "mail.example.com"],
     }
     expectedBody = {
         "id": alert_id,
         "name": "newName",
         "data": {"max": 80, "min": 20},
-        "notifier_list_ids": ["6707da567cd4f300012cd7e4","6707da567cd4f300012cd7e6"],
-        "record_ids": ["6707da567cd4f300012cd7d4","6707da567cd4f300012cd7d9"],
-        "zone_names":["www.example.com", "mail.example.com"],
+        "notifier_list_ids": ["6707da567cd4f300012cd7e4", "6707da567cd4f300012cd7e6"],
+        "record_ids": ["6707da567cd4f300012cd7d4", "6707da567cd4f300012cd7d9"],
+        "zone_names": ["www.example.com", "mail.example.com"],
     }
     assert a._buildBody(alert_id, **kwargs) == expectedBody
