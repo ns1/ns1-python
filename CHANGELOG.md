@@ -1,4 +1,4 @@
-## 0.21.1 (Oct 29th, 2024)
+## 0.22.0 (Oct 29th, 2024)
 
 ENHANCEMENTS:
 * Adds support for specifying a list of views when creating zones with or without a provided zone file.
