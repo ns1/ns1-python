@@ -43,7 +43,7 @@ class Zones(resource.BaseResource):
         params = self._buildImportParams(kwargs)
         return self._make_request(
             "PUT",
-            "import/zonefile/{}".format(zone),
+            f"import/zonefile/{zone}",
             files=files,
             params=params,
             callback=callback,
@@ -57,7 +57,7 @@ class Zones(resource.BaseResource):
         # parameter but the zonefile API expects parameters containing comma
         # seperated values.
         if fields.get("networks") is not None:
-            networks_strs = map(str, fields["networks"])
+            networks_strs = [str(network) for network in fields["networks"]]
             networks_param = ",".join(networks_strs)
             params["networks"] = networks_param
         if fields.get("views") is not None:
@@ -73,7 +73,7 @@ class Zones(resource.BaseResource):
             name = zone
         return self._make_request(
             "PUT",
-            "{}/{}".format(self.ROOT, name),
+            f"{self.ROOT}/{name}",
             body=body,
             callback=callback,
             errback=errback,
