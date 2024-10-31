@@ -21,8 +21,14 @@ class Zones(resource.BaseResource):
         "link",
         "primary_master",
         "tags",
+        "views",
     ]
     BOOL_FIELDS = ["dnssec"]
+
+    ZONEFILE_FIELDS = [
+        "networks",
+        "views",
+    ]
 
     def _buildBody(self, zone, **kwargs):
         body = {}
@@ -34,19 +40,40 @@ class Zones(resource.BaseResource):
         self, zone, zoneFile, callback=None, errback=None, **kwargs
     ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
+        params = self._buildImportParams(kwargs)
         return self._make_request(
             "PUT",
-            "import/zonefile/%s" % (zone),
+            f"import/zonefile/{zone}",
             files=files,
+            params=params,
             callback=callback,
             errback=errback,
         )
 
-    def create(self, zone, callback=None, errback=None, **kwargs):
+    # Extra import args are specified as query parameters not fields in a JSON object.
+    def _buildImportParams(self, fields):
+        params = {}
+        # Arrays of values should be passed as multiple instances of the same
+        # parameter but the zonefile API expects parameters containing comma
+        # seperated values.
+        if fields.get("networks") is not None:
+            networks_strs = [str(network) for network in fields["networks"]]
+            networks_param = ",".join(networks_strs)
+            params["networks"] = networks_param
+        if fields.get("views") is not None:
+            views_param = ",".join(fields["views"])
+            params["views"] = views_param
+        if fields.get("name") is not None:
+            params["name"] = fields.get("name")
+        return params
+
+    def create(self, zone, callback=None, errback=None, name=None, **kwargs):
         body = self._buildBody(zone, **kwargs)
+        if name is None:
+            name = zone
         return self._make_request(
             "PUT",
-            "%s/%s" % (self.ROOT, zone),
+            f"{self.ROOT}/{name}",
             body=body,
             callback=callback,
             errback=errback,

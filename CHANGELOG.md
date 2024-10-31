@@ -1,3 +1,10 @@
+## 0.22.0 (Oct 29th, 2024)
+
+ENHANCEMENTS:
+* Adds support for specifying a list of views when creating zones with or without a provided zone file.
+* Adds support for specifying a zone name other than the FQDN when creating zones with or without a provided zone file.
+* A specified list of networks for a zone was only applied to zone creation when a zone file was not provided. 
+
 ## 0.21.0 (July 19th, 2024)
 
 ENHANCEMENTS:
