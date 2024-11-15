@@ -35,7 +35,7 @@ zone = api.createZone("example.com", nx_ttl=3600)
 redirect_https = redirects.create(
     domain="source.domain.example.com",
     path="/path",
-    target="https://www.ibm.com/products/ns1-connect"
+    target="https://www.ibm.com/products/ns1-connect",
 )
 
 # an http redirect, http://domain/path -> target, will not hold any certificate for the domain
@@ -67,11 +67,11 @@ redirect_allsettings = redirects.create(
 ##########
 
 # search; we can also use list() to get all redirects
-reds = redirects.searchSource('example.com')
-print(reds['total'], len(reds['results']))
+reds = redirects.searchSource("example.com")
+print(reds["total"], len(reds["results"]))
 
-certs = certificates.search('example.com')
-print(certs['total'], len(certs['results']))
+certs = certificates.search("example.com")
+print(certs["total"], len(certs["results"]))
 
 #################
 # READ / UPDATE #
@@ -93,13 +93,13 @@ print(redirect_tmp)
 ##########
 
 # delete redirects
-redirects.delete(redirect_https['id'])
-redirects.delete(redirect_http['id'])
-redirects.delete(redirect_allsettings['id'])
+redirects.delete(redirect_https["id"])
+redirects.delete(redirect_http["id"])
+redirects.delete(redirect_allsettings["id"])
 
 # also revoke certificate;
 # note that the domain in redirect_http is the same so the certificate is also the same
 certificates.delete(redirect_https["certificate_id"])
 certificates.delete(redirect_allsettings["certificate_id"])
 
-api.zones().delete('example.com')
+api.zones().delete("example.com")
