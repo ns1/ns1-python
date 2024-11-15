@@ -59,7 +59,7 @@ redirect_allsettings = redirects.create(
     query_forwarding=False,
     forwarding_mode="all",
     forwarding_type="permanent",
-    tags=["test","me"],
+    tags=["test", "me"],
 )
 
 ##########
@@ -68,10 +68,10 @@ redirect_allsettings = redirects.create(
 
 # search; we can also use list() to get all redirects
 reds = redirects.searchSource('example.com')
-print (reds['total'], len(reds['results']))
+print(reds['total'], len(reds['results']))
 
 certs = certificates.search('example.com')
-print (certs['total'], len(certs['results']))
+print(certs['total'], len(certs['results']))
 
 #################
 # READ / UPDATE #
