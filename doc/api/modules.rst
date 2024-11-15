@@ -9,3 +9,4 @@ ns1 package
    zones
    records
    rest
+   redirect
