@@ -47,3 +47,8 @@ A thin layer over the NS1 REST API
     :members:
     :undoc-members:
     :show-inheritance:
+
+.. automodule:: ns1.rest.redirect
+    :members:
+    :undoc-members:
+    :show-inheritance:
