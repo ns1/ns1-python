@@ -73,6 +73,17 @@ def test_rest_alert_list(alerts_config):
                 "zone_names": ["example-secondary.com"],
                 "notifier_list_ids": ["6707da567cd4f300012cd7e4"],
             },
+        ),
+        (
+            "test_alert_with_data",
+            "zone",
+            "transfer_failed",
+            "../alerting/v1/alerts",
+            {
+                "zone_names": ["example-secondary.com"],
+                "notifier_list_ids": ["6707da567cd4f300012cd7e4"],
+                "data": {"min": 20, "max":80}
+            },
         )
     ],
 )
