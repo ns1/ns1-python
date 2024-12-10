@@ -7,7 +7,7 @@ from . import resource
 
 
 class Alerts(resource.BaseResource):
-    ROOT = "../alerting/v1beta1/alerts"
+    ROOT = "../alerting/v1/alerts"
     PASSTHRU_FIELDS = [
         "name",
         "data",

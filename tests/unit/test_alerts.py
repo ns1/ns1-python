@@ -35,7 +35,7 @@ def alerts_config(config):
     [
         (
             "9d51efb4-a012-43b0-bcd9-6fad45227baf",
-            "../alerting/v1beta1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf",
+            "../alerting/v1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf",
         )
     ],
 )
@@ -54,7 +54,7 @@ def test_rest_alert_list(alerts_config):
     a.list()
     a._make_request.assert_called_once_with(
         "GET",
-        "../alerting/v1beta1/alerts",
+        "../alerting/v1/alerts",
         callback=None,
         errback=None,
         pagination_handler=ns1.rest.alerts.alert_list_pagination,
@@ -68,7 +68,7 @@ def test_rest_alert_list(alerts_config):
             "test_alert",
             "zone",
             "transfer_failed",
-            "../alerting/v1beta1/alerts",
+            "../alerting/v1/alerts",
             {
                 "zone_names": ["example-secondary.com"],
                 "notifier_list_ids": ["6707da567cd4f300012cd7e4"],
@@ -100,7 +100,7 @@ def test_rest_alert_create(
     [
         (
             "9d51efb4-a012-43b0-bcd9-6fad45227baf",
-            "../alerting/v1beta1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf",
+            "../alerting/v1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf",
         )
     ],
 )
@@ -123,7 +123,7 @@ def test_rest_alert_update(alerts_config, alert_id, url):
     [
         (
             "9d51efb4-a012-43b0-bcd9-6fad45227baf",
-            "../alerting/v1beta1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf",
+            "../alerting/v1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf",
         )
     ],
 )
@@ -142,7 +142,7 @@ def test_rest_alert_delete(alerts_config, alert_id, url):
     [
         (
             "9d51efb4-a012-43b0-bcd9-6fad45227baf",
-            "../alerting/v1beta1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf/test",
+            "../alerting/v1/alerts/9d51efb4-a012-43b0-bcd9-6fad45227baf/test",
         )
     ],
 )
