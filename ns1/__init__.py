@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright (c) 2014, 2024 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -231,6 +231,16 @@ class NS1:
         import ns1.rest.redirect
 
         return ns1.rest.redirect.RedirectCertificates(self.config)
+
+    def alerts(self):
+        """
+        Return a new raw REST interface to alert resources
+
+        :rtype: :py:class:`ns1.rest.alerts.Alerts`
+        """
+        import ns1.rest.alerts
+
+        return ns1.rest.alerts.Alerts(self.config)
 
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
