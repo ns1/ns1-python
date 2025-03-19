@@ -1,3 +1,8 @@
+## 0.24.0 (March 20th, 2025)
+
+ENHANCEMENTS:
+* Adds support for BillingUsage
+
 ## 0.23.0 (Dec 9th, 2024)
 
 ENHANCEMENTS:

@@ -1,11 +1,11 @@
 #
-# Copyright (c) 2014, 2024 NSONE, Inc.
+# Copyright (c) 2014, 2025 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 from .config import Config
 
-version = "0.23.0"
+version = "0.24.0"
 
 
 class NS1:
@@ -241,6 +241,15 @@ class NS1:
         import ns1.rest.alerts
 
         return ns1.rest.alerts.Alerts(self.config)
+
+    def billing_usage(self):
+        """
+        Return a new raw REST interface to BillingUsage resources
+        :rtype: :py:class:`ns1.rest.billing_usage.BillingUsage`
+        """
+        import ns1.rest.billing_usage
+
+        return ns1.rest.billing_usage.BillingUsage(self.config)
 
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):

@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright (c) 2014, 2025 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -56,7 +56,21 @@ class BaseResource:
                 body[f] = fields[f]
 
     def _make_url(self, path):
-        return self._config.getEndpoint() + path
+        if self._config['api_version_before_resource']:
+            return "%s/%s/%s" % (
+                self._config.getEndpoint(),
+                self._config['api_version'],
+                path,
+            )
+
+        resource, sub_resource = path.split("/", 1)
+
+        return "%s/%s/%s/%s" % (
+            self._config.getEndpoint(),
+            resource,
+            self._config['api_version'],
+            sub_resource,
+        )
 
     def _make_request(self, type, path, **kwargs):
         VERBS = ["GET", "POST", "DELETE", "PUT"]

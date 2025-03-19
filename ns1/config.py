@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright (c) 2014, 2025 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -45,6 +45,10 @@ class Config:
 
     API_VERSION = "v1"
 
+    # API_VERSION_BEFORE_RESOURCE is a flag that determines whether the API_VERSION should go before the resource in the URL
+    # Example: https://api.nsone.net/v1/zones vs https://api.nsone.net/zones/v1
+    API_VERSION_BEFORE_RESOURCE = True
+
     DEFAULT_CONFIG_FILE = "~/.nsone"
 
     def __init__(self, path=None):
@@ -71,6 +75,9 @@ class Config:
 
         if "api_version" not in self._data:
             self._data["api_version"] = self.API_VERSION
+
+        if "api_version_before_resource" not in self._data:
+            self._data["api_version_before_resource"] = self.API_VERSION_BEFORE_RESOURCE
 
         if "cli" not in self._data:
             self._data["cli"] = {}
@@ -243,7 +250,7 @@ class Config:
         else:
             endpoint = self._data["endpoint"]
 
-        return "https://%s%s/%s/" % (endpoint, port, self._data["api_version"])
+        return "https://%s%s" % (endpoint, port)
 
     def getRateLimitingFunc(self):
         """
