@@ -1,6 +1,5 @@
 import pytest
 
-import ns1.rest.billing_usage
 from ns1 import NS1
 
 try:  # Python 3.3 +
@@ -99,7 +98,7 @@ def test_rest_get_billing_usage_for_monitors(billing_usage_config, url):
 
 
 @pytest.mark.parametrize("url", [("billing-usage/limits")])
-def test_rest_get_billing_usage_for_monitors(billing_usage_config, url):
+def test_rest_get_billing_usage_limits(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
     z.getLimits(fromUnix=123, toUnix=456)
