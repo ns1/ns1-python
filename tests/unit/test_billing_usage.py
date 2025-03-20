@@ -4,6 +4,7 @@ from ns1 import NS1
 
 import unittest.mock as mock
 
+
 @pytest.fixture
 def billing_usage_config(config):
     config.loadFromDict(
