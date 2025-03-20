@@ -247,9 +247,9 @@ class TwistedTransport(TransportBase):
 
             if headers is None:
                 headers = {}
-            headers[
-                "Content-Type"
-            ] = "multipart/form-data; boundary={}".format(boundary)
+            headers["Content-Type"] = (
+                "multipart/form-data; boundary={}".format(boundary)
+            )
             bProducer = FileBodyProducer(StringIO.StringIO(body))
 
         theaders = (

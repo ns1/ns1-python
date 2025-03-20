@@ -13,7 +13,6 @@ class RecordException(Exception):
 
 
 class Record(object):
-
     """
     High level object representing a Record
     """
