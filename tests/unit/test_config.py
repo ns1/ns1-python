@@ -82,5 +82,5 @@ def test_load_from_str(config):
     assert config.getCurrentKeyID() == key_cfg["default_key"]
     assert config["keys"] == key_cfg["keys"]
     assert config.getAPIKey() == key_cfg["keys"][key_cfg["default_key"]]["key"]
-    endpoint = "https://%s" % defaults["endpoint"]
+    endpoint = f'https://{defaults["endpoint"]}'
     assert config.getEndpoint() == endpoint

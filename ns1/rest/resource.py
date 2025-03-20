@@ -57,20 +57,11 @@ class BaseResource:
 
     def _make_url(self, path):
         if self._config["api_version_before_resource"]:
-            return "%s/%s/%s" % (
-                self._config.getEndpoint(),
-                self._config["api_version"],
-                path,
-            )
+            return f"{self._config.getEndpoint()}/{self._config['api_version']}/{path}"
 
         resource, sub_resource = path.split("/", 1)
 
-        return "%s/%s/%s/%s" % (
-            self._config.getEndpoint(),
-            resource,
-            self._config["api_version"],
-            sub_resource,
-        )
+        return f"{self._config.getEndpoint()}/{resource}/{self._config['api_version']}/{sub_resource}"
 
     def _make_request(self, type, path, **kwargs):
         VERBS = ["GET", "POST", "DELETE", "PUT"]

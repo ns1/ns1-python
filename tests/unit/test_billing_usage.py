@@ -2,11 +2,7 @@ import pytest
 
 from ns1 import NS1
 
-try:  # Python 3.3 +
-    import unittest.mock as mock
-except ImportError:
-    import mock
-
+import unittest.mock as mock
 
 @pytest.fixture
 def billing_usage_config(config):

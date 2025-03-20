@@ -5,6 +5,7 @@
 #
 
 from ns1 import NS1
+import datetime
 
 # NS1 will use config in ~/.nsone by default
 api = NS1()
@@ -18,11 +19,14 @@ api = NS1()
 
 config = api.config
 
+from_unix = int(datetime.datetime.fromisoformat("2025-02-01 00:00:00").strftime("%s"))
+to_unix = int(datetime.datetime.fromisoformat("2025-02-28 23:59:59").strftime("%s"))
+
 ############################
 # GET BILLING USAGE LIMITS #
 ############################
 
-limits = api.billing_usage().getLimits(fromUnix=1738368000, toUnix=1740614400)
+limits = api.billing_usage().getLimits(from_unix, to_unix)
 print("### USAGE LIMITS ###")
 print(limits)
 print("####################")
@@ -31,9 +35,7 @@ print("####################")
 # GET BILLING USAGE FOR QUERIES   #
 ###################################
 
-usg = api.billing_usage().getQueriesUsage(
-    fromUnix=1738368000, toUnix=1740614400
-)
+usg = api.billing_usage().getQueriesUsage(from_unix, to_unix)
 print("### QUERIES USAGE ###")
 print(usg)
 print("####################")
@@ -42,9 +44,7 @@ print("####################")
 # GET BILLING USAGE FOR DECISIONS #
 ###################################
 
-usg = api.billing_usage().getDecisionsUsage(
-    fromUnix=1738368000, toUnix=1740614400
-)
+usg = api.billing_usage().getDecisionsUsage(from_unix, to_unix)
 print("### DECISIONS USAGE ###")
 print(usg)
 print("####################")

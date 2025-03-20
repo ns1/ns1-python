@@ -15,28 +15,28 @@ class BillingUsage(resource.BaseResource):
         config["api_version_before_resource"] = False
         super(BillingUsage, self).__init__(config)
 
-    def getQueriesUsage(self, fromUnix, toUnix, callback=None, errback=None):
+    def getQueriesUsage(self, from_unix, to_unix, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/queries" % self.ROOT,
+            f"{self.ROOT}/queries",
             callback=callback,
             errback=errback,
-            params={"from": fromUnix, "to": toUnix},
+            params={"from": from_unix, "to": to_unix},
         )
 
-    def getDecisionsUsage(self, fromUnix, toUnix, callback=None, errback=None):
+    def getDecisionsUsage(self, from_unix, to_unix, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/decisions" % self.ROOT,
+            f"{self.ROOT}/decisions",
             callback=callback,
             errback=errback,
-            params={"from": fromUnix, "to": toUnix},
+            params={"from": from_unix, "to": to_unix},
         )
 
     def getRecordsUsage(self, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/records" % self.ROOT,
+            f"{self.ROOT}/records",
             callback=callback,
             errback=errback,
             params={},
@@ -45,7 +45,7 @@ class BillingUsage(resource.BaseResource):
     def getMonitorsUsage(self, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/monitors" % self.ROOT,
+            f"{self.ROOT}/monitors",
             callback=callback,
             errback=errback,
             params={},
@@ -54,17 +54,17 @@ class BillingUsage(resource.BaseResource):
     def getFilterChainsUsage(self, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/filter-chains" % self.ROOT,
+            f"{self.ROOT}/filter-chains",
             callback=callback,
             errback=errback,
             params={},
         )
 
-    def getLimits(self, fromUnix, toUnix, callback=None, errback=None):
+    def getLimits(self, from_unix, to_unix, callback=None, errback=None):
         return self._make_request(
             "GET",
-            "%s/limits" % self.ROOT,
+            f"{self.ROOT}/limits",
             callback=callback,
             errback=errback,
-            params={"from": fromUnix, "to": toUnix},
+            params={"from": from_unix, "to": to_unix},
         )

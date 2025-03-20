@@ -251,7 +251,7 @@ class Config:
         else:
             endpoint = self._data["endpoint"]
 
-        return "https://%s%s" % (endpoint, port)
+        return f"https://{endpoint}{port}"
 
     def getRateLimitingFunc(self):
         """
