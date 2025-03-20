@@ -12,7 +12,6 @@ class MonitorException(Exception):
 
 
 class Monitor(object):
-
     """
     High level object representing a Monitor
     """
