@@ -19,8 +19,12 @@ api = NS1()
 
 config = api.config
 
-from_unix = int(datetime.datetime.fromisoformat("2025-02-01 00:00:00").strftime("%s"))
-to_unix = int(datetime.datetime.fromisoformat("2025-02-28 23:59:59").strftime("%s"))
+from_unix = int(
+    datetime.datetime.fromisoformat("2025-02-01 00:00:00").strftime("%s")
+)
+to_unix = int(
+    datetime.datetime.fromisoformat("2025-02-28 23:59:59").strftime("%s")
+)
 
 ############################
 # GET BILLING USAGE LIMITS #

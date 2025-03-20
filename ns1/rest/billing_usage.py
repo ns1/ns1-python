@@ -24,7 +24,9 @@ class BillingUsage(resource.BaseResource):
             params={"from": from_unix, "to": to_unix},
         )
 
-    def getDecisionsUsage(self, from_unix, to_unix, callback=None, errback=None):
+    def getDecisionsUsage(
+        self, from_unix, to_unix, callback=None, errback=None
+    ):
         return self._make_request(
             "GET",
             f"{self.ROOT}/decisions",
