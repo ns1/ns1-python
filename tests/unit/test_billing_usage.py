@@ -28,7 +28,7 @@ def billing_usage_config(config):
 def test_rest_get_billing_usage_for_queries(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
-    z.getQueriesUsage(fromUnix=123, toUnix=456)
+    z.getQueriesUsage(from_unix=123, to_unix=456)
     z._make_request.assert_called_once_with(
         "GET",
         url,
@@ -42,7 +42,7 @@ def test_rest_get_billing_usage_for_queries(billing_usage_config, url):
 def test_rest_get_billing_usage_for_decisions(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
-    z.getDecisionsUsage(fromUnix=123, toUnix=456)
+    z.getDecisionsUsage(from_unix=123, to_unix=456)
     z._make_request.assert_called_once_with(
         "GET",
         url,
@@ -98,7 +98,7 @@ def test_rest_get_billing_usage_for_monitors(billing_usage_config, url):
 def test_rest_get_billing_usage_limits(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
-    z.getLimits(fromUnix=123, toUnix=456)
+    z.getLimits(from_unix=123, to_unix=456)
     z._make_request.assert_called_once_with(
         "GET",
         url,
