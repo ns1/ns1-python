@@ -56,10 +56,10 @@ class BaseResource:
                 body[f] = fields[f]
 
     def _make_url(self, path):
-        if self._config['api_version_before_resource']:
+        if self._config["api_version_before_resource"]:
             return "%s/%s/%s" % (
                 self._config.getEndpoint(),
-                self._config['api_version'],
+                self._config["api_version"],
                 path,
             )
 
@@ -68,7 +68,7 @@ class BaseResource:
         return "%s/%s/%s/%s" % (
             self._config.getEndpoint(),
             resource,
-            self._config['api_version'],
+            self._config["api_version"],
             sub_resource,
         )
 

@@ -12,7 +12,7 @@ class BillingUsage(resource.BaseResource):
 
     def __init__(self, config):
         config = copy.deepcopy(config)
-        config['api_version_before_resource'] = False
+        config["api_version_before_resource"] = False
         super(BillingUsage, self).__init__(config)
 
     def getQueriesUsage(self, fromUnix, toUnix, callback=None, errback=None):
@@ -21,7 +21,7 @@ class BillingUsage(resource.BaseResource):
             "%s/queries" % self.ROOT,
             callback=callback,
             errback=errback,
-            params={'from': fromUnix, 'to': toUnix},
+            params={"from": fromUnix, "to": toUnix},
         )
 
     def getDecisionsUsage(self, fromUnix, toUnix, callback=None, errback=None):
@@ -30,7 +30,7 @@ class BillingUsage(resource.BaseResource):
             "%s/decisions" % self.ROOT,
             callback=callback,
             errback=errback,
-            params={'from': fromUnix, 'to': toUnix},
+            params={"from": fromUnix, "to": toUnix},
         )
 
     def getRecordsUsage(self, callback=None, errback=None):
@@ -66,5 +66,5 @@ class BillingUsage(resource.BaseResource):
             "%s/limits" % self.ROOT,
             callback=callback,
             errback=errback,
-            params={'from': fromUnix, 'to': toUnix},
+            params={"from": fromUnix, "to": toUnix},
         )

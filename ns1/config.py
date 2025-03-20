@@ -77,7 +77,9 @@ class Config:
             self._data["api_version"] = self.API_VERSION
 
         if "api_version_before_resource" not in self._data:
-            self._data["api_version_before_resource"] = self.API_VERSION_BEFORE_RESOURCE
+            self._data[
+                "api_version_before_resource"
+            ] = self.API_VERSION_BEFORE_RESOURCE
 
         if "cli" not in self._data:
             self._data["cli"] = {}

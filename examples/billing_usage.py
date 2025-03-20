@@ -31,7 +31,9 @@ print("####################")
 # GET BILLING USAGE FOR QUERIES   #
 ###################################
 
-usg = api.billing_usage().getQueriesUsage(fromUnix=1738368000, toUnix=1740614400)
+usg = api.billing_usage().getQueriesUsage(
+    fromUnix=1738368000, toUnix=1740614400
+)
 print("### QUERIES USAGE ###")
 print(usg)
 print("####################")
@@ -40,7 +42,9 @@ print("####################")
 # GET BILLING USAGE FOR DECISIONS #
 ###################################
 
-usg = api.billing_usage().getDecisionsUsage(fromUnix=1738368000, toUnix=1740614400)
+usg = api.billing_usage().getDecisionsUsage(
+    fromUnix=1738368000, toUnix=1740614400
+)
 print("### DECISIONS USAGE ###")
 print(usg)
 print("####################")
