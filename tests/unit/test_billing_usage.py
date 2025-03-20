@@ -24,7 +24,7 @@ def billing_usage_config(config):
     return config
 
 
-@pytest.mark.parametrize("url", [("billing-usage/queries")])
+@pytest.mark.parametrize("url", ["billing-usage/queries"])
 def test_rest_get_billing_usage_for_queries(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
@@ -38,7 +38,7 @@ def test_rest_get_billing_usage_for_queries(billing_usage_config, url):
     )
 
 
-@pytest.mark.parametrize("url", [("billing-usage/decisions")])
+@pytest.mark.parametrize("url", ["billing-usage/decisions"])
 def test_rest_get_billing_usage_for_decisions(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
@@ -52,7 +52,7 @@ def test_rest_get_billing_usage_for_decisions(billing_usage_config, url):
     )
 
 
-@pytest.mark.parametrize("url", [("billing-usage/records")])
+@pytest.mark.parametrize("url", ["billing-usage/records"])
 def test_rest_get_billing_usage_for_records(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
@@ -66,7 +66,7 @@ def test_rest_get_billing_usage_for_records(billing_usage_config, url):
     )
 
 
-@pytest.mark.parametrize("url", [("billing-usage/filter-chains")])
+@pytest.mark.parametrize("url", ["billing-usage/filter-chains"])
 def test_rest_get_billing_usage_for_filter_chains(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
@@ -80,7 +80,7 @@ def test_rest_get_billing_usage_for_filter_chains(billing_usage_config, url):
     )
 
 
-@pytest.mark.parametrize("url", [("billing-usage/monitors")])
+@pytest.mark.parametrize("url", ["billing-usage/monitors"])
 def test_rest_get_billing_usage_for_monitors(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
@@ -94,7 +94,7 @@ def test_rest_get_billing_usage_for_monitors(billing_usage_config, url):
     )
 
 
-@pytest.mark.parametrize("url", [("billing-usage/limits")])
+@pytest.mark.parametrize("url", ["billing-usage/limits"])
 def test_rest_get_billing_usage_limits(billing_usage_config, url):
     z = NS1(config=billing_usage_config).billing_usage()
     z._make_request = mock.MagicMock()
