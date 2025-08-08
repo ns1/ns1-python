@@ -193,14 +193,15 @@ def test_rest_zone_import_file(zones_config, zone, name, url, networks, views):
 
 
 @pytest.mark.parametrize(
-    "zone, url", [("test.zone", "zones/test.zone/versions?force=false")]
+    "zone, url, name",
+    [("test.zone", "zones/test.zone/versions?force=false", "new.zone")],
 )
-def test_rest_zone_version_create(zones_config, zone, url):
+def test_rest_zone_version_create(zones_config, zone, url, name):
     z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
-    z.create_version(zone)
+    z.create_version(zone, name=name)
     z._make_request.assert_called_once_with(
-        "PUT", url, params={}, callback=None, errback=None
+        "PUT", url, body={"name": name}, callback=None, errback=None
     )
 
 

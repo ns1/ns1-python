@@ -147,14 +147,21 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create_version(self, zone, force=False, callback=None, errback=None):
+    def create_version(
+        self, zone, force=False, callback=None, errback=None, name=None
+    ):
+        if name is None:
+            name = zone
+        body = {}
+        body["name"] = name
+
         request = "{}/{}/versions?force={}".format(
             self.ROOT, zone, str.lower(str(force))
         )
         return self._make_request(
             "PUT",
             request,
-            params={},
+            body=body,
             callback=callback,
             errback=errback,
         )
