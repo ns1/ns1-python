@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.24.0"
+version = "0.25.0"
 
 
 class NS1:
@@ -241,6 +241,22 @@ class NS1:
         import ns1.rest.alerts
 
         return ns1.rest.alerts.Alerts(self.config)
+
+    def alerting(self):
+        """
+        Return the alerting namespace for accessing alerting features
+
+        :return: Alerting namespace
+        """
+        from ns1.alerting import UsageAlertsAPI
+        
+        # Create or reuse the alerting namespace
+        ns = getattr(self, "_alerting_ns", None)
+        if ns is None:
+            ns = type("AlertingNS", (), {})()
+            ns.usage = UsageAlertsAPI(self)
+            setattr(self, "_alerting_ns", ns)
+        return ns
 
     def billing_usage(self):
         """
