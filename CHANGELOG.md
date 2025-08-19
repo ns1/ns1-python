@@ -1,3 +1,8 @@
+## 0.25.0 (August 20th, 2025)
+
+ENHANCEMENTS:
+* Adds support for new Alerts
+
 ## 0.24.0 (March 20th, 2025)
 
 ENHANCEMENTS:
