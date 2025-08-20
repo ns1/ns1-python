@@ -11,7 +11,8 @@ def _validate(name: str, subtype: str, alert_at_percent: int) -> None:
         raise ValueError("name required")
     if subtype not in USAGE_SUBTYPES:
         raise ValueError("invalid subtype")
-    if not isinstance(alert_at_percent, int) or not (1 <= alert_at_percent <= 100):
+    if not isinstance(alert_at_percent, int) or not (
+            1 <= alert_at_percent <= 100):
         raise ValueError("data.alert_at_percent must be int in 1..100")
 
 
@@ -21,6 +22,7 @@ class UsageAlertsAPI:
     Server rules: type='account'; data.alert_at_percent in 1..100;
     PATCH must not include type/subtype; zone_names/notifier_list_ids may be [].
     """
+
     def __init__(self, client) -> None:
         self._c = client
 
@@ -53,7 +55,8 @@ class UsageAlertsAPI:
         if name is not None:
             patch["name"] = name
         if alert_at_percent is not None:
-            if not isinstance(alert_at_percent, int) or not (1 <= alert_at_percent <= 100):
+            if not isinstance(alert_at_percent, int) or not (
+                    1 <= alert_at_percent <= 100):
                 raise ValueError("data.alert_at_percent must be int in 1..100")
             patch["data"] = {"alert_at_percent": int(alert_at_percent)}
         if notifier_list_ids is not None:

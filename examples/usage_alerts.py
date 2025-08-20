@@ -31,11 +31,10 @@ c.loadFromDict(config)
 client = NS1(config=c)
 
 
-
 # Usage Alerts API Examples
 def usage_alerts_example():
     print("\n=== Usage Alerts Examples ===\n")
-    
+
     # List all usage alerts
     print("Listing usage alerts:")
     try:
@@ -45,7 +44,7 @@ def usage_alerts_example():
             print(f"  {i+1}. {alert.get('name')} (id: {alert.get('id')})")
     except Exception as e:
         print(f"Error listing alerts: {e}")
-    
+
     # Create a usage alert
     print("\nCreating a usage alert:")
     try:
@@ -62,7 +61,7 @@ def usage_alerts_example():
     except Exception as e:
         print(f"Error creating alert: {e}")
         return
-    
+
     # Update the alert
     print("\nUpdating the alert threshold to 90%:")
     try:
@@ -74,7 +73,7 @@ def usage_alerts_example():
         print(f"New threshold: {updated['data']['alert_at_percent']}%")
     except Exception as e:
         print(f"Error updating alert: {e}")
-    
+
     # Get alert details
     print("\nGetting alert details:")
     try:
@@ -82,7 +81,7 @@ def usage_alerts_example():
         print(f"Alert details: {json.dumps(details, indent=2)}")
     except Exception as e:
         print(f"Error getting alert: {e}")
-    
+
     # Delete the alert
     print("\nDeleting the alert:")
     try:
@@ -92,11 +91,10 @@ def usage_alerts_example():
         print(f"Error deleting alert: {e}")
 
 
-
 # Test validation failures
 def test_validation():
     print("\n=== Validation Tests ===\n")
-    
+
     # Test invalid subtype
     print("Testing invalid subtype:")
     try:
@@ -107,7 +105,7 @@ def test_validation():
         )
     except ValueError as e:
         print(f"Validation error (expected): {e}")
-    
+
     # Test threshold too low
     print("\nTesting threshold too low (0):")
     try:
@@ -118,7 +116,7 @@ def test_validation():
         )
     except ValueError as e:
         print(f"Validation error (expected): {e}")
-    
+
     # Test threshold too high
     print("\nTesting threshold too high (101):")
     try:
@@ -131,13 +129,12 @@ def test_validation():
         print(f"Validation error (expected): {e}")
 
 
-
 if __name__ == '__main__':
     print("Usage Alerts API Examples")
     print("-" * 30)
     print("Note: To run against the actual API, set the NS1_APIKEY environment variable")
     print("Otherwise, this will run against a mock API endpoint")
-    
+
     # Run examples
     usage_alerts_example()
     test_validation()
