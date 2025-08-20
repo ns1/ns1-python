@@ -26,6 +26,7 @@ def usage_alerts_client(config):
         }
     )
     from ns1 import NS1
+
     client = NS1(config=config)
     return client
 
@@ -45,7 +46,7 @@ def test_create_usage_alert(usage_alerts_client):
         "notifier_list_ids": ["n1"],
         "zone_names": [],
         "created_at": 1597937213,
-        "updated_at": 1597937213
+        "updated_at": 1597937213,
     }
 
     # Patch the client reference
@@ -54,7 +55,7 @@ def test_create_usage_alert(usage_alerts_client):
             name="Test Alert",
             subtype="query_usage",
             alert_at_percent=85,
-            notifier_list_ids=["n1"]
+            notifier_list_ids=["n1"],
         )
 
     # Verify _post was called with correct arguments
@@ -64,10 +65,11 @@ def test_create_usage_alert(usage_alerts_client):
         "subtype": "query_usage",
         "data": {"alert_at_percent": 85},
         "notifier_list_ids": ["n1"],
-        "zone_names": []
+        "zone_names": [],
     }
     client._post.assert_called_once_with(
-        "/alerting/v1/alerts", json=expected_body)
+        "/alerting/v1/alerts", json=expected_body
+    )
 
     # Verify result
     assert alert["id"] == "a1b2c3"
@@ -91,7 +93,7 @@ def test_get_usage_alert(usage_alerts_client):
         "subtype": "query_usage",
         "data": {"alert_at_percent": 85},
         "notifier_list_ids": ["n1"],
-        "zone_names": []
+        "zone_names": [],
     }
 
     # Patch the client reference
@@ -121,24 +123,20 @@ def test_patch_usage_alert(usage_alerts_client):
         "subtype": "query_usage",
         "data": {"alert_at_percent": 90},
         "notifier_list_ids": ["n1"],
-        "zone_names": []
+        "zone_names": [],
     }
 
     # Patch the client reference
     with mock.patch.object(client.alerting().usage, "_c", client):
         alert = client.alerting().usage.patch(
-            alert_id,
-            name="Updated Alert",
-            alert_at_percent=90
+            alert_id, name="Updated Alert", alert_at_percent=90
         )
 
     # Verify _patch was called with correct arguments
-    expected_body = {
-        "name": "Updated Alert",
-        "data": {"alert_at_percent": 90}
-    }
+    expected_body = {"name": "Updated Alert", "data": {"alert_at_percent": 90}}
     client._patch.assert_called_once_with(
-        f"/alerting/v1/alerts/{alert_id}", json=expected_body)
+        f"/alerting/v1/alerts/{alert_id}", json=expected_body
+    )
 
     # Verify type/subtype are not in the arguments
     call_args = client._patch.call_args[1]["json"]
@@ -183,25 +181,20 @@ def test_list_usage_alerts(usage_alerts_client):
                 "name": "Alert 1",
                 "type": "account",
                 "subtype": "query_usage",
-                "data": {"alert_at_percent": 80}
+                "data": {"alert_at_percent": 80},
             }
-        ]
+        ],
     }
 
     # Patch the client reference
     with mock.patch.object(client.alerting().usage, "_c", client):
-        response = client.alerting().usage.list(
-            limit=1,
-            order_descending=True
-        )
+        response = client.alerting().usage.list(limit=1, order_descending=True)
 
     # Verify _get was called with correct URL and params
-    expected_params = {
-        "limit": 1,
-        "order_descending": "true"
-    }
+    expected_params = {"limit": 1, "order_descending": "true"}
     client._get.assert_called_once_with(
-        "/alerting/v1/alerts", params=expected_params)
+        "/alerting/v1/alerts", params=expected_params
+    )
 
     # Verify result
     assert "results" in response
@@ -219,27 +212,20 @@ def test_validation_threshold_bounds(usage_alerts_client):
     # Test below minimum
     with pytest.raises(ValueError) as excinfo:
         client.alerting().usage.create(
-            name="Test Alert",
-            subtype="query_usage",
-            alert_at_percent=0
+            name="Test Alert", subtype="query_usage", alert_at_percent=0
         )
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
     # Test above maximum
     with pytest.raises(ValueError) as excinfo:
         client.alerting().usage.create(
-            name="Test Alert",
-            subtype="query_usage",
-            alert_at_percent=101
+            name="Test Alert", subtype="query_usage", alert_at_percent=101
         )
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
     # Test same validation in patch
     with pytest.raises(ValueError) as excinfo:
-        client.alerting().usage.patch(
-            "a1",
-            alert_at_percent=101
-        )
+        client.alerting().usage.patch("a1", alert_at_percent=101)
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
 

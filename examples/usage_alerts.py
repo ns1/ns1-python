@@ -10,19 +10,20 @@ from ns1 import NS1
 from ns1.config import Config
 
 # Path hackery to ensure we import the local ns1 module
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                                '..')))
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+)
 
 # Create NS1 client
 config = {
-    'endpoint': 'https://api.nsone.net',
-    'default_key': 'test1',
-    'keys': {
-        'test1': {
-            'key': os.environ.get('NS1_APIKEY', 'test1'),
-            'desc': 'test key'
+    "endpoint": "https://api.nsone.net",
+    "default_key": "test1",
+    "keys": {
+        "test1": {
+            "key": os.environ.get("NS1_APIKEY", "test1"),
+            "desc": "test key",
         }
-    }
+    },
 }
 
 # Create a config from dictionary and create the client
@@ -40,7 +41,7 @@ def usage_alerts_example():
     try:
         alerts = client.alerting().usage.list(limit=10)
         print(f"Total alerts: {alerts.get('total_results', 0)}")
-        for i, alert in enumerate(alerts.get('results', [])):
+        for i, alert in enumerate(alerts.get("results", [])):
             print(f"  {i+1}. {alert.get('name')} (id: {alert.get('id')})")
     except Exception as e:
         print(f"Error listing alerts: {e}")
@@ -53,9 +54,9 @@ def usage_alerts_example():
             subtype="query_usage",
             alert_at_percent=85,
             notifier_list_ids=[],
-            zone_names=[]
+            zone_names=[],
         )
-        alert_id = alert['id']
+        alert_id = alert["id"]
         print(f"Created alert: {alert['name']} (id: {alert_id})")
         print(f"Alert details: {json.dumps(alert, indent=2)}")
     except Exception as e:
@@ -65,10 +66,7 @@ def usage_alerts_example():
     # Update the alert
     print("\nUpdating the alert threshold to 90%:")
     try:
-        updated = client.alerting().usage.patch(
-            alert_id,
-            alert_at_percent=90
-        )
+        updated = client.alerting().usage.patch(alert_id, alert_at_percent=90)
         print(f"Updated alert: {updated['name']}")
         print(f"New threshold: {updated['data']['alert_at_percent']}%")
     except Exception as e:
@@ -99,9 +97,7 @@ def test_validation():
     print("Testing invalid subtype:")
     try:
         client.alerting().usage.create(
-            name="Test alert",
-            subtype="invalid_subtype",
-            alert_at_percent=85
+            name="Test alert", subtype="invalid_subtype", alert_at_percent=85
         )
     except ValueError as e:
         print(f"Validation error (expected): {e}")
@@ -110,9 +106,7 @@ def test_validation():
     print("\nTesting threshold too low (0):")
     try:
         client.alerting().usage.create(
-            name="Test alert",
-            subtype="query_usage",
-            alert_at_percent=0
+            name="Test alert", subtype="query_usage", alert_at_percent=0
         )
     except ValueError as e:
         print(f"Validation error (expected): {e}")
@@ -121,18 +115,18 @@ def test_validation():
     print("\nTesting threshold too high (101):")
     try:
         client.alerting().usage.create(
-            name="Test alert",
-            subtype="query_usage",
-            alert_at_percent=101
+            name="Test alert", subtype="query_usage", alert_at_percent=101
         )
     except ValueError as e:
         print(f"Validation error (expected): {e}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print("Usage Alerts API Examples")
     print("-" * 30)
-    print("Note: To run against the actual API, set the NS1_APIKEY environment variable")
+    print(
+        "Note: To run against the actual API, set the NS1_APIKEY environment variable"
+    )
     print("Otherwise, this will run against a mock API endpoint")
 
     # Run examples
