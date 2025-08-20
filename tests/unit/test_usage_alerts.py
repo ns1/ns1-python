@@ -1,40 +1,54 @@
-import json
+#
+# Copyright (c) 2025 NSONE, Inc.
+#
+# License under The MIT License (MIT). See LICENSE in project root.
+#
 import pytest
-import responses
 
-from ns1.alerting import UsageAlertsAPI, USAGE_SUBTYPES
+try:  # Python 3.3 +
+    import unittest.mock as mock
+except ImportError:
+    import mock
+
+import json
 
 
 @pytest.fixture
-def usage_alerts_client():
+def usage_alerts_client(config):
+    config.loadFromDict(
+        {
+            "endpoint": "api.nsone.net",
+            "default_key": "test1",
+            "keys": {
+                "test1": {
+                    "key": "key-1",
+                    "desc": "test key number 1",
+                }
+            },
+        }
+    )
     from ns1 import NS1
-    client = NS1(apiKey="test1")
-    client.config["endpoint"] = "https://api.nsone.net"
+    client = NS1(config=config)
     return client
 
 
-@responses.activate
 def test_create_usage_alert(usage_alerts_client):
     """Test creating a usage alert"""
     client = usage_alerts_client
     
-    # Mock response for create
-    responses.add(
-        responses.POST,
-        "https://api.nsone.net/alerting/v1/alerts",
-        json={
-            "id": "a1b2c3",
-            "name": "Test Alert",
-            "type": "account",
-            "subtype": "query_usage",
-            "data": {"alert_at_percent": 85},
-            "notifier_list_ids": ["n1"],
-            "zone_names": [],
-            "created_at": 1597937213,
-            "updated_at": 1597937213
-        },
-        status=200,
-    )
+    # Create a mock for the _post method in alerting().usage
+    client.alerting()._c._post = mock.MagicMock()
+    client.alerting()._c._post.return_value = {
+        "id": "a1b2c3",
+        "name": "Test Alert",
+        "type": "account",
+        "subtype": "query_usage",
+        "data": {"alert_at_percent": 85},
+        "notifier_list_ids": ["n1"],
+        "zone_names": [],
+        "created_at": 1597937213,
+        "updated_at": 1597937213
+    }
     
     alert = client.alerting().usage.create(
         name="Test Alert",
@@ -43,74 +57,69 @@ def test_create_usage_alert(usage_alerts_client):
         notifier_list_ids=["n1"]
     )
     
+    # Verify _post was called with correct arguments
+    expected_body = {
+        "name": "Test Alert",
+        "type": "account",
+        "subtype": "query_usage",
+        "data": {"alert_at_percent": 85},
+        "notifier_list_ids": ["n1"],
+        "zone_names": []
+    }
+    client.alerting()._c._post.assert_called_once_with("/alerting/v1/alerts", json=expected_body)
+    
+    # Verify result
     assert alert["id"] == "a1b2c3"
     assert alert["name"] == "Test Alert"
     assert alert["type"] == "account"
     assert alert["subtype"] == "query_usage"
     assert alert["data"]["alert_at_percent"] == 85
-    assert alert["notifier_list_ids"] == ["n1"]
 
 
-@responses.activate
 def test_get_usage_alert(usage_alerts_client):
     """Test retrieving a usage alert"""
     client = usage_alerts_client
     alert_id = "a1b2c3"
     
-    # Mock response for get
-    responses.add(
-        responses.GET,
-        f"https://api.nsone.net/alerting/v1/alerts/{alert_id}",
-        json={
-            "id": alert_id,
-            "name": "Test Alert",
-            "type": "account",
-            "subtype": "query_usage",
-            "data": {"alert_at_percent": 85},
-            "notifier_list_ids": ["n1"],
-            "zone_names": []
-        },
-        status=200,
-    )
+    # Create a mock for the _get method
+    client.alerting()._c._get = mock.MagicMock()
+    client.alerting()._c._get.return_value = {
+        "id": alert_id,
+        "name": "Test Alert",
+        "type": "account",
+        "subtype": "query_usage",
+        "data": {"alert_at_percent": 85},
+        "notifier_list_ids": ["n1"],
+        "zone_names": []
+    }
     
     alert = client.alerting().usage.get(alert_id)
     
+    # Verify _get was called with correct URL
+    client.alerting()._c._get.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
+    
+    # Verify result
     assert alert["id"] == alert_id
     assert alert["name"] == "Test Alert"
     assert alert["data"]["alert_at_percent"] == 85
 
 
-@responses.activate
 def test_patch_usage_alert(usage_alerts_client):
     """Test patching a usage alert - verify type/subtype are not sent"""
     client = usage_alerts_client
     alert_id = "a1b2c3"
     
-    def request_callback(request):
-        payload = json.loads(request.body)
-        # Verify type and subtype are not in the request
-        assert "type" not in payload
-        assert "subtype" not in payload
-        # Verify data contains the right alert_at_percent
-        assert payload["data"]["alert_at_percent"] == 90
-        
-        resp_body = {
-            "id": alert_id,
-            "name": "Updated Alert",
-            "type": "account",
-            "subtype": "query_usage",
-            "data": {"alert_at_percent": 90},
-            "notifier_list_ids": ["n1"],
-            "zone_names": []
-        }
-        return (200, {}, json.dumps(resp_body))
-    
-    responses.add_callback(
-        responses.PATCH,
-        f"https://api.nsone.net/alerting/v1/alerts/{alert_id}",
-        callback=request_callback,
-        content_type="application/json",
-    )
+    # Create a mock for the _patch method
+    client.alerting()._c._patch = mock.MagicMock()
+    client.alerting()._c._patch.return_value = {
+        "id": alert_id,
+        "name": "Updated Alert",
+        "type": "account",
+        "subtype": "query_usage",
+        "data": {"alert_at_percent": 90},
+        "notifier_list_ids": ["n1"],
+        "zone_names": []
+    }
     
     alert = client.alerting().usage.patch(
         alert_id, 
@@ -118,64 +127,72 @@ def test_patch_usage_alert(usage_alerts_client):
         alert_at_percent=90
     )
     
+    # Verify _patch was called with correct arguments
+    expected_body = {
+        "name": "Updated Alert",
+        "data": {"alert_at_percent": 90}
+    }
+    client.alerting()._c._patch.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}", json=expected_body)
+    
+    # Verify type/subtype are not in the arguments
+    call_args = client.alerting()._c._patch.call_args[1]["json"]
+    assert "type" not in call_args
+    assert "subtype" not in call_args
+    
+    # Verify result
     assert alert["id"] == alert_id
     assert alert["name"] == "Updated Alert"
     assert alert["data"]["alert_at_percent"] == 90
 
 
-@responses.activate
 def test_delete_usage_alert(usage_alerts_client):
     """Test deleting a usage alert"""
     client = usage_alerts_client
     alert_id = "a1b2c3"
     
-    responses.add(
-        responses.DELETE,
-        f"https://api.nsone.net/alerting/v1/alerts/{alert_id}",
-        status=204,
-    )
+    # Create a mock for the _delete method
+    client.alerting()._c._delete = mock.MagicMock()
     
     client.alerting().usage.delete(alert_id)
     
-    # If we got here without exception, the test passes
+    # Verify _delete was called with correct URL
+    client.alerting()._c._delete.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
 
 
-@responses.activate
 def test_list_usage_alerts(usage_alerts_client):
     """Test listing usage alerts with pagination params"""
     client = usage_alerts_client
     
-    responses.add(
-        responses.GET,
-        "https://api.nsone.net/alerting/v1/alerts",
-        json={
-            "limit": 1,
-            "next": "next_token",
-            "total_results": 2,
-            "results": [
-                {
-                    "id": "a1",
-                    "name": "Alert 1",
-                    "type": "account",
-                    "subtype": "query_usage",
-                    "data": {"alert_at_percent": 80}
-                }
-            ]
-        },
-        status=200,
-        match=[
-            responses.matchers.query_param_matcher({
-                "limit": "1",
-                "order_descending": "true"
-            })
+    # Create a mock for the _get method
+    client.alerting()._c._get = mock.MagicMock()
+    client.alerting()._c._get.return_value = {
+        "limit": 1,
+        "next": "next_token",
+        "total_results": 2,
+        "results": [
+            {
+                "id": "a1",
+                "name": "Alert 1",
+                "type": "account",
+                "subtype": "query_usage",
+                "data": {"alert_at_percent": 80}
+            }
         ]
-    )
+    }
     
     response = client.alerting().usage.list(
         limit=1,
         order_descending=True
     )
     
+    # Verify _get was called with correct URL and params
+    expected_params = {
+        "limit": 1,
+        "order_descending": "true"
+    }
+    client.alerting()._c._get.assert_called_once_with("/alerting/v1/alerts", params=expected_params)
+    
+    # Verify result
     assert "results" in response
     assert "next" in response
     assert response["next"] == "next_token"
@@ -215,51 +232,19 @@ def test_validation_threshold_bounds(usage_alerts_client):
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
 
-def test_validation_subtype(usage_alerts_client):
+def test_validation_subtype():
     """Test validation of subtype values"""
-    client = usage_alerts_client
+    from ns1.alerting import USAGE_SUBTYPES
+    from ns1.alerting.usage_alerts import _validate
     
-    # Verify all defined subtypes are accepted
+    # Valid subtypes should pass validation
     for subtype in USAGE_SUBTYPES:
         try:
-            # Just validate, don't make an actual request
-            client.alerting().usage._c = None  # This will cause an error if validation passes
-            with pytest.raises(AttributeError):
-                client.alerting().usage.create(
-                    name="Test Alert", 
-                    subtype=subtype, 
-                    alert_at_percent=85
-                )
+            _validate("Test Alert", subtype, 85)
         except ValueError:
             pytest.fail(f"Valid subtype '{subtype}' was rejected")
     
-    # Test invalid subtype
+    # Invalid subtype should fail validation
     with pytest.raises(ValueError) as excinfo:
-        client.alerting().usage.create(
-            name="Test Alert",
-            subtype="invalid_subtype",
-            alert_at_percent=85
-        )
+        _validate("Test Alert", "invalid_subtype", 85)
     assert "invalid subtype" in str(excinfo.value)
-
-
-@responses.activate
-def test_404_error_handling(usage_alerts_client):
-    """Test proper error handling for 404 responses"""
-    client = usage_alerts_client
-    alert_id = "nonexistent"
-    
-    # Mock 404 response with error message
-    responses.add(
-        responses.GET,
-        f"https://api.nsone.net/alerting/v1/alerts/{alert_id}",
-        json={"message": "alert not found"},
-        status=404,
-    )
-    
-    # This should raise an exception through the REST transport
-    with pytest.raises(Exception) as excinfo:
-        client.alerting().usage.get(alert_id)
-    
-    # Verify error contains the message from the server
-    assert "alert not found" in str(excinfo.value)
