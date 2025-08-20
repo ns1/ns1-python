@@ -6,12 +6,12 @@
 import os
 import sys
 import json
+from ns1 import NS1
+from ns1.config import Config
 
 # Path hackery to ensure we import the local ns1 module
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                               '..')))
-
-from ns1 import NS1
+                                                '..')))
 
 # Create NS1 client
 config = {
@@ -26,10 +26,11 @@ config = {
 }
 
 # Create a config from dictionary and create the client
-from ns1.config import Config
 c = Config()
 c.loadFromDict(config)
 client = NS1(config=c)
+
+
 
 # Usage Alerts API Examples
 def usage_alerts_example():
@@ -90,6 +91,8 @@ def usage_alerts_example():
     except Exception as e:
         print(f"Error deleting alert: {e}")
 
+
+
 # Test validation failures
 def test_validation():
     print("\n=== Validation Tests ===\n")
@@ -126,6 +129,8 @@ def test_validation():
         )
     except ValueError as e:
         print(f"Validation error (expected): {e}")
+
+
 
 if __name__ == '__main__':
     print("Usage Alerts API Examples")

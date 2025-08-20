@@ -5,6 +5,7 @@ USAGE_SUBTYPES = {
     "rum_decision_usage", "filter_chain_usage", "monitor_usage",
 }
 
+
 def _validate(name: str, subtype: str, alert_at_percent: int) -> None:
     if not name:
         raise ValueError("name required")
@@ -12,6 +13,7 @@ def _validate(name: str, subtype: str, alert_at_percent: int) -> None:
         raise ValueError("invalid subtype")
     if not isinstance(alert_at_percent, int) or not (1 <= alert_at_percent <= 100):
         raise ValueError("data.alert_at_percent must be int in 1..100")
+
 
 class UsageAlertsAPI:
     """

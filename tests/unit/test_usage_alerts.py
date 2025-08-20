@@ -10,7 +10,6 @@ try:  # Python 3.3 +
 except ImportError:
     import mock
 
-import json
 
 
 @pytest.fixture
@@ -32,13 +31,14 @@ def usage_alerts_client(config):
     return client
 
 
+
 def test_create_usage_alert(usage_alerts_client):
     """Test creating a usage alert"""
     client = usage_alerts_client
-    
+
     # Create a mock for the _post method in alerting().usage
-    client.alerting()._c._post = mock.MagicMock()
-    client.alerting()._c._post.return_value = {
+    client._post = mock.MagicMock()
+    client._post.return_value = {
         "id": "a1b2c3",
         "name": "Test Alert",
         "type": "account",
@@ -50,12 +50,14 @@ def test_create_usage_alert(usage_alerts_client):
         "updated_at": 1597937213
     }
     
-    alert = client.alerting().usage.create(
-        name="Test Alert",
-        subtype="query_usage",
-        alert_at_percent=85,
-        notifier_list_ids=["n1"]
-    )
+    # Patch the client reference
+    with mock.patch.object(client.alerting().usage, "_c", client):
+        alert = client.alerting().usage.create(
+            name="Test Alert",
+            subtype="query_usage",
+            alert_at_percent=85,
+            notifier_list_ids=["n1"]
+        )
     
     # Verify _post was called with correct arguments
     expected_body = {
@@ -66,7 +68,7 @@ def test_create_usage_alert(usage_alerts_client):
         "notifier_list_ids": ["n1"],
         "zone_names": []
     }
-    client.alerting()._c._post.assert_called_once_with("/alerting/v1/alerts", json=expected_body)
+    client._post.assert_called_once_with("/alerting/v1/alerts", json=expected_body)
     
     # Verify result
     assert alert["id"] == "a1b2c3"
@@ -76,14 +78,15 @@ def test_create_usage_alert(usage_alerts_client):
     assert alert["data"]["alert_at_percent"] == 85
 
 
+
 def test_get_usage_alert(usage_alerts_client):
     """Test retrieving a usage alert"""
     client = usage_alerts_client
     alert_id = "a1b2c3"
     
     # Create a mock for the _get method
-    client.alerting()._c._get = mock.MagicMock()
-    client.alerting()._c._get.return_value = {
+    client._get = mock.MagicMock()
+    client._get.return_value = {
         "id": alert_id,
         "name": "Test Alert",
         "type": "account",
@@ -93,15 +96,18 @@ def test_get_usage_alert(usage_alerts_client):
         "zone_names": []
     }
     
-    alert = client.alerting().usage.get(alert_id)
+    # Patch the client reference
+    with mock.patch.object(client.alerting().usage, "_c", client):
+        alert = client.alerting().usage.get(alert_id)
     
     # Verify _get was called with correct URL
-    client.alerting()._c._get.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
+    client._get.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
     
     # Verify result
     assert alert["id"] == alert_id
     assert alert["name"] == "Test Alert"
     assert alert["data"]["alert_at_percent"] == 85
+
 
 
 def test_patch_usage_alert(usage_alerts_client):
@@ -110,8 +116,8 @@ def test_patch_usage_alert(usage_alerts_client):
     alert_id = "a1b2c3"
     
     # Create a mock for the _patch method
-    client.alerting()._c._patch = mock.MagicMock()
-    client.alerting()._c._patch.return_value = {
+    client._patch = mock.MagicMock()
+    client._patch.return_value = {
         "id": alert_id,
         "name": "Updated Alert",
         "type": "account",
@@ -121,21 +127,23 @@ def test_patch_usage_alert(usage_alerts_client):
         "zone_names": []
     }
     
-    alert = client.alerting().usage.patch(
-        alert_id, 
-        name="Updated Alert",
-        alert_at_percent=90
-    )
+    # Patch the client reference
+    with mock.patch.object(client.alerting().usage, "_c", client):
+        alert = client.alerting().usage.patch(
+            alert_id,
+            name="Updated Alert",
+            alert_at_percent=90
+        )
     
     # Verify _patch was called with correct arguments
     expected_body = {
         "name": "Updated Alert",
         "data": {"alert_at_percent": 90}
     }
-    client.alerting()._c._patch.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}", json=expected_body)
+    client._patch.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}", json=expected_body)
     
     # Verify type/subtype are not in the arguments
-    call_args = client.alerting()._c._patch.call_args[1]["json"]
+    call_args = client._patch.call_args[1]["json"]
     assert "type" not in call_args
     assert "subtype" not in call_args
     
@@ -145,18 +153,22 @@ def test_patch_usage_alert(usage_alerts_client):
     assert alert["data"]["alert_at_percent"] == 90
 
 
+
 def test_delete_usage_alert(usage_alerts_client):
     """Test deleting a usage alert"""
     client = usage_alerts_client
     alert_id = "a1b2c3"
     
     # Create a mock for the _delete method
-    client.alerting()._c._delete = mock.MagicMock()
+    client._delete = mock.MagicMock()
     
-    client.alerting().usage.delete(alert_id)
+    # Patch the client reference
+    with mock.patch.object(client.alerting().usage, "_c", client):
+        client.alerting().usage.delete(alert_id)
     
     # Verify _delete was called with correct URL
-    client.alerting()._c._delete.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
+    client._delete.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
+
 
 
 def test_list_usage_alerts(usage_alerts_client):
@@ -164,8 +176,8 @@ def test_list_usage_alerts(usage_alerts_client):
     client = usage_alerts_client
     
     # Create a mock for the _get method
-    client.alerting()._c._get = mock.MagicMock()
-    client.alerting()._c._get.return_value = {
+    client._get = mock.MagicMock()
+    client._get.return_value = {
         "limit": 1,
         "next": "next_token",
         "total_results": 2,
@@ -180,17 +192,19 @@ def test_list_usage_alerts(usage_alerts_client):
         ]
     }
     
-    response = client.alerting().usage.list(
-        limit=1,
-        order_descending=True
-    )
+    # Patch the client reference
+    with mock.patch.object(client.alerting().usage, "_c", client):
+        response = client.alerting().usage.list(
+            limit=1,
+            order_descending=True
+        )
     
     # Verify _get was called with correct URL and params
     expected_params = {
         "limit": 1,
         "order_descending": "true"
     }
-    client.alerting()._c._get.assert_called_once_with("/alerting/v1/alerts", params=expected_params)
+    client._get.assert_called_once_with("/alerting/v1/alerts", params=expected_params)
     
     # Verify result
     assert "results" in response
@@ -199,6 +213,7 @@ def test_list_usage_alerts(usage_alerts_client):
     assert response["total_results"] == 2
     assert len(response["results"]) == 1
     assert response["results"][0]["id"] == "a1"
+
 
 
 def test_validation_threshold_bounds(usage_alerts_client):
@@ -230,6 +245,7 @@ def test_validation_threshold_bounds(usage_alerts_client):
             alert_at_percent=101
         )
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
+
 
 
 def test_validation_subtype():

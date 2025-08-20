@@ -249,7 +249,7 @@ class NS1:
         :return: Alerting namespace
         """
         from ns1.alerting import UsageAlertsAPI
-        
+
         # Create or reuse the alerting namespace
         ns = getattr(self, "_alerting_ns", None)
         if ns is None:
