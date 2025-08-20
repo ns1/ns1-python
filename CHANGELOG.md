@@ -1,3 +1,8 @@
+## 0.25.0 (August 19th, 2025)
+
+ENHANCEMENTS:
+* Add Usage Alerts (account): create/get/patch/delete/list; client-side validation; examples.
+
 ## 0.24.0 (March 20th, 2025)
 
 ENHANCEMENTS:
