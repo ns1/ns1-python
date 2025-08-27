@@ -4,15 +4,9 @@
 #
 
 import os
-import sys
 import json
 from ns1 import NS1
 from ns1.config import Config
-
-# Path hackery to ensure we import the local ns1 module
-sys.path.insert(
-    0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-)
 
 # Create NS1 client
 config = {
@@ -31,6 +25,11 @@ c = Config()
 c.loadFromDict(config)
 client = NS1(config=c)
 
+# If no real API key is set, we'll get appropriate errors
+# This is just an example to show the usage pattern
+if not os.environ.get("NS1_APIKEY"):
+    print("Using a mock endpoint - for real usage, set the NS1_APIKEY environment variable")
+
 
 # Usage Alerts API Examples
 def usage_alerts_example():
@@ -39,7 +38,7 @@ def usage_alerts_example():
     # List all usage alerts
     print("Listing usage alerts:")
     try:
-        alerts = client.alerting().usage.list(limit=10)
+        alerts = client.alerts().usage.list(limit=10)
         print(f"Total alerts: {alerts.get('total_results', 0)}")
         for i, alert in enumerate(alerts.get("results", [])):
             print(f"  {i+1}. {alert.get('name')} (id: {alert.get('id')})")
@@ -49,7 +48,7 @@ def usage_alerts_example():
     # Create a usage alert
     print("\nCreating a usage alert:")
     try:
-        alert = client.alerting().usage.create(
+        alert = client.alerts().usage.create(
             name="Example query usage alert",
             subtype="query_usage",
             alert_at_percent=85,
@@ -66,7 +65,7 @@ def usage_alerts_example():
     # Update the alert
     print("\nUpdating the alert threshold to 90%:")
     try:
-        updated = client.alerting().usage.patch(alert_id, alert_at_percent=90)
+        updated = client.alerts().usage.patch(alert_id, alert_at_percent=90)
         print(f"Updated alert: {updated['name']}")
         print(f"New threshold: {updated['data']['alert_at_percent']}%")
     except Exception as e:
@@ -75,7 +74,7 @@ def usage_alerts_example():
     # Get alert details
     print("\nGetting alert details:")
     try:
-        details = client.alerting().usage.get(alert_id)
+        details = client.alerts().usage.get(alert_id)
         print(f"Alert details: {json.dumps(details, indent=2)}")
     except Exception as e:
         print(f"Error getting alert: {e}")
@@ -83,7 +82,7 @@ def usage_alerts_example():
     # Delete the alert
     print("\nDeleting the alert:")
     try:
-        client.alerting().usage.delete(alert_id)
+        client.alerts().usage.delete(alert_id)
         print(f"Alert {alert_id} deleted successfully")
     except Exception as e:
         print(f"Error deleting alert: {e}")
@@ -96,7 +95,7 @@ def test_validation():
     # Test invalid subtype
     print("Testing invalid subtype:")
     try:
-        client.alerting().usage.create(
+        client.alerts().usage.create(
             name="Test alert", subtype="invalid_subtype", alert_at_percent=85
         )
     except ValueError as e:
@@ -105,7 +104,7 @@ def test_validation():
     # Test threshold too low
     print("\nTesting threshold too low (0):")
     try:
-        client.alerting().usage.create(
+        client.alerts().usage.create(
             name="Test alert", subtype="query_usage", alert_at_percent=0
         )
     except ValueError as e:
@@ -114,7 +113,7 @@ def test_validation():
     # Test threshold too high
     print("\nTesting threshold too high (101):")
     try:
-        client.alerting().usage.create(
+        client.alerts().usage.create(
             name="Test alert", subtype="query_usage", alert_at_percent=101
         )
     except ValueError as e:

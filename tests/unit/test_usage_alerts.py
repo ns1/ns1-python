@@ -35,7 +35,7 @@ def test_create_usage_alert(usage_alerts_client):
     """Test creating a usage alert"""
     client = usage_alerts_client
 
-    # Create a mock for the _post method in alerting().usage
+    # Create a mock for the _post method
     client._post = mock.MagicMock()
     client._post.return_value = {
         "id": "a1b2c3",
@@ -49,9 +49,12 @@ def test_create_usage_alert(usage_alerts_client):
         "updated_at": 1597937213,
     }
 
-    # Patch the client reference
-    with mock.patch.object(client.alerting().usage, "_c", client):
-        alert = client.alerting().usage.create(
+    # Get the usage API and directly set its client
+    usage_api = client.alerts().usage
+    usage_api._c = client
+    
+    # Make the API call
+    alert = usage_api.create(
             name="Test Alert",
             subtype="query_usage",
             alert_at_percent=85,
@@ -96,9 +99,12 @@ def test_get_usage_alert(usage_alerts_client):
         "zone_names": [],
     }
 
-    # Patch the client reference
-    with mock.patch.object(client.alerting().usage, "_c", client):
-        alert = client.alerting().usage.get(alert_id)
+    # Get the usage API and directly set its client
+    usage_api = client.alerts().usage
+    usage_api._c = client
+    
+    # Make the API call
+    alert = usage_api.get(alert_id)
 
     # Verify _get was called with correct URL
     client._get.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
@@ -126,11 +132,14 @@ def test_patch_usage_alert(usage_alerts_client):
         "zone_names": [],
     }
 
-    # Patch the client reference
-    with mock.patch.object(client.alerting().usage, "_c", client):
-        alert = client.alerting().usage.patch(
-            alert_id, name="Updated Alert", alert_at_percent=90
-        )
+    # Get the usage API and directly set its client
+    usage_api = client.alerts().usage
+    usage_api._c = client
+    
+    # Make the API call
+    alert = usage_api.patch(
+        alert_id, name="Updated Alert", alert_at_percent=90
+    )
 
     # Verify _patch was called with correct arguments
     expected_body = {"name": "Updated Alert", "data": {"alert_at_percent": 90}}
@@ -157,9 +166,12 @@ def test_delete_usage_alert(usage_alerts_client):
     # Create a mock for the _delete method
     client._delete = mock.MagicMock()
 
-    # Patch the client reference
-    with mock.patch.object(client.alerting().usage, "_c", client):
-        client.alerting().usage.delete(alert_id)
+    # Get the usage API and directly set its client
+    usage_api = client.alerts().usage
+    usage_api._c = client
+    
+    # Make the API call
+    usage_api.delete(alert_id)
 
     # Verify _delete was called with correct URL
     client._delete.assert_called_once_with(f"/alerting/v1/alerts/{alert_id}")
@@ -186,9 +198,12 @@ def test_list_usage_alerts(usage_alerts_client):
         ],
     }
 
-    # Patch the client reference
-    with mock.patch.object(client.alerting().usage, "_c", client):
-        response = client.alerting().usage.list(limit=1, order_descending=True)
+    # Get the usage API and directly set its client
+    usage_api = client.alerts().usage
+    usage_api._c = client
+    
+    # Make the API call
+    response = usage_api.list(limit=1, order_descending=True)
 
     # Verify _get was called with correct URL and params
     expected_params = {"limit": 1, "order_descending": "true"}
@@ -211,21 +226,21 @@ def test_validation_threshold_bounds(usage_alerts_client):
 
     # Test below minimum
     with pytest.raises(ValueError) as excinfo:
-        client.alerting().usage.create(
+        client.alerts().usage.create(
             name="Test Alert", subtype="query_usage", alert_at_percent=0
         )
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
     # Test above maximum
     with pytest.raises(ValueError) as excinfo:
-        client.alerting().usage.create(
+        client.alerts().usage.create(
             name="Test Alert", subtype="query_usage", alert_at_percent=101
         )
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
     # Test same validation in patch
     with pytest.raises(ValueError) as excinfo:
-        client.alerting().usage.patch("a1", alert_at_percent=101)
+        client.alerts().usage.patch("a1", alert_at_percent=101)
     assert "alert_at_percent must be int in 1..100" in str(excinfo.value)
 
 

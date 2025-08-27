@@ -23,9 +23,14 @@ def _validate(name: str, subtype: str, alert_at_percent: int) -> None:
 
 class UsageAlertsAPI:
     """
-    Account-scoped usage alerts.
-    Server rules: type='account'; data.alert_at_percent in 1..100;
-    PATCH must not include type/subtype; zone_names/notifier_list_ids may be [].
+    Account-scoped usage alerts. Triggers when usage ≥ alert_at_percent.
+    
+    Server rules: 
+    - Always type='account' 
+    - data.alert_at_percent must be in 1..100
+    - PATCH must not include type/subtype
+    - zone_names/notifier_list_ids may be empty ([])
+    - Server ignores datafeed notifiers for usage alerts
     """
 
     def __init__(self, client) -> None:
