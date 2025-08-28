@@ -28,7 +28,9 @@ client = NS1(config=c)
 # If no real API key is set, we'll get appropriate errors
 # This is just an example to show the usage pattern
 if not os.environ.get("NS1_APIKEY"):
-    print("Using a mock endpoint - for real usage, set the NS1_APIKEY environment variable")
+    print(
+        "Using a mock endpoint - for real usage, set the NS1_APIKEY environment variable"
+    )
 
 
 # Usage Alerts API Examples

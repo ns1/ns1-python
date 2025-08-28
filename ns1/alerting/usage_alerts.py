@@ -24,9 +24,9 @@ def _validate(name: str, subtype: str, alert_at_percent: int) -> None:
 class UsageAlertsAPI:
     """
     Account-scoped usage alerts. Triggers when usage ≥ alert_at_percent.
-    
-    Server rules: 
-    - Always type='account' 
+
+    Server rules:
+    - Always type='account'
     - data.alert_at_percent must be in 1..100
     - PATCH must not include type/subtype
     - zone_names/notifier_list_ids may be empty ([])
