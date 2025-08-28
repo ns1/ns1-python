@@ -242,7 +242,6 @@ class NS1:
 
         return ns1.rest.alerts.Alerts(self.config)
 
-
     def billing_usage(self):
         """
         Return a new raw REST interface to BillingUsage resources

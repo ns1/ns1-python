@@ -85,6 +85,24 @@ def test_rest_alert_list(alerts_config):
                 "data": {"min": 20, "max": 80},
             },
         ),
+        (
+            "sso_alert",
+            "account",
+            "saml_certificate_expired",
+            "../alerting/v1/alerts",
+            {
+                "notifier_list_ids": ["6707da567cd4f300012cd7e4"],
+            },
+        ),
+        (
+            "redirect_alert",
+            "redirects",
+            "certificate_renewal_failed",
+            "../alerting/v1/alerts",
+            {
+                "notifier_list_ids": ["6707da567cd4f300012cd7e4"],
+            },
+        ),
     ],
 )
 def test_rest_alert_create(

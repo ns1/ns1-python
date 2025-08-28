@@ -28,7 +28,7 @@ def datasets_config(config):
     return config
 
 
-@pytest.mark.parametrize("url", [("datasets")])
+@pytest.mark.parametrize("url", ["datasets"])
 def test_rest_datasets_list(datasets_config, url):
     z = NS1(config=datasets_config).datasets()
     z._make_request = mock.MagicMock()
@@ -62,7 +62,7 @@ def test_rest_dataset_retrieve(datasets_config, dtId, url):
     )
 
 
-@pytest.mark.parametrize("url", [("datasets")])
+@pytest.mark.parametrize("url", ["datasets"])
 def test_rest_dataset_create(datasets_config, url):
     z = NS1(config=datasets_config).datasets()
     z._make_request = mock.MagicMock()

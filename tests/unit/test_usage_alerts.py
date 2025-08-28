@@ -52,14 +52,14 @@ def test_create_usage_alert(usage_alerts_client):
     # Get the usage API and directly set its client
     usage_api = client.alerts().usage
     usage_api._c = client
-    
+
     # Make the API call
     alert = usage_api.create(
-            name="Test Alert",
-            subtype="query_usage",
-            alert_at_percent=85,
-            notifier_list_ids=["n1"],
-        )
+        name="Test Alert",
+        subtype="query_usage",
+        alert_at_percent=85,
+        notifier_list_ids=["n1"],
+    )
 
     # Verify _post was called with correct arguments
     expected_body = {
@@ -102,7 +102,7 @@ def test_get_usage_alert(usage_alerts_client):
     # Get the usage API and directly set its client
     usage_api = client.alerts().usage
     usage_api._c = client
-    
+
     # Make the API call
     alert = usage_api.get(alert_id)
 
@@ -135,7 +135,7 @@ def test_patch_usage_alert(usage_alerts_client):
     # Get the usage API and directly set its client
     usage_api = client.alerts().usage
     usage_api._c = client
-    
+
     # Make the API call
     alert = usage_api.patch(
         alert_id, name="Updated Alert", alert_at_percent=90
@@ -169,7 +169,7 @@ def test_delete_usage_alert(usage_alerts_client):
     # Get the usage API and directly set its client
     usage_api = client.alerts().usage
     usage_api._c = client
-    
+
     # Make the API call
     usage_api.delete(alert_id)
 
@@ -201,7 +201,7 @@ def test_list_usage_alerts(usage_alerts_client):
     # Get the usage API and directly set its client
     usage_api = client.alerts().usage
     usage_api._c = client
-    
+
     # Make the API call
     response = usage_api.list(limit=1, order_descending=True)
 
