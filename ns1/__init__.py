@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.24.0"
+version = "0.25.0"
 
 
 class NS1:
@@ -241,6 +241,7 @@ class NS1:
         import ns1.rest.alerts
 
         return ns1.rest.alerts.Alerts(self.config)
+
 
     def billing_usage(self):
         """
