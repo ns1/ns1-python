@@ -26,7 +26,13 @@ class RequestsTransport(TransportBase):
         if not have_requests:
             raise ImportError("requests module required for RequestsTransport")
         TransportBase.__init__(self, config, self.__module__)
+
         self.session = requests.Session()
+        if self._config.get("http_proxy", None):
+            self.session.proxies = {"https": self._config["http_proxy"]}
+        self.session.cert = self._config.get("client_cert")
+        self.session.verify = self._config.get("cert_verify", True)
+
         self.REQ_MAP = {
             "GET": self.session.get,
             "POST": self.session.post,
