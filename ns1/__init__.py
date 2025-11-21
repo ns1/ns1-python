@@ -251,6 +251,16 @@ class NS1:
 
         return ns1.rest.billing_usage.BillingUsage(self.config)
 
+    def pulsardecisions(self):
+        """
+        Return a new raw REST interface to Pulsar Decisions resources
+
+        :rtype: :py:class:`ns1.rest.pulsar_decisions.Decisions`
+        """
+        import ns1.rest.pulsar_decisions
+
+        return ns1.rest.pulsar_decisions.Decisions(self.config)
+    
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         """
