@@ -76,7 +76,9 @@ def main():
         if time_data.get("data"):
             first_point = time_data["data"][0]
             print(f"   First timestamp: {first_point.get('timestamp')}")
-            print(f"   Job counts at first point: {len(first_point.get('counts', []))}")
+            print(
+                f"   Job counts at first point: {len(first_point.get('counts', []))}"
+            )
     except Exception as e:
         print(f"   Error: {e}")
 
@@ -90,7 +92,9 @@ def main():
         )
         print(f"   Areas found: {len(area_data.get('areas', []))}")
         for area in area_data.get("areas", [])[:3]:  # Show first 3
-            print(f"   - {area.get('area_name')}: {area.get('count')} decisions")
+            print(
+                f"   - {area.get('area_name')}: {area.get('count')} decisions"
+            )
     except Exception as e:
         print(f"   Error: {e}")
 
@@ -124,7 +128,9 @@ def main():
         print(f"   Time points: {len(results_time.get('data', []))}")
         if results_time.get("data"):
             first_point = results_time["data"][0]
-            print(f"   Results at first point: {len(first_point.get('results', []))}")
+            print(
+                f"   Results at first point: {len(first_point.get('results', []))}"
+            )
     except Exception as e:
         print(f"   Error: {e}")
 
@@ -156,7 +162,9 @@ def main():
         print(f"   Time points: {len(filters_time.get('filters', []))}")
         if filters_time.get("filters"):
             first_point = filters_time["filters"][0]
-            print(f"   Filters at first point: {len(first_point.get('filters', {}))}")
+            print(
+                f"   Filters at first point: {len(first_point.get('filters', {}))}"
+            )
     except Exception as e:
         print(f"   Error: {e}")
 
@@ -171,7 +179,9 @@ def main():
         )
         print(f"   Data points: {len(customer_data.get('data', []))}")
         if customer_data.get("data"):
-            total = sum(point.get("total", 0) for point in customer_data["data"])
+            total = sum(
+                point.get("total", 0) for point in customer_data["data"]
+            )
             print(f"   Total decisions: {total}")
     except Exception as e:
         print(f"   Error: {e}")
@@ -217,9 +227,9 @@ def main():
         )
         print(f"   Total decisions: {records_data.get('total', 0)}")
         print(f"   Number of records: {len(records_data.get('records', {}))}")
-        for record_key, record_info in list(records_data.get("records", {}).items())[
-            :3
-        ]:
+        for record_key, record_info in list(
+            records_data.get("records", {}).items()
+        )[:3]:
             print(
                 f"   - {record_key}: {record_info.get('count')} decisions "
                 f"({record_info.get('percentage_of_total', 0):.1f}%)"
@@ -236,9 +246,9 @@ def main():
             start=start_time, end=end_time
         )
         print(f"   Number of records: {len(results_record.get('record', {}))}")
-        for record_key, record_info in list(results_record.get("record", {}).items())[
-            :3
-        ]:
+        for record_key, record_info in list(
+            results_record.get("record", {}).items()
+        )[:3]:
             print(
                 f"   - {record_key}: {record_info.get('decision_count')} decisions, "
                 f"{len(record_info.get('results', {}))} unique results"
@@ -259,7 +269,9 @@ def main():
             job="your-job-id",  # Replace with actual job ID
             agg="sum",
         )
-        print(f"   Total decisions (filtered): {filtered_data.get('total', 0)}")
+        print(
+            f"   Total decisions (filtered): {filtered_data.get('total', 0)}"
+        )
     except Exception as e:
         print(f"   Error: {e}")
 
@@ -273,7 +285,9 @@ def main():
             end=end_time,
             jobs=["job1", "job2", "job3"],  # Replace with actual job IDs
         )
-        print(f"   Total decisions (multi-job): {multi_job_data.get('total', 0)}")
+        print(
+            f"   Total decisions (multi-job): {multi_job_data.get('total', 0)}"
+        )
     except Exception as e:
         print(f"   Error: {e}")
 

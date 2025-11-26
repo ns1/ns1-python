@@ -56,55 +56,92 @@ class Decisions(resource.BaseResource):
     def get_decisions(self, callback=None, errback=None, **kwargs):
         path = self._make_query_url("decisions", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
-    def get_decisions_graph_region(self, callback=None, errback=None, **kwargs):
+    def get_decisions_graph_region(
+        self, callback=None, errback=None, **kwargs
+    ):
         path = self._make_query_url("decisions/graph/region", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decisions_graph_time(self, callback=None, errback=None, **kwargs):
         path = self._make_query_url("decisions/graph/time", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decisions_area(self, callback=None, errback=None, **kwargs):
         path = self._make_query_url("decisions/area", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decisions_asn(self, callback=None, errback=None, **kwargs):
         path = self._make_query_url("decisions/asn", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
-    def get_decisions_results_time(self, callback=None, errback=None, **kwargs):
+    def get_decisions_results_time(
+        self, callback=None, errback=None, **kwargs
+    ):
         path = self._make_query_url("decisions/results/time", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
-    def get_decisions_results_area(self, callback=None, errback=None, **kwargs):
+    def get_decisions_results_area(
+        self, callback=None, errback=None, **kwargs
+    ):
         path = self._make_query_url("decisions/results/area", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_filters_time(self, callback=None, errback=None, **kwargs):
         path = self._make_query_url("decisions/filters/time", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
-    def get_decision_customer(self, customer_id, callback=None, errback=None, **kwargs):
-        path = self._make_query_url("decision/customer/%s" % customer_id, **kwargs)
+    def get_decision_customer(
+        self, customer_id, callback=None, errback=None, **kwargs
+    ):
+        path = self._make_query_url(
+            "decision/customer/%s" % customer_id, **kwargs
+        )
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decision_customer_undetermined(
@@ -114,22 +151,41 @@ class Decisions(resource.BaseResource):
             "decision/customer/%s/undetermined" % customer_id, **kwargs
         )
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decision_record(
-        self, customer_id, domain, rec_type, callback=None, errback=None, **kwargs
+        self,
+        customer_id,
+        domain,
+        rec_type,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         path = self._make_query_url(
-            "decision/customer/%s/record/%s/%s" % (customer_id, domain, rec_type),
+            "decision/customer/%s/record/%s/%s"
+            % (customer_id, domain, rec_type),
             **kwargs
         )
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decision_record_undetermined(
-        self, customer_id, domain, rec_type, callback=None, errback=None, **kwargs
+        self,
+        customer_id,
+        domain,
+        rec_type,
+        callback=None,
+        errback=None,
+        **kwargs
     ):
         path = self._make_query_url(
             "decision/customer/%s/record/%s/%s/undetermined"
@@ -137,25 +193,41 @@ class Decisions(resource.BaseResource):
             **kwargs
         )
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
-    def get_decision_total(self, customer_id, callback=None, errback=None, **kwargs):
+    def get_decision_total(
+        self, customer_id, callback=None, errback=None, **kwargs
+    ):
         path = self._make_query_url(
             "decision/customer/%s/total" % customer_id, **kwargs
         )
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
     def get_decisions_records(self, callback=None, errback=None, **kwargs):
         path = self._make_query_url("decisions/records", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )
 
-    def get_decisions_results_record(self, callback=None, errback=None, **kwargs):
+    def get_decisions_results_record(
+        self, callback=None, errback=None, **kwargs
+    ):
         path = self._make_query_url("decisions/results/record", **kwargs)
         return self._make_request(
-            "GET", "%s/%s" % (self.ROOT, path), callback=callback, errback=errback
+            "GET",
+            "%s/%s" % (self.ROOT, path),
+            callback=callback,
+            errback=errback,
         )

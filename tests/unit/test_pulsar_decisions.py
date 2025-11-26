@@ -148,13 +148,19 @@ def pulsar_decisions_config(config):
         ),
     ],
 )
-def test_rest_pulsar_decisions(pulsar_decisions_config, op, args, method, url, kwargs):
+def test_rest_pulsar_decisions(
+    pulsar_decisions_config, op, args, method, url, kwargs
+):
     """Test Pulsar Decisions REST API endpoints."""
     m = ns1.rest.pulsar_decisions.Decisions(pulsar_decisions_config)
     m._make_request = mock.MagicMock()
     operation = getattr(m, op)
     if args is not None:
-        if isinstance(args, list) and len(args) == 1 and isinstance(args[0], dict):
+        if (
+            isinstance(args, list)
+            and len(args) == 1
+            and isinstance(args[0], dict)
+        ):
             # Handle kwargs case
             operation(**args[0])
         else:
