@@ -17,7 +17,7 @@ class Decisions(resource.BaseResource):
 
     def _build_query_params(self, **kwargs):
         params = {}
-        
+
         if 'start' in kwargs and kwargs['start']:
             params['start'] = int(kwargs['start'])
         if 'end' in kwargs and kwargs['end']:
@@ -44,7 +44,7 @@ class Decisions(resource.BaseResource):
             params['zone_id'] = kwargs['zone_id']
         if 'customer_id' in kwargs and kwargs['customer_id']:
             params['customer_id'] = int(kwargs['customer_id'])
-            
+
         return params
 
     def _make_query_url(self, path, **kwargs):

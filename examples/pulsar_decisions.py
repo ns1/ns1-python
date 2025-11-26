@@ -33,7 +33,7 @@ def main():
     print("=" * 60)
     print("Pulsar Decisions API Examples")
     print("=" * 60)
-    
+
     ############################
     # GET DECISIONS DATA #
     ############################
@@ -114,7 +114,7 @@ def main():
     except Exception as e:
         print(f"   Error: {e}")
 
-    ############################## 
+    ##############################
     # GET RESULTS OVER TIME #
     ##############################
     print("\n6. Getting results over time...")
@@ -131,7 +131,7 @@ def main():
     except Exception as e:
         print(f"   Error: {e}")
 
-    ############################## 
+    ##############################
     # GET RESULTS BY AREA #
     ##############################
     print("\n7. Getting results by area...")
@@ -147,7 +147,7 @@ def main():
     except Exception as e:
         print(f"   Error: {e}")
 
-    ############################## 
+    ##############################
     # GET FILTER DATA OVER TIME #
     ##############################
     print("\n8. Getting filter data over time...")
@@ -163,7 +163,7 @@ def main():
     except Exception as e:
         print(f"   Error: {e}")
 
-    ################################### 
+    ###################################
     # GET CUSTOMER-SPECIFIC DECISIONS #
     ###################################
     print("\n9. Getting customer-specific decisions...")
@@ -181,7 +181,7 @@ def main():
     except Exception as e:
         print(f"   Error: {e}")
 
-    ################################### 
+    ###################################
     # GET RECORD-SPECIFIC DECISIONS #
     ###################################
     print("\n10. Getting record-specific decisions...")
@@ -203,7 +203,7 @@ def main():
     except Exception as e:
         print(f"   Error: {e}")
 
-    #################################### 
+    ####################################
     # GET TOTAL DECISIONS FOR CUSTOMER #
     ####################################
     print("\n11. Getting total decisions for customer...")

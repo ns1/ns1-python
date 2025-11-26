@@ -260,7 +260,7 @@ class NS1:
         import ns1.rest.pulsar_decisions
 
         return ns1.rest.pulsar_decisions.Decisions(self.config)
-    
+
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
         """
