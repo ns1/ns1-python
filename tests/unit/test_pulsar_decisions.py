@@ -148,9 +148,7 @@ def pulsar_decisions_config(config):
         ),
     ],
 )
-def test_rest_pulsar_decisions(
-    pulsar_decisions_config, op, args, method, url, kwargs
-):
+def test_rest_pulsar_decisions(pulsar_decisions_config, op, args, method, url, kwargs):
     """Test Pulsar Decisions REST API endpoints."""
     m = ns1.rest.pulsar_decisions.Decisions(pulsar_decisions_config)
     m._make_request = mock.MagicMock()
@@ -184,7 +182,7 @@ def test_rest_pulsar_decisions_build_query_params(pulsar_decisions_config):
         agg="sum",
         geo="country",
         zone_id="zone123",
-        customer_id=12345
+        customer_id=12345,
     )
 
     assert params["start"] == 1234567890
