@@ -6,11 +6,9 @@
 #
 """
 Example usage of Pulsar Decisions API endpoints.
-
 This example demonstrates how to query Pulsar decision analytics data
 using the ns1-python library.
 """
-
 from ns1 import NS1
 import time
 
@@ -28,12 +26,10 @@ api = NS1()
 end_time = int(time.time())
 start_time = end_time - 3600  # 1 hour ago
 
-
 def main():
     """
     Demonstrate various Pulsar Decisions API endpoints.
     """
-    
     print("=" * 60)
     print("Pulsar Decisions API Examples")
     print("=" * 60)
@@ -52,7 +48,7 @@ def main():
         print(f"   Number of graphs: {len(decisions.get('graphs', []))}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ############################
     # GET REGIONAL GRAPH DATA #
     ############################
@@ -67,7 +63,7 @@ def main():
             print(f"   - {region.get('region')}: {len(region.get('counts', []))} job counts")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ##############################
     # GET TIME-SERIES GRAPH DATA #
     ##############################
@@ -85,7 +81,7 @@ def main():
             print(f"   Job counts at first point: {len(first_point.get('counts', []))}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ##############################
     # GET AREA-BASED DECISIONS #
     ##############################
@@ -101,7 +97,7 @@ def main():
             print(f"   - {area.get('area_name')}: {area.get('count')} decisions")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ##############################
     # GET ASN-BASED DECISIONS #
     ##############################
@@ -117,7 +113,7 @@ def main():
                   f"({asn.get('traffic_distribution', 0)*100:.1f}% of traffic)")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ############################## 
     # GET RESULTS OVER TIME #
     ##############################
@@ -134,7 +130,7 @@ def main():
             print(f"   Results at first point: {len(first_point.get('results', []))}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ############################## 
     # GET RESULTS BY AREA #
     ##############################
@@ -150,7 +146,7 @@ def main():
                   f"{len(area.get('results', []))} unique results")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ############################## 
     # GET FILTER DATA OVER TIME #
     ##############################
@@ -166,7 +162,7 @@ def main():
             print(f"   Filters at first point: {len(first_point.get('filters', {}))}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ################################### 
     # GET CUSTOMER-SPECIFIC DECISIONS #
     ###################################
@@ -184,7 +180,7 @@ def main():
             print(f"   Total decisions: {total}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ################################### 
     # GET RECORD-SPECIFIC DECISIONS #
     ###################################
@@ -206,7 +202,7 @@ def main():
             print(f"   Total decisions for {domain}/{rec_type}: {total}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     #################################### 
     # GET TOTAL DECISIONS FOR CUSTOMER #
     ####################################
@@ -221,7 +217,7 @@ def main():
         print(f"   Total decisions: {total_data.get('total', 0)}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ################################
     # GET DECISIONS BY RECORD #
     ################################
@@ -238,7 +234,7 @@ def main():
                   f"({record_info.get('percentage_of_total', 0):.1f}%)")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ##############################
     # GET RESULTS BY RECORD #
     ##############################
@@ -254,7 +250,7 @@ def main():
                   f"{len(record_info.get('results', {}))} unique results")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ##################################
     # QUERYING WITH MULTIPLE FILTERS #
     ##################################
@@ -271,7 +267,7 @@ def main():
         print(f"   Total decisions (filtered): {filtered_data.get('total', 0)}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     ##################################
     # QUERYING WITH MULTIPLE JOBS #
     ##################################
@@ -289,7 +285,6 @@ def main():
     print("\n" + "=" * 60)
     print("Examples completed!")
     print("=" * 60)
-
 
 if __name__ == '__main__':
     main()
