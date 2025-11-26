@@ -26,6 +26,7 @@ api = NS1()
 end_time = int(time.time())
 start_time = end_time - 3600  # 1 hour ago
 
+
 def main():
     """
     Demonstrate various Pulsar Decisions API endpoints.
@@ -281,10 +282,11 @@ def main():
         print(f"   Total decisions (multi-job): {multi_job_data.get('total', 0)}")
     except Exception as e:
         print(f"   Error: {e}")
-    
+
     print("\n" + "=" * 60)
     print("Examples completed!")
     print("=" * 60)
+
 
 if __name__ == '__main__':
     main()

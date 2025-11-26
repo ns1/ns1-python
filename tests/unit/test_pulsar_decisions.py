@@ -170,7 +170,7 @@ def test_rest_pulsar_decisions(
 def test_rest_pulsar_decisions_build_query_params(pulsar_decisions_config):
     """Test _build_query_params helper method."""
     m = ns1.rest.pulsar_decisions.Decisions(pulsar_decisions_config)
-    
+
     params = m._build_query_params(
         start=1234567890,
         end=1234567900,
@@ -186,7 +186,8 @@ def test_rest_pulsar_decisions_build_query_params(pulsar_decisions_config):
         zone_id="zone123",
         customer_id=12345
     )
-    
+
+
     assert params["start"] == 1234567890
     assert params["end"] == 1234567900
     assert params["period"] == "1h"
