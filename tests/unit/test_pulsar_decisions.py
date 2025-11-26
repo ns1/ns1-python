@@ -187,7 +187,6 @@ def test_rest_pulsar_decisions_build_query_params(pulsar_decisions_config):
         customer_id=12345
     )
 
-
     assert params["start"] == 1234567890
     assert params["end"] == 1234567900
     assert params["period"] == "1h"
