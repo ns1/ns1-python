@@ -21,7 +21,7 @@ against 3.8, 3.9, 3.10, 3.11, 3.12 and 3.13
 Installation
 ============
 
-    $ pip install ns1-python
+    $ pip install ns1_python
 
 Dependencies
 ============
