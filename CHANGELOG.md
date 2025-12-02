@@ -1,3 +1,8 @@
+## 0.26.0 (August 28th, 2025)
+
+ENHANCEMENTS:
+* Adds support for pulsar decision endpoints
+
 ## 0.25.0 (August 28th, 2025)
 
 ENHANCEMENTS:

@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.25.0"
+version = "0.26.0"
 
 
 class NS1:
@@ -250,6 +250,16 @@ class NS1:
         import ns1.rest.billing_usage
 
         return ns1.rest.billing_usage.BillingUsage(self.config)
+
+    def pulsardecisions(self):
+        """
+        Return a new raw REST interface to Pulsar Decisions resources
+
+        :rtype: :py:class:`ns1.rest.pulsar_decisions.Decisions`
+        """
+        import ns1.rest.pulsar_decisions
+
+        return ns1.rest.pulsar_decisions.Decisions(self.config)
 
     # HIGH LEVEL INTERFACE
     def loadZone(self, zone, callback=None, errback=None):
