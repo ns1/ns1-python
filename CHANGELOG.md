@@ -1,3 +1,8 @@
+## 0.27.0 (December 3rd, 2025)
+
+CHANGED:
+* Renamed package from `ns1-python` to `ns1_python` to comply with PEP 625
+
 ## 0.26.0 (August 28th, 2025)
 
 ENHANCEMENTS:
