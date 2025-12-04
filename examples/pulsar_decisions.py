@@ -7,7 +7,7 @@
 """
 Example usage of Pulsar Decisions API endpoints.
 This example demonstrates how to query Pulsar decision analytics data
-using the ns1-python library.
+using the ns1_python library.
 """
 from ns1 import NS1
 import time

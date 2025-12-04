@@ -17,7 +17,7 @@ Both python 2.7 and 3.3 are supported.
 
 Install with::
 
-  $ pip install ns1-python
+  $ pip install ns1_python
 
 
 Quick Start

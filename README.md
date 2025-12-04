@@ -21,7 +21,7 @@ against 3.8, 3.9, 3.10, 3.11, 3.12 and 3.13
 Installation
 ============
 
-    $ pip install ns1-python
+    $ pip install ns1_python
 
 Dependencies
 ============
@@ -89,3 +89,9 @@ pip install flake8 black
 flake8 . --count --show-source --statistics --extend-ignore=E501
 black . --check -l 79 --diff
 ```
+
+## NOTE
+
+This package was originally named `ns1-python`, but to comply with [PEP 625](https://peps.python.org/pep-0625/) it was renamed to `ns1_python` via [this PR](https://github.com/ns1/ns1-python/pull/142).
+
+You can still install the `ns1-python` package as normal.

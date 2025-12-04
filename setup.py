@@ -10,7 +10,7 @@ with open(path.join(cwd, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    name="ns1-python",
+    name="ns1_python",
     # flake8: noqa
     version=ns1.version,
     description="Python SDK for the NS1 DNS platform",
