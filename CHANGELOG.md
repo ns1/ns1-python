@@ -1,3 +1,8 @@
+## 0.27.1 (December 3rd, 2025)
+
+FIXED:
+* Updated release version
+
 ## 0.27.0 (December 3rd, 2025)
 
 CHANGED:
