@@ -291,7 +291,7 @@ class Zone(object):
     def export(self, callback=None, errback=None):
         """
         Export zone as a BIND-compatible zone file.
-        
+
         :param callback: optional callback
         :param errback: optional error callback
         :return: zone file content as string

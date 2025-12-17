@@ -191,7 +191,7 @@ class Zones(resource.BaseResource):
     def export(self, zone, callback=None, errback=None):
         """
         Export zone as BIND-compatible zone file.
-        
+
         :param str zone: zone name
         :return: zone file content as string
         """

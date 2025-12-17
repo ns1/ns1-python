@@ -23,4 +23,3 @@ print(zone_file)
 # save to a file
 with open("example.com.zone", "w") as f:
     f.write(zone_file)
-
