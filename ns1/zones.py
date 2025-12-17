@@ -287,3 +287,15 @@ class Zone(object):
         return stats.usage(
             zone=self.zone, callback=callback, errback=errback, **kwargs
         )
+
+    def export(self, callback=None, errback=None):
+        """
+        Export zone as a BIND-compatible zone file.
+        
+        :param callback: optional callback
+        :param errback: optional error callback
+        :return: zone file content as string
+        """
+        return self._rest.export(
+            self.zone, callback=callback, errback=errback
+        )

@@ -188,6 +188,20 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
+    def export(self, zone, callback=None, errback=None):
+        """
+        Export zone as BIND-compatible zone file.
+        
+        :param str zone: zone name
+        :return: zone file content as string
+        """
+        return self._make_request(
+            "GET",
+            f"{self.ROOT}/{zone}/export",
+            callback=callback,
+            errback=errback,
+        )
+
 
 # successive pages just extend the list of zones
 def zone_list_pagination(curr_json, next_json):
