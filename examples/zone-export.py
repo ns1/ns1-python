@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright (c) 2025 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -24,4 +24,3 @@ print(zone_file)
 with open("example.com.zone", "w") as f:
     f.write(zone_file)
 
-# Made with Bob
