@@ -296,6 +296,4 @@ class Zone(object):
         :param errback: optional error callback
         :return: zone file content as string
         """
-        return self._rest.export(
-            self.zone, callback=callback, errback=errback
-        )
+        return self._rest.export(self.zone, callback=callback, errback=errback)

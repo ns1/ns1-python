@@ -253,7 +253,9 @@ def test_rest_zone_buildbody(zones_config):
     assert z._buildBody(zone, **kwargs) == body
 
 
-@pytest.mark.parametrize("zone, url", [("test.zone", "zones/test.zone/export")])
+@pytest.mark.parametrize(
+    "zone, url", [("test.zone", "zones/test.zone/export")]
+)
 def test_rest_zone_export(zones_config, zone, url):
     z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
