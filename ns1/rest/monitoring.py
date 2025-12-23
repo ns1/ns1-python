@@ -17,11 +17,22 @@ class Monitors(resource.BaseResource):
         "policy",
         "notes",
         "rules",
-        "notify_delay",
         "notify_list",
     ]
-    INT_FIELDS = ["frequency", "notify_repeat"]
-    BOOL_FIELDS = ["active", "rapid_recheck", "notify_regional"]
+
+    INT_FIELDS = [
+        "frequency",
+        "notify_delay",
+        "notify_repeat"
+    ]
+
+    BOOL_FIELDS = [
+        "active",
+        "rapid_recheck",
+        "notify_regional",
+        "mute",
+        "notify_failback"
+    ]
 
     def list(self, callback=None, errback=None):
         return self._make_request(
