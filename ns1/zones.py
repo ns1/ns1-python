@@ -297,3 +297,27 @@ class Zone(object):
         :return: zone file content as string
         """
         return self._rest.export(self.zone, callback=callback, errback=errback)
+
+    def initiate_export(self, callback=None, errback=None):
+        """
+        Initiate zone export job.
+
+        :param callback: optional callback
+        :param errback: optional error callback
+        :return: export status response
+        """
+        return self._rest.initiate_export(
+            self.zone, callback=callback, errback=errback
+        )
+
+    def export_status(self, callback=None, errback=None):
+        """
+        Check zone export status.
+
+        :param callback: optional callback
+        :param errback: optional error callback
+        :return: export status response
+        """
+        return self._rest.export_status(
+            self.zone, callback=callback, errback=errback
+        )

@@ -202,6 +202,35 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
+    def initiate_export(self, zone, callback=None, errback=None):
+        """
+        Initiate zone export job.
+
+        :param str zone: zone name
+        :return: export status response
+        """
+        return self._make_request(
+            "PUT",
+            f"export/zonefile/{zone}",
+            body={},
+            callback=callback,
+            errback=errback,
+        )
+
+    def export_status(self, zone, callback=None, errback=None):
+        """
+        Check zone export status.
+
+        :param str zone: zone name
+        :return: export status response
+        """
+        return self._make_request(
+            "GET",
+            f"export/zonefile/{zone}/status",
+            callback=callback,
+            errback=errback,
+        )
+
 
 # successive pages just extend the list of zones
 def zone_list_pagination(curr_json, next_json):
