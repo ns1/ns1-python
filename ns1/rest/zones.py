@@ -188,21 +188,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def export(self, zone, callback=None, errback=None):
-        """
-        Export zone as BIND-compatible zone file.
-
-        :param str zone: zone name
-        :return: zone file content as string
-        """
-        return self._make_request(
-            "GET",
-            f"{self.ROOT}/{zone}/export",
-            callback=callback,
-            errback=errback,
-        )
-
-    def initiate_export(self, zone, callback=None, errback=None):
+    def initiate_zonefile_export(self, zone, callback=None, errback=None):
         """
         Initiate zone export job.
 
@@ -217,7 +203,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def export_status(self, zone, callback=None, errback=None):
+    def status_zonefile_export(self, zone, callback=None, errback=None):
         """
         Check zone export status.
 
@@ -227,6 +213,20 @@ class Zones(resource.BaseResource):
         return self._make_request(
             "GET",
             f"export/zonefile/{zone}/status",
+            callback=callback,
+            errback=errback,
+        )
+
+    def get_zonefile_export(self, zone, callback=None, errback=None):
+        """
+        Download the exported zone file in BIND-compatible format.
+
+        :param str zone: zone name
+        :return: zone file content as string
+        """
+        return self._make_request(
+            "GET",
+            f"{self.ROOT}/{zone}/export",
             callback=callback,
             errback=errback,
         )

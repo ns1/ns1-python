@@ -15,11 +15,21 @@ api = NS1()
 # to load an alternate configuration file:
 # api = NS1(configFile='/etc/ns1/api.json')
 
-# export a zone to BIND format
+# Export a zone to BIND format
+# The export() method will:
+# 1. Initiate the export job
+# 2. Poll the status until complete or failed
+# 3. Download and return the zone file content
 zone = api.loadZone("example.com")
+
+print("Exporting zone example.com...")
 zone_file = zone.export()
+print("Export complete!")
 print(zone_file)
 
-# save to a file
-with open("example.com.zone", "w") as f:
+# Save to a file
+with open("example.com.txt", "w") as f:
     f.write(zone_file)
+print("Zone file saved to example.com.txt")
+
+# Made with Bob

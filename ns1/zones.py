@@ -288,36 +288,49 @@ class Zone(object):
             zone=self.zone, callback=callback, errback=errback, **kwargs
         )
 
-    def export(self, callback=None, errback=None):
+    def export(self, callback=None, errback=None, timeout=300, poll_interval=2):
         """
         Export zone as a BIND-compatible zone file.
+        
+        This method initiates the export, polls the status until complete or failed,
+        and downloads the zone file.
 
         :param callback: optional callback
         :param errback: optional error callback
+        :param int timeout: maximum time to wait for export completion in seconds (default: 300)
+        :param int poll_interval: time between status checks in seconds (default: 2)
         :return: zone file content as string
+        :raises ZoneException: if export fails or times out
         """
-        return self._rest.export(self.zone, callback=callback, errback=errback)
+        import time
 
-    def initiate_export(self, callback=None, errback=None):
-        """
-        Initiate zone export job.
+        # Initiate the export
+        self._rest.initiate_zonefile_export(self.zone)
 
-        :param callback: optional callback
-        :param errback: optional error callback
-        :return: export status response
-        """
-        return self._rest.initiate_export(
+        # Poll the status until complete or failed
+        start_time = time.time()
+        while True:
+            if time.time() - start_time > timeout:
+                raise ZoneException(
+                    f"Zone export timed out after {timeout} seconds"
+                )
+
+            status_response = self._rest.status_zonefile_export(self.zone)
+            status = status_response.get("status")
+
+            if status == "COMPLETE":
+                break
+            elif status == "FAILED":
+                error_msg = status_response.get("message", "Unknown error")
+                raise ZoneException(f"Zone export failed: {error_msg}")
+
+            time.sleep(poll_interval)
+
+        # Download the zone file
+        zone_file = self._rest.get_zonefile_export(
             self.zone, callback=callback, errback=errback
         )
-
-    def export_status(self, callback=None, errback=None):
-        """
-        Check zone export status.
-
-        :param callback: optional callback
-        :param errback: optional error callback
-        :return: export status response
-        """
-        return self._rest.export_status(
-            self.zone, callback=callback, errback=errback
-        )
+        
+        if callback:
+            return callback(zone_file)
+        return zone_file
