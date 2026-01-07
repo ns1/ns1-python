@@ -256,10 +256,10 @@ def test_rest_zone_buildbody(zones_config):
 @pytest.mark.parametrize(
     "zone, url", [("test.zone", "zones/test.zone/export")]
 )
-def test_rest_zone_export(zones_config, zone, url):
+def test_rest_zone_get_zonefile_export(zones_config, zone, url):
     z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
-    z.export(zone)
+    z.get_zonefile_export(zone)
     z._make_request.assert_called_once_with(
         "GET",
         url,
@@ -271,10 +271,10 @@ def test_rest_zone_export(zones_config, zone, url):
 @pytest.mark.parametrize(
     "zone, url", [("test.zone", "export/zonefile/test.zone")]
 )
-def test_rest_zone_initiate_export(zones_config, zone, url):
+def test_rest_zone_initiate_zonefile_export(zones_config, zone, url):
     z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
-    z.initiate_export(zone)
+    z.initiate_zonefile_export(zone)
     z._make_request.assert_called_once_with(
         "PUT",
         url,
@@ -287,10 +287,10 @@ def test_rest_zone_initiate_export(zones_config, zone, url):
 @pytest.mark.parametrize(
     "zone, url", [("test.zone", "export/zonefile/test.zone/status")]
 )
-def test_rest_zone_export_status(zones_config, zone, url):
+def test_rest_zone_status_zonefile_export(zones_config, zone, url):
     z = ns1.rest.zones.Zones(zones_config)
     z._make_request = mock.MagicMock()
-    z.export_status(zone)
+    z.status_zonefile_export(zone)
     z._make_request.assert_called_once_with(
         "GET",
         url,
