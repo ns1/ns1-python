@@ -36,7 +36,9 @@ class Zones(resource.BaseResource):
         self._buildStdBody(body, kwargs)
         return body
 
-    def import_file(self, zone, zoneFile, callback=None, errback=None, **kwargs):
+    def import_file(
+        self, zone, zoneFile, callback=None, errback=None, **kwargs
+    ):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
         params = self._buildImportParams(kwargs)
         return self._make_request(
@@ -145,7 +147,9 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create_version(self, zone, force=False, callback=None, errback=None, name=None):
+    def create_version(
+        self, zone, force=False, callback=None, errback=None, name=None
+    ):
         if name is None:
             name = zone
         body = {}
@@ -163,7 +167,9 @@ class Zones(resource.BaseResource):
         )
 
     def activate_version(self, zone, version_id, callback=None, errback=None):
-        request = "{}/{}/versions/{}/activate".format(self.ROOT, zone, str(version_id))
+        request = "{}/{}/versions/{}/activate".format(
+            self.ROOT, zone, str(version_id)
+        )
         return self._make_request(
             "POST",
             request,
