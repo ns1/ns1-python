@@ -36,9 +36,7 @@ class Zones(resource.BaseResource):
         self._buildStdBody(body, kwargs)
         return body
 
-    def import_file(
-        self, zone, zoneFile, callback=None, errback=None, **kwargs
-    ):
+    def import_file(self, zone, zoneFile, callback=None, errback=None, **kwargs):
         files = [("zonefile", (zoneFile, open(zoneFile, "rb"), "text/plain"))]
         params = self._buildImportParams(kwargs)
         return self._make_request(
@@ -147,9 +145,7 @@ class Zones(resource.BaseResource):
             errback=errback,
         )
 
-    def create_version(
-        self, zone, force=False, callback=None, errback=None, name=None
-    ):
+    def create_version(self, zone, force=False, callback=None, errback=None, name=None):
         if name is None:
             name = zone
         body = {}
@@ -167,9 +163,7 @@ class Zones(resource.BaseResource):
         )
 
     def activate_version(self, zone, version_id, callback=None, errback=None):
-        request = "{}/{}/versions/{}/activate".format(
-            self.ROOT, zone, str(version_id)
-        )
+        request = "{}/{}/versions/{}/activate".format(self.ROOT, zone, str(version_id))
         return self._make_request(
             "POST",
             request,
@@ -228,7 +222,7 @@ class Zones(resource.BaseResource):
         # The transport layer will try to parse it as JSON and fail
         # We catch that exception and extract the raw body text
         from ns1.rest.errors import ResourceException
-        
+
         try:
             return self._make_request(
                 "GET",
@@ -240,7 +234,7 @@ class Zones(resource.BaseResource):
             # If it's about invalid JSON, that's expected - extract the body
             if "invalid json in response" in str(e):
                 # The body is the third argument in ResourceException
-                if hasattr(e, 'args') and len(e.args) >= 3:
+                if hasattr(e, "args") and len(e.args) >= 3:
                     body = e.args[2]
                     if callback:
                         return callback(body)
