@@ -254,7 +254,7 @@ def test_rest_zone_buildbody(zones_config):
 
 
 @pytest.mark.parametrize(
-    "zone, url", [("test.zone", "zones/test.zone/export")]
+    "zone, url", [("test.zone", "export/zonefile/test.zone")]
 )
 def test_rest_zone_get_zonefile_export(zones_config, zone, url):
     z = ns1.rest.zones.Zones(zones_config)
