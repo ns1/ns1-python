@@ -3,6 +3,8 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+import time
+
 from ns1.rest.zones import Zones
 from ns1.records import Record
 from ns1.rest.stats import Stats
@@ -304,10 +306,13 @@ class Zone(object):
         :return: zone file content as string
         :raises ZoneException: if export fails or times out
         """
-        import time
-
         # Initiate the export
-        self._rest.initiate_zonefile_export(self.zone)
+        init_response = self._rest.initiate_zonefile_export(self.zone)
+        if not init_response or init_response.get("status") == "FAILED":
+            error_msg = init_response.get(
+                "message", "Failed to initiate export"
+            )
+            raise ZoneException(f"Zone export initiation failed: {error_msg}")
 
         # Poll the status until complete or failed
         start_time = time.time()
@@ -320,7 +325,7 @@ class Zone(object):
             status_response = self._rest.status_zonefile_export(self.zone)
             status = status_response.get("status")
 
-            if status == "COMPLETE":
+            if status == "COMPLETED":
                 break
             elif status == "FAILED":
                 error_msg = status_response.get("message", "Unknown error")
@@ -329,10 +334,6 @@ class Zone(object):
             time.sleep(poll_interval)
 
         # Download the zone file
-        zone_file = self._rest.get_zonefile_export(
+        return self._rest.get_zonefile_export(
             self.zone, callback=callback, errback=errback
         )
-
-        if callback:
-            return callback(zone_file)
-        return zone_file

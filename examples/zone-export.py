@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2025 NSONE, Inc.
+# Copyright (c) 2026 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -31,5 +31,3 @@ print(zone_file)
 with open("example.com.txt", "w") as f:
     f.write(zone_file)
 print("Zone file saved to example.com.txt")
-
-# Made with Bob
