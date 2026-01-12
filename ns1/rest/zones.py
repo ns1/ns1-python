@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright IBM Corp. 2014, 2026
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -186,6 +186,50 @@ class Zones(resource.BaseResource):
             params={},
             callback=callback,
             errback=errback,
+        )
+
+    def initiate_zonefile_export(self, zone, callback=None, errback=None):
+        """
+        Initiate zone export job.
+
+        :param str zone: zone name
+        :return: export status response
+        """
+        return self._make_request(
+            "PUT",
+            f"export/zonefile/{zone}",
+            body={},
+            callback=callback,
+            errback=errback,
+        )
+
+    def status_zonefile_export(self, zone, callback=None, errback=None):
+        """
+        Check zone export status.
+
+        :param str zone: zone name
+        :return: export status response
+        """
+        return self._make_request(
+            "GET",
+            f"export/zonefile/{zone}/status",
+            callback=callback,
+            errback=errback,
+        )
+
+    def get_zonefile_export(self, zone, callback=None, errback=None):
+        """
+        Download the exported zone file in BIND-compatible format.
+
+        :param str zone: zone name
+        :return: zone file content as string
+        """
+        return self._make_request(
+            "GET",
+            f"export/zonefile/{zone}",
+            callback=callback,
+            errback=errback,
+            skip_json_parsing=True,
         )
 
 

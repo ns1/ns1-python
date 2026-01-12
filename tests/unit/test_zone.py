@@ -1,3 +1,9 @@
+#
+# Copyright IBM Corp. 2014, 2026
+#
+# License under The MIT License (MIT). See LICENSE in project root.
+#
+
 import ns1.rest.zones
 import pytest
 import os
@@ -251,3 +257,50 @@ def test_rest_zone_buildbody(zones_config):
         "tags": {"foo": "bar", "hai": "bai"},
     }
     assert z._buildBody(zone, **kwargs) == body
+
+
+@pytest.mark.parametrize(
+    "zone, url", [("test.zone", "export/zonefile/test.zone")]
+)
+def test_rest_zone_get_zonefile_export(zones_config, zone, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.get_zonefile_export(zone)
+    z._make_request.assert_called_once_with(
+        "GET",
+        url,
+        callback=None,
+        errback=None,
+        skip_json_parsing=True,
+    )
+
+
+@pytest.mark.parametrize(
+    "zone, url", [("test.zone", "export/zonefile/test.zone")]
+)
+def test_rest_zone_initiate_zonefile_export(zones_config, zone, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.initiate_zonefile_export(zone)
+    z._make_request.assert_called_once_with(
+        "PUT",
+        url,
+        body={},
+        callback=None,
+        errback=None,
+    )
+
+
+@pytest.mark.parametrize(
+    "zone, url", [("test.zone", "export/zonefile/test.zone/status")]
+)
+def test_rest_zone_status_zonefile_export(zones_config, zone, url):
+    z = ns1.rest.zones.Zones(zones_config)
+    z._make_request = mock.MagicMock()
+    z.status_zonefile_export(zone)
+    z._make_request.assert_called_once_with(
+        "GET",
+        url,
+        callback=None,
+        errback=None,
+    )

@@ -1,8 +1,10 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright IBM Corp. 2014, 2026
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+import time
+
 from ns1.rest.zones import Zones
 from ns1.records import Record
 from ns1.rest.stats import Stats
@@ -123,7 +125,7 @@ class Zone(object):
                 callback=success,
                 errback=errback,
                 name=name,
-                **kwargs
+                **kwargs,
             )
         else:
             return self._rest.create(
@@ -131,7 +133,7 @@ class Zone(object):
                 callback=success,
                 errback=errback,
                 name=name,
-                **kwargs
+                **kwargs,
             )
 
     def __getattr__(self, item):
@@ -169,7 +171,7 @@ class Zone(object):
         rtype,
         callback=None,
         errback=None,
-        **kwargs
+        **kwargs,
     ):
         """
         Create a new linked record in this zone. These records use the
@@ -194,7 +196,7 @@ class Zone(object):
             link=existing_domain,
             callback=callback,
             errback=errback,
-            **kwargs
+            **kwargs,
         )
 
     def cloneRecord(
@@ -286,4 +288,52 @@ class Zone(object):
         stats = Stats(self.config)
         return stats.usage(
             zone=self.zone, callback=callback, errback=errback, **kwargs
+        )
+
+    def export(
+        self, callback=None, errback=None, timeout=300, poll_interval=2
+    ):
+        """
+        Export zone as a BIND-compatible zone file.
+
+        This method initiates the export, polls the status until complete or failed,
+        and downloads the zone file.
+
+        :param callback: optional callback
+        :param errback: optional error callback
+        :param int timeout: maximum time to wait for export completion in seconds (default: 300)
+        :param int poll_interval: time between status checks in seconds (default: 2)
+        :return: zone file content as string
+        :raises ZoneException: if export fails or times out
+        """
+        # Initiate the export
+        init_response = self._rest.initiate_zonefile_export(self.zone)
+        if not init_response or init_response.get("status") == "FAILED":
+            error_msg = init_response.get(
+                "message", "Failed to initiate export"
+            )
+            raise ZoneException(f"Zone export initiation failed: {error_msg}")
+
+        # Poll the status until complete or failed
+        start_time = time.time()
+        while True:
+            if time.time() - start_time > timeout:
+                raise ZoneException(
+                    f"Zone export timed out after {timeout} seconds"
+                )
+
+            status_response = self._rest.status_zonefile_export(self.zone)
+            status = status_response.get("status")
+
+            if status == "COMPLETED":
+                break
+            elif status == "FAILED":
+                error_msg = status_response.get("message", "Unknown error")
+                raise ZoneException(f"Zone export failed: {error_msg}")
+
+            time.sleep(poll_interval)
+
+        # Download the zone file
+        return self._rest.get_zonefile_export(
+            self.zone, callback=callback, errback=errback
         )

@@ -1,3 +1,8 @@
+## 0.28.0 (TBD)
+
+ENHANCEMENTS:
+* Add zone export functionality to export zones in BIND format for backup/migration
+
 ## 0.27.1 (December 3rd, 2025)
 
 FIXED:
