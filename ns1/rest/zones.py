@@ -5,7 +5,6 @@
 #
 
 from . import resource
-from .errors import ResourceException
 
 
 class Zones(resource.BaseResource):
