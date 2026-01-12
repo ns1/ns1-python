@@ -5,6 +5,7 @@
 #
 
 from . import resource
+from .errors import ResourceException
 
 
 class Zones(resource.BaseResource):
@@ -227,8 +228,6 @@ class Zones(resource.BaseResource):
         # Note: This endpoint returns raw zone file text, not JSON
         # The transport layer will try to parse it as JSON and fail
         # We catch that exception and extract the raw body text
-        from ns1.rest.errors import ResourceException
-
         try:
             return self._make_request(
                 "GET",
@@ -237,14 +236,15 @@ class Zones(resource.BaseResource):
                 errback=errback,
             )
         except ResourceException as e:
-            # If it's about invalid JSON, that's expected - extract the body
-            if "invalid json in response" in str(e):
-                # The body is the third argument in ResourceException
-                if hasattr(e, "args") and len(e.args) >= 3:
-                    body = e.args[2]
-                    if callback:
-                        return callback(body)
-                    return body
+            # Check if this is a valid zonefile response (plain text)
+            # The response should be 200 OK with text/plain content
+            if e.response and e.response.getcode() == 200:
+                # Check content-type header for text/plain
+                content_type = e.response.getheader("Content-Type", "")
+                if "text/plain" in content_type or "text" in content_type:
+                    # This is the expected plain text zonefile
+                    return e.body if e.body else ""
+            # Otherwise, this is a real error - re-raise it
             raise
 
 
