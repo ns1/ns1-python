@@ -1,3 +1,9 @@
+#
+# Copyright IBM Corp. 2014, 2026
+#
+# License under The MIT License (MIT). See LICENSE in project root.
+#
+
 import ns1.rest.zones
 import pytest
 import os

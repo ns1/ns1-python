@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2026 NSONE, Inc.
+# Copyright IBM Corp. 2026
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #

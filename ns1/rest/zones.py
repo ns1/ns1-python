@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright IBM Corp. 2014, 2026
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
@@ -225,27 +225,13 @@ class Zones(resource.BaseResource):
         :param str zone: zone name
         :return: zone file content as string
         """
-        # Note: This endpoint returns raw zone file text, not JSON
-        # The transport layer will try to parse it as JSON and fail
-        # We catch that exception and extract the raw body text
-        try:
-            return self._make_request(
-                "GET",
-                f"export/zonefile/{zone}",
-                callback=callback,
-                errback=errback,
-            )
-        except ResourceException as e:
-            # Check if this is a valid zonefile response (plain text)
-            # The response should be 200 OK with text/plain content
-            if e.response and e.response.getcode() == 200:
-                # Check content-type header for text/plain
-                content_type = e.response.getheader("Content-Type", "")
-                if "text/plain" in content_type or "text" in content_type:
-                    # This is the expected plain text zonefile
-                    return e.body if e.body else ""
-            # Otherwise, this is a real error - re-raise it
-            raise
+        return self._make_request(
+            "GET",
+            f"export/zonefile/{zone}",
+            callback=callback,
+            errback=errback,
+            skip_json_parsing=True,
+        )
 
 
 # successive pages just extend the list of zones
