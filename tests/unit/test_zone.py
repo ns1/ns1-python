@@ -271,6 +271,7 @@ def test_rest_zone_get_zonefile_export(zones_config, zone, url):
         url,
         callback=None,
         errback=None,
+        skip_json_parsing=True,
     )
 
 
