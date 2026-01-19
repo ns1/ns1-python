@@ -19,6 +19,7 @@ _default_perms = {
         "manage_account_settings": False,
         "manage_apikeys": False,
         "view_activity_log": False,
+        "manage_ip_whitelist": False,
     },
     "monitoring": {
         "manage_jobs": False,
