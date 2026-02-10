@@ -1,3 +1,8 @@
+## 0.27.2 (February 10th, 2026)
+
+ENHANCEMENTS:
+* Adds support for monitoring
+
 ## 0.27.1 (December 3rd, 2025)
 
 FIXED:
