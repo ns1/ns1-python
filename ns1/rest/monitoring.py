@@ -20,18 +20,14 @@ class Monitors(resource.BaseResource):
         "notify_list",
     ]
 
-    INT_FIELDS = [
-        "frequency",
-        "notify_delay",
-        "notify_repeat"
-    ]
+    INT_FIELDS = ["frequency", "notify_delay", "notify_repeat"]
 
     BOOL_FIELDS = [
         "active",
         "rapid_recheck",
         "notify_regional",
         "mute",
-        "notify_failback"
+        "notify_failback",
     ]
 
     def list(self, callback=None, errback=None):
