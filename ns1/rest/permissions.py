@@ -1,5 +1,5 @@
 #
-# Copyright (c) 2014 NSONE, Inc.
+# Copyright (c) 2014, 2026 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
