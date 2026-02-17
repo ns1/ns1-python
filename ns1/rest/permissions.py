@@ -36,4 +36,11 @@ _default_perms = {
         "view_zones": False,
         "zones_allow_by_default": False,
     },
+    "redirects": {
+        "manage_redirects": False,
+    },
+    "insights": {
+        "view_insights": False,
+        "manage_insights": False,
+    },
 }

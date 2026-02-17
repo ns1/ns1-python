@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.27.2"
+version = "0.27.3"
 
 
 class NS1:
@@ -36,9 +36,7 @@ class NS1:
         if apiKey:
             self.config.createFromAPIKey(apiKey)
         else:
-            configFile = (
-                Config.DEFAULT_CONFIG_FILE if not configFile else configFile
-            )
+            configFile = Config.DEFAULT_CONFIG_FILE if not configFile else configFile
             self.config.loadFromFile(configFile)
 
     # REST INTERFACE
@@ -300,13 +298,7 @@ class NS1:
         return rest_zone.search(query, type, expand, max, callback, errback)
 
     def createZone(
-        self,
-        zone,
-        zoneFile=None,
-        callback=None,
-        errback=None,
-        name=None,
-        **kwargs
+        self, zone, zoneFile=None, callback=None, errback=None, name=None, **kwargs
     ):
         """
         Create a new zone, and return an associated high level Zone object.
@@ -331,11 +323,7 @@ class NS1:
         zone = ns1.zones.Zone(self.config, zone)
 
         return zone.create(
-            zoneFile=zoneFile,
-            name=name,
-            callback=callback,
-            errback=errback,
-            **kwargs
+            zoneFile=zoneFile, name=name, callback=callback, errback=errback, **kwargs
         )
 
     def loadRecord(
@@ -367,9 +355,7 @@ class NS1:
                 zone = ".".join(parts[1:])
         z = ns1.zones.Zone(self.config, zone)
 
-        return z.loadRecord(
-            domain, type, callback=callback, errback=errback, **kwargs
-        )
+        return z.loadRecord(domain, type, callback=callback, errback=errback, **kwargs)
 
     def loadMonitors(self, callback=None, errback=None, **kwargs):
         """
