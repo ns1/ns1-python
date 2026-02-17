@@ -1,3 +1,8 @@
+## 0.27.3 (February 17th, 2026)
+
+ENHANCEMENTS:
+* Adds support for DNS Insights permissions
+
 ## 0.27.2 (February 10th, 2026)
 
 ENHANCEMENTS:
@@ -38,7 +43,7 @@ ENHANCEMENTS:
 ENHANCEMENTS:
 * Adds support for specifying a list of views when creating zones with or without a provided zone file.
 * Adds support for specifying a zone name other than the FQDN when creating zones with or without a provided zone file.
-* A specified list of networks for a zone was only applied to zone creation when a zone file was not provided. 
+* A specified list of networks for a zone was only applied to zone creation when a zone file was not provided.
 
 ## 0.21.0 (July 19th, 2024)
 

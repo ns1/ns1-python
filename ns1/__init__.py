@@ -1,11 +1,11 @@
 #
-# Copyright (c) 2014, 2025 NSONE, Inc.
+# Copyright (c) 2014, 2026 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
 from .config import Config
 
-version = "0.27.2"
+version = "0.27.3"
 
 
 class NS1:
