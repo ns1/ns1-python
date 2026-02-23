@@ -262,6 +262,20 @@ class NS1:
         return ns1.rest.pulsar_decisions.Decisions(self.config)
 
     # HIGH LEVEL INTERFACE
+    def listZones(self, callback=None, errback=None):
+        """
+        Returns a list of Zone objects for all of your zones. Note that
+        to avoid needless API traffic, these are NOT "loaded", and you
+        will need to call the `.load` method on any that you intend to use
+        further.
+
+        :rtype: list of :py:class:`ns1.zones.Zone`
+        """
+        import ns1.zones
+
+        zones = ns1.rest.zones.Zones(self.config)
+        return [ns1.zones.Zone(self.config, z["zone"]) for z in zones.list()]
+
     def loadZone(self, zone, callback=None, errback=None):
         """
         Load an existing zone into a high level Zone object.
