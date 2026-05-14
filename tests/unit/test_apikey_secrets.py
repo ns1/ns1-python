@@ -88,6 +88,7 @@ def test_rest_apikey_secret_delete(apikey_secret_config, secret_id, url):
         "DELETE", url, callback=None, errback=None
     )
 
+
 @pytest.mark.parametrize(
     "secret_id, url",
     [
@@ -103,6 +104,7 @@ def test_rest_apikey_secret_retrieve(apikey_secret_config, secret_id, url):
         "GET", url, callback=None, errback=None
     )
 
+
 @pytest.mark.parametrize(
     "url",
     [
@@ -116,6 +118,7 @@ def test_rest_apikey_secret_retrieve_self(apikey_secret_config, url):
     z._make_request.assert_called_once_with(
         "GET", url, callback=None, errback=None
     )
+
 
 @pytest.mark.parametrize(
     "secret_id, url",
@@ -131,6 +134,7 @@ def test_rest_apikey_secret_renew(apikey_secret_config, secret_id, url):
     z._make_request.assert_called_once_with(
         "POST", url, callback=None, errback=None
     )
+
 
 @pytest.mark.parametrize(
     "url",

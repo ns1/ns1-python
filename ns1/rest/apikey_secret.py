@@ -13,7 +13,7 @@ class APIKeySecret(resource.BaseResource):
         "expires_at",
     ]
 
-    BOOL_FIELDS= [
+    BOOL_FIELDS = [
         "enabled",
     ]
 

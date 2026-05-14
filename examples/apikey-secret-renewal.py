@@ -6,11 +6,13 @@
 
 from ns1 import NS1
 
+
 def print_secret(secret):
     print(f"  Secret ID: {secret['secret_id']}")
     print(f"  Secret Value: {secret['secret']}")
     print(f"  Expires At: {secret['expires_at']}")
     print(f"  Enabled: {secret['enabled']}")
+
 
 # NS1 will use config in ~/.nsone by default
 api = NS1()
@@ -44,7 +46,7 @@ try:
     # Store the actual apikey for later operations
     apikey_id = apikey["id"]
     apikey_secret = apikey["secrets"][0]
-    apikey_secret_id= apikey_secret["secret_id"]
+    apikey_secret_is = apikey_secret["secret_id"]
     apikey_secret_key = apikey_secret["secret"]
 
     print("Initial api key secret:")
@@ -61,7 +63,7 @@ try:
     # The default secret id for renew() is "self" and this will
     # renew the secret being used for authentication.
     new_secret = apikeysecrets_with_secret_auth.renew()
-    print(f"Renewed api key secret:")
+    print("Renewed api key secret:")
     print_secret(new_secret)
 finally:
     # Clean up the API key so this script can be re-run
