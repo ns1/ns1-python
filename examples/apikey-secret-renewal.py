@@ -23,10 +23,6 @@ api = NS1()
 # to load an alternate configuration file:
 # api = NS1(configFile='/etc/ns1/api.json')
 
-########################
-# CREATE API KEY       #
-########################
-
 # Get the API key interface
 apikey_api = api.apikey()
 
@@ -36,6 +32,9 @@ apikey_api = api.apikey()
 # expiry_duration is set to 30 days
 apikey_id = ""
 try:
+    ###########################
+    # CREATE EXPIRING API KEY #
+    ###########################
     print("Creating API key with 30 day expiry...")
     apikey = apikey_api.create(
         "example-api-key-with-expiry", expiry_duration="30d"
