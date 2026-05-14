@@ -85,7 +85,7 @@ if have_twisted:
     @implementer(IPolicyForHTTPS)
     class NoValidationPolicy(object):
         def creatorForNetloc(self, hostname, port):
-            return CertificateOptions(verify=False)
+            return CertificateOptions(trustRoot=None)
 
 
 class TwistedTransport(TransportBase):
