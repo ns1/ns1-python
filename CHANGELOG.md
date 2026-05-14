@@ -1,3 +1,8 @@
+## 0.27.4 (May 14th, 2026)
+
+BUG FIXES:
+* Fix compatibility with Twisted 26 and TLS certificate validation.
+
 ## 0.27.3 (February 17th, 2026)
 
 ENHANCEMENTS:
