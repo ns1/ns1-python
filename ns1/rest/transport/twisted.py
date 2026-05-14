@@ -34,7 +34,6 @@ try:
     from twisted.web.http_headers import Headers
     from twisted.internet.defer import succeed
     from twisted.internet.ssl import CertificateOptions
-    from twisted.internet._sslverify import ClientTLSOptions
     from twisted.web.iweb import IPolicyForHTTPS
     from zope.interface import implementer
 
@@ -83,21 +82,10 @@ class StringProducer(object):
 
 
 if have_twisted:
-
-    class IgnoreHostnameClientTLSOptions(ClientTLSOptions):
-        def _identityVerifyingInfoCallback(self, connection, where, ret):
-            # override hostname validation
-
-            return
-
     @implementer(IPolicyForHTTPS)
     class NoValidationPolicy(object):
         def creatorForNetloc(self, hostname, port):
-            options = CertificateOptions(trustRoot=None)
-            ascii_hostname = hostname.decode("ascii")
-            context = options.getContext()
-
-            return IgnoreHostnameClientTLSOptions(ascii_hostname, context)
+            return CertificateOptions(verify=False)
 
 
 class TwistedTransport(TransportBase):
