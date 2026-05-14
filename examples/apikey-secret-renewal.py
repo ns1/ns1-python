@@ -34,10 +34,12 @@ apikey_api = api.apikey()
 # You can also specify teams, ip_whitelist, ip_whitelist_strict, and permissions
 # If permissions are not specified, default permissions (all false) will be used
 # expiry_duration is set to 30 days
-apikey_id = ''
+apikey_id = ""
 try:
-    print('Creating API key with 30 day expiry...')
-    apikey = apikey_api.create("example-api-key-with-expiry", expiry_duration="30d")
+    print("Creating API key with 30 day expiry...")
+    apikey = apikey_api.create(
+        "example-api-key-with-expiry", expiry_duration="30d"
+    )
     apikey_id = apikey["id"]
     print(f"Created API key: {apikey_id}")
 
@@ -67,5 +69,5 @@ try:
     print_secret(new_secret)
 finally:
     # Clean up the API key so this script can be re-run
-    if apikey_id != '':
+    if apikey_id != "":
         apikey_api.delete(apikey_id)

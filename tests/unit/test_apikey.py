@@ -59,7 +59,9 @@ def test_rest_apikey_create(apikey_config, name, url):
     )
 
 
-@pytest.mark.parametrize("name, url", [("test-apikey-with-expiry", "account/apikeys")])
+@pytest.mark.parametrize(
+    "name, url", [("test-apikey-with-expiry", "account/apikeys")]
+)
 def test_rest_apikey_create_with_expiry(apikey_config, name, url):
     z = ns1.rest.apikey.APIKey(apikey_config)
     z._make_request = mock.MagicMock()
@@ -69,7 +71,11 @@ def test_rest_apikey_create_with_expiry(apikey_config, name, url):
         url,
         callback=None,
         errback=None,
-        body={"name": name, "permissions": permissions._default_perms, "expiry_duration": "10d"},
+        body={
+            "name": name,
+            "permissions": permissions._default_perms,
+            "expiry_duration": "10d",
+        },
     )
 
 
