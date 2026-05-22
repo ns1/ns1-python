@@ -17,43 +17,6 @@ class APIKeySecret(resource.BaseResource):
         "enabled",
     ]
 
-    # Forward HTTP methods needed by APIKey Secrets API
-    def _get(self, path, params=None):
-        """Forward GET requests to make_request"""
-        # Fix path to start with /apikeys/v1/secrets/ if needed
-        if path.startswith("/"):
-            path = path[1:]  # Remove leading slash
-        if not path.startswith("apikeys/v1/secrets/"):
-            # Secret endpoints should have this prefix
-            path = f"{self.ROOT}/{path.split('/')[-1]}"
-        return self._make_request("GET", path, params=params)
-
-    def _post(self, path, json=None):
-        """Forward POST requests to make_request"""
-        if path.startswith("/"):
-            path = path[1:]  # Remove leading slash
-        if not path.startswith("apikeys/v1/secrets/"):
-            path = f"{self.ROOT}"
-        return self._make_request("POST", path, body=json)
-
-    def _patch(self, path, json=None):
-        """Forward PATCH requests to make_request"""
-        if path.startswith("/"):
-            path = path[1:]  # Remove leading slash
-        if not path.startswith("apikeys/v1/secrets/"):
-            parts = path.split("/")
-            path = f"{self.ROOT}/{parts[-1]}"
-        return self._make_request("PATCH", path, body=json)
-
-    def _delete(self, path):
-        """Forward DELETE requests to make_request"""
-        if path.startswith("/"):
-            path = path[1:]  # Remove leading slash
-        if not path.startswith("apikeys/v1/secrets/"):
-            parts = path.split("/")
-            path = f"{self.ROOT}/{parts[-1]}"
-        return self._make_request("DELETE", path)
-
     def update(self, secret_id, callback=None, errback=None, **kwargs):
         body = {}
         self._buildStdBody(body, kwargs)
