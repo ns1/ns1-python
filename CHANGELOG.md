@@ -1,4 +1,4 @@
-## 0.28.0 (May Nth, 2026)
+## 0.28.0 (June 8th, 2026)
 
 ENHANCEMENTS:
 * Add support for API Key expiry and secret renewal
