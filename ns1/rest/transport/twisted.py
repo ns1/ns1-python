@@ -82,6 +82,7 @@ class StringProducer(object):
 
 
 if have_twisted:
+
     @implementer(IPolicyForHTTPS)
     class NoValidationPolicy(object):
         def creatorForNetloc(self, hostname, port):

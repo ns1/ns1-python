@@ -5,7 +5,7 @@
 #
 from .config import Config
 
-version = "0.27.4"
+version = "0.28.0"
 
 
 class NS1:
@@ -182,6 +182,16 @@ class NS1:
         import ns1.rest.apikey
 
         return ns1.rest.apikey.APIKey(self.config)
+
+    def apikeysecrets(self):
+        """
+        Return a new raw REST interface to API key secret resources
+
+        :rtype: :py:class:`ns1.rest.apikey_secret.APIKeySecret`
+        """
+        import ns1.rest.apikey_secret
+
+        return ns1.rest.apikey_secret.APIKeySecret(self.config)
 
     def acls(self):
         """
