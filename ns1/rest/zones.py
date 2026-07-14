@@ -106,13 +106,14 @@ class Zones(resource.BaseResource):
             pagination_handler=zone_list_pagination,
         )
 
-    def retrieve(self, zone, callback=None, errback=None):
+    def retrieve(self, zone, callback=None, errback=None, params=None):
         return self._make_request(
             "GET",
             "%s/%s" % (self.ROOT, zone),
             callback=callback,
             errback=errback,
             pagination_handler=zone_retrieve_pagination,
+            params=params,
         )
 
     def search(
