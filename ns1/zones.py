@@ -43,7 +43,9 @@ class Zone(object):
         """
         Reload zone data from the API.
         """
-        return self.load(reload=True, callback=callback, errback=errback, params=params)
+        return self.load(
+            reload=True, callback=callback, errback=errback, params=params
+        )
 
     def load(self, callback=None, errback=None, reload=False, params=None):
         """
