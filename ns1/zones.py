@@ -39,13 +39,15 @@ class Zone(object):
     def __getitem__(self, item):
         return self.data.get(item, None)
 
-    def reload(self, callback=None, errback=None):
+    def reload(self, callback=None, errback=None, params=None):
         """
         Reload zone data from the API.
         """
-        return self.load(reload=True, callback=callback, errback=errback)
+        return self.load(
+            reload=True, callback=callback, errback=errback, params=params
+        )
 
-    def load(self, callback=None, errback=None, reload=False):
+    def load(self, callback=None, errback=None, reload=False, params=None):
         """
         Load zone data from the API.
         """
@@ -60,7 +62,7 @@ class Zone(object):
                 return self
 
         return self._rest.retrieve(
-            self.zone, callback=success, errback=errback
+            self.zone, callback=success, errback=errback, params=params
         )
 
     def delete(self, callback=None, errback=None):
