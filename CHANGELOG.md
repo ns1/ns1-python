@@ -1,3 +1,8 @@
+## 0.29.0 (July 15th, 2026)
+
+ENHANCEMENTS:
+* Add zone export functionality to export zones in BIND format for backup/migration
+
 ## 0.28.0 (June 8th, 2026)
 
 ENHANCEMENTS:
