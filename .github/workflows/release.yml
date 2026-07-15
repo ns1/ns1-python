@@ -24,7 +24,7 @@ jobs:
 
       - name: Publish package to PyPI
         if: github.repository == 'ns1/ns1-python' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
-        uses: pypa/gh-action-pypi-publish@v1.5.0
+        uses: pypa/gh-action-pypi-publish@v1.13.0
         with:
           user: __token__
           password: ${{ secrets.ns1_python_publish }}

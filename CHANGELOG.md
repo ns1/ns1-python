@@ -1,7 +1,27 @@
-## 0.28.0 (TBD)
+## 0.29.0 (July 15th, 2026)
 
 ENHANCEMENTS:
 * Add zone export functionality to export zones in BIND format for backup/migration
+
+## 0.28.0 (June 8th, 2026)
+
+ENHANCEMENTS:
+* Add support for API Key expiry and secret renewal
+
+## 0.27.4 (May 14th, 2026)
+
+BUG FIXES:
+* Fix compatibility with Twisted 26 and TLS certificate validation.
+
+## 0.27.3 (February 17th, 2026)
+
+ENHANCEMENTS:
+* Adds support for DNS Insights permissions
+
+## 0.27.2 (February 10th, 2026)
+
+ENHANCEMENTS:
+* Adds support for monitoring
 
 ## 0.27.1 (December 3rd, 2025)
 
@@ -38,7 +58,7 @@ ENHANCEMENTS:
 ENHANCEMENTS:
 * Adds support for specifying a list of views when creating zones with or without a provided zone file.
 * Adds support for specifying a zone name other than the FQDN when creating zones with or without a provided zone file.
-* A specified list of networks for a zone was only applied to zone creation when a zone file was not provided. 
+* A specified list of networks for a zone was only applied to zone creation when a zone file was not provided.
 
 ## 0.21.0 (July 19th, 2024)
 
