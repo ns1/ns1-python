@@ -24,17 +24,21 @@ class NS1:
         """
         self.config = config
 
-        if self.config is None:
-            self._loadConfig(apiKey, configFile)
+        if not isinstance(self.config, Config):
+            self._loadConfig(apiKey, config, configFile)
 
         if keyID:
             self.config.useKeyID(keyID)
 
-    def _loadConfig(self, apiKey, configFile):
+    def _loadConfig(self, apiKey, config, configFile):
         self.config = Config()
 
         if apiKey:
-            self.config.createFromAPIKey(apiKey)
+            if config is None:
+                config = {}
+            config["apiKey"] = apiKey
+
+            self.config.loadFromDict(config)
         else:
             configFile = (
                 Config.DEFAULT_CONFIG_FILE if not configFile else configFile

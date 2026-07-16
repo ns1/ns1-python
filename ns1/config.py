@@ -92,6 +92,15 @@ class Config:
         if "follow_pagination" not in self._data:
             self._data["follow_pagination"] = False
 
+        if "http_proxy" not in self._data:
+            self._data["proxy"] = None
+
+        if "client_cert" not in self._data:
+            self._data["client_cert"] = None
+
+        if "cert_verify" not in self._data:
+            self._data["cert_verify"] = True
+
     def createFromAPIKey(self, apikey, maybeWriteDefault=False):
         """
         Create a basic config from a single API key
@@ -117,7 +126,11 @@ class Config:
 
         :param dict d: Python dictionary containing configuration items
         """
-        self._data = d
+        apikey = d.pop("apiKey", None)
+        if apikey:
+            self.createFromAPIKey(apikey)
+
+        self._data.update(d)
         self._doDefaults()
 
     def loadFromString(self, body):
