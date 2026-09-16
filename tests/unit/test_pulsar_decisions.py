@@ -188,8 +188,6 @@ def test_rest_pulsar_decisions_deprecated(
     m._make_request.assert_called_once_with(method, url, **kwargs)
 
 
-
-
 def test_rest_pulsar_decisions_build_query_params(pulsar_decisions_config):
     """Test _build_query_params helper method."""
     m = ns1.rest.pulsar_decisions.Decisions(pulsar_decisions_config)
