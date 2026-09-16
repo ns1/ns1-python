@@ -3,6 +3,8 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+import warnings
+
 from ns1.rest.views import Views
 
 
@@ -11,7 +13,17 @@ class ViewException(Exception):
 
 
 class View(object):
+    """
+    .. deprecated::
+        The Views API is deprecated and will be removed in a future release.
+    """
+
     def __init__(self, config, view):
+        warnings.warn(
+            "View is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         self._rest = Views(config)
         self.config = config
         self.view = view

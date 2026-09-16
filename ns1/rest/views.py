@@ -2,11 +2,17 @@
 # Copyright (c) 2014 NSONE, Inc.
 #
 # License under The MIT License (MIT). See LICENSE in project root.
+import warnings
 
 from . import resource
 
 
 class Views(resource.BaseResource):
+    """
+    .. deprecated::
+        The Views API is deprecated and will be removed in a future release.
+    """
+
     ROOT = "views"
     INT_FIELDS = [
         "preference",
@@ -25,6 +31,15 @@ class Views(resource.BaseResource):
         return body
 
     def create(self, view_name, callback=None, errback=None, **kwargs):
+        """
+        .. deprecated::
+            The Views API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Views.create is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         body = self._buildBody(view_name, **kwargs)
 
         return self.create_raw(
@@ -34,6 +49,15 @@ class Views(resource.BaseResource):
     def create_raw(
         self, view_name, body, callback=None, errback=None, **kwargs
     ):
+        """
+        .. deprecated::
+            The Views API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Views.create_raw is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._make_request(
             "PUT",
             "%s/%s" % (self.ROOT, view_name),
@@ -43,6 +67,15 @@ class Views(resource.BaseResource):
         )
 
     def update(self, view_name, callback=None, errback=None, **kwargs):
+        """
+        .. deprecated::
+            The Views API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Views.update is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         body = self._buildBody(view_name, **kwargs)
 
         return self._make_request(
@@ -54,6 +87,15 @@ class Views(resource.BaseResource):
         )
 
     def delete(self, view_name, callback=None, errback=None):
+        """
+        .. deprecated::
+            The Views API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Views.delete is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._make_request(
             "DELETE",
             "%s/%s" % (self.ROOT, view_name),
@@ -62,6 +104,15 @@ class Views(resource.BaseResource):
         )
 
     def retrieve(self, view_name, callback=None, errback=None):
+        """
+        .. deprecated::
+            The Views API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Views.retrieve is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._make_request(
             "GET",
             "%s/%s" % (self.ROOT, view_name),

@@ -165,12 +165,21 @@ class NS1:
 
     def tsig(self):
         """
-        Return a new raw REST interface to tsgi resources
+        Return a new raw REST interface to tsig resources.
 
-        :rtype: :py:class:`ns1.rest.tsig.Tsgi`
+        .. deprecated::
+            The TSIG key API is deprecated and will be removed in a future release.
+
+        :rtype: :py:class:`ns1.rest.tsig.Tsig`
         """
+        import warnings
         import ns1.rest.tsig
 
+        warnings.warn(
+            "NS1.tsig() is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return ns1.rest.tsig.Tsig(self.config)
 
     def apikey(self):
@@ -205,12 +214,21 @@ class NS1:
 
     def views(self):
         """
-        Return a new raw REST interface to View resources
+        Return a new raw REST interface to View resources.
+
+        .. deprecated::
+            The Views API is deprecated and will be removed in a future release.
 
         :rtype: :py:class:`ns1.rest.views.Views`
         """
+        import warnings
         import ns1.rest.views
 
+        warnings.warn(
+            "NS1.views() is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return ns1.rest.views.Views(self.config)
 
     def datasets(self):
