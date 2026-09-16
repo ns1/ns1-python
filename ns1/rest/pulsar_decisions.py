@@ -3,6 +3,8 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+import warnings
+
 from . import resource
 
 try:
@@ -134,6 +136,17 @@ class Decisions(resource.BaseResource):
     def get_decision_customer(
         self, customer_id, callback=None, errback=None, **kwargs
     ):
+        """
+        .. deprecated::
+            The ``pulsar/query/decision/customer`` API is deprecated and will
+            be removed in a future release.
+        """
+        warnings.warn(
+            "Decisions.get_decision_customer is deprecated and will be"
+            " removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         path = self._make_query_url(
             "decision/customer/%s" % customer_id, **kwargs
         )
@@ -147,6 +160,17 @@ class Decisions(resource.BaseResource):
     def get_decision_customer_undetermined(
         self, customer_id, callback=None, errback=None, **kwargs
     ):
+        """
+        .. deprecated::
+            The ``pulsar/query/decision/customer`` API is deprecated and will
+            be removed in a future release.
+        """
+        warnings.warn(
+            "Decisions.get_decision_customer_undetermined is deprecated and"
+            " will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         path = self._make_query_url(
             "decision/customer/%s/undetermined" % customer_id, **kwargs
         )
@@ -166,6 +190,17 @@ class Decisions(resource.BaseResource):
         errback=None,
         **kwargs
     ):
+        """
+        .. deprecated::
+            The ``pulsar/query/decision/customer`` API is deprecated and will
+            be removed in a future release.
+        """
+        warnings.warn(
+            "Decisions.get_decision_record is deprecated and will be"
+            " removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         path = self._make_query_url(
             "decision/customer/%s/record/%s/%s"
             % (customer_id, domain, rec_type),
@@ -187,6 +222,17 @@ class Decisions(resource.BaseResource):
         errback=None,
         **kwargs
     ):
+        """
+        .. deprecated::
+            The ``pulsar/query/decision/customer`` API is deprecated and will
+            be removed in a future release.
+        """
+        warnings.warn(
+            "Decisions.get_decision_record_undetermined is deprecated and"
+            " will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         path = self._make_query_url(
             "decision/customer/%s/record/%s/%s/undetermined"
             % (customer_id, domain, rec_type),
@@ -202,6 +248,17 @@ class Decisions(resource.BaseResource):
     def get_decision_total(
         self, customer_id, callback=None, errback=None, **kwargs
     ):
+        """
+        .. deprecated::
+            The ``pulsar/query/decision/customer`` API is deprecated and will
+            be removed in a future release.
+        """
+        warnings.warn(
+            "Decisions.get_decision_total is deprecated and will be"
+            " removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         path = self._make_query_url(
             "decision/customer/%s/total" % customer_id, **kwargs
         )

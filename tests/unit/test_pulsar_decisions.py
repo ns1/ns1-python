@@ -98,41 +98,6 @@ def pulsar_decisions_config(config):
             {"callback": None, "errback": None},
         ),
         (
-            "get_decision_customer",
-            ["12345"],
-            "GET",
-            "pulsar/query/decision/customer/12345",
-            {"callback": None, "errback": None},
-        ),
-        (
-            "get_decision_customer_undetermined",
-            ["12345"],
-            "GET",
-            "pulsar/query/decision/customer/12345/undetermined",
-            {"callback": None, "errback": None},
-        ),
-        (
-            "get_decision_record",
-            ["12345", "example.com", "A"],
-            "GET",
-            "pulsar/query/decision/customer/12345/record/example.com/A",
-            {"callback": None, "errback": None},
-        ),
-        (
-            "get_decision_record_undetermined",
-            ["12345", "example.com", "A"],
-            "GET",
-            "pulsar/query/decision/customer/12345/record/example.com/A/undetermined",
-            {"callback": None, "errback": None},
-        ),
-        (
-            "get_decision_total",
-            ["12345"],
-            "GET",
-            "pulsar/query/decision/customer/12345/total",
-            {"callback": None, "errback": None},
-        ),
-        (
             "get_decisions_records",
             None,
             "GET",
@@ -169,6 +134,60 @@ def test_rest_pulsar_decisions(
     else:
         operation()
     m._make_request.assert_called_once_with(method, url, **kwargs)
+
+
+@pytest.mark.parametrize(
+    "op, args, method, url, kwargs",
+    [
+        (
+            "get_decision_customer",
+            ["12345"],
+            "GET",
+            "pulsar/query/decision/customer/12345",
+            {"callback": None, "errback": None},
+        ),
+        (
+            "get_decision_customer_undetermined",
+            ["12345"],
+            "GET",
+            "pulsar/query/decision/customer/12345/undetermined",
+            {"callback": None, "errback": None},
+        ),
+        (
+            "get_decision_record",
+            ["12345", "example.com", "A"],
+            "GET",
+            "pulsar/query/decision/customer/12345/record/example.com/A",
+            {"callback": None, "errback": None},
+        ),
+        (
+            "get_decision_record_undetermined",
+            ["12345", "example.com", "A"],
+            "GET",
+            "pulsar/query/decision/customer/12345/record/example.com/A/undetermined",
+            {"callback": None, "errback": None},
+        ),
+        (
+            "get_decision_total",
+            ["12345"],
+            "GET",
+            "pulsar/query/decision/customer/12345/total",
+            {"callback": None, "errback": None},
+        ),
+    ],
+)
+def test_rest_pulsar_decisions_deprecated(
+    pulsar_decisions_config, op, args, method, url, kwargs
+):
+    """Test deprecated pulsar/query/decision/customer endpoints."""
+    m = ns1.rest.pulsar_decisions.Decisions(pulsar_decisions_config)
+    m._make_request = mock.MagicMock()
+    operation = getattr(m, op)
+    with pytest.warns(DeprecationWarning):
+        operation(*args)
+    m._make_request.assert_called_once_with(method, url, **kwargs)
+
+
 
 
 def test_rest_pulsar_decisions_build_query_params(pulsar_decisions_config):
