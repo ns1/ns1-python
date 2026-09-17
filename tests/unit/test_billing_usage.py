@@ -106,3 +106,17 @@ def test_rest_get_billing_usage_limits(billing_usage_config, url):
         errback=None,
         params={"from": 123, "to": 456},
     )
+
+
+@pytest.mark.parametrize("url", ["billing-usage/redirects"])
+def test_rest_get_billing_usage_for_redirects(billing_usage_config, url):
+    z = NS1(config=billing_usage_config).billing_usage()
+    z._make_request = mock.MagicMock()
+    z.getRedirectsUsage()
+    z._make_request.assert_called_once_with(
+        "GET",
+        url,
+        callback=None,
+        errback=None,
+        params={},
+    )

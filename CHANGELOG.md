@@ -1,3 +1,10 @@
+## Unreleased
+
+ENHANCEMENTS:
+* Add `getRedirectsUsage` to `BillingUsage` for the `billing-usage/v1/redirects` endpoint
+* Deprecate `tsig` and `views` DDI resources
+* Deprecate `pulsar/query/decision/customer` endpoints
+
 ## 0.29.0 (July 15th, 2026)
 
 ENHANCEMENTS:
