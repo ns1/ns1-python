@@ -31,6 +31,7 @@ print("Export complete!")
 print(zone_file)
 
 # Save to a file
-with open("example.com.txt", "w") as f:
+output_file = f"{zone_name}.txt"
+with open(output_file, "w") as f:
     f.write(zone_file)
-print("Zone file saved to example.com.txt")
+print(f"Zone file saved to {output_file}")
