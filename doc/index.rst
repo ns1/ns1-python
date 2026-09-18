@@ -2,7 +2,7 @@ Python SDK for NS1 DNS Platform
 ===============================
 
 .. image:: _static/ns1.png
-    :target: https://ns1.com/
+    :target: https://www.ibm.com/products/ns1-connect
 
 
 About

@@ -44,14 +44,14 @@ See the [examples directory](https://github.com/ns1/ns1-python/tree/master/examp
 Documentation
 =============
 
-If you don't yet have an NS1 account, [signup here (free)](https://ns1.com/signup/)
+If you don't yet have an NS1 account, [signup here (free)](https://www.ibm.com/account/reg/us-en/signup?formid=urx-54055)
 
 You'll need an API Key. To create one, login to [the portal](https://my.nsone.net/)
 and click on the Account button in the top right. Select Settings & Users, then
 add a new API Key at the bottom.
 
 * [Documentation at ReadTheDocs](https://ns1-python.readthedocs.org/en/latest/)
-* [NS1 REST API Documentation](https://ns1.com/api/)
+* [NS1 REST API Documentation](https://developer.ibm.com/apis/catalog/ns1--ibm-ns1-connect-api/api/API--ns1--ibm-ns1-connect-api)
 
 Tests
 =====

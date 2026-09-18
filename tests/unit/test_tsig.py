@@ -29,7 +29,8 @@ def tsig_config(config):
 def test_rest_tsig_list(tsig_config):
     t = ns1.rest.tsig.Tsig(tsig_config)
     t._make_request = mock.MagicMock()
-    t.list()
+    with pytest.warns(DeprecationWarning):
+        t.list()
     t._make_request.assert_called_once_with(
         "GET", "tsig", callback=None, errback=None
     )
@@ -39,7 +40,8 @@ def test_rest_tsig_list(tsig_config):
 def test_rest_tsig_retrieve(tsig_config, key_name, url):
     t = ns1.rest.tsig.Tsig(tsig_config)
     t._make_request = mock.MagicMock()
-    t.retrieve(key_name)
+    with pytest.warns(DeprecationWarning):
+        t.retrieve(key_name)
     t._make_request.assert_called_once_with(
         "GET", url, callback=None, errback=None
     )
@@ -52,7 +54,8 @@ def test_rest_tsig_retrieve(tsig_config, key_name, url):
 def test_rest_tsig_create(tsig_config, key_name, algorithm, secret, url):
     t = ns1.rest.tsig.Tsig(tsig_config)
     t._make_request = mock.MagicMock()
-    t.create(key_name, algorithm, secret)
+    with pytest.warns(DeprecationWarning):
+        t.create(key_name, algorithm, secret)
     t._make_request.assert_called_once_with(
         "PUT",
         url,
@@ -80,7 +83,8 @@ def test_rest_tsig_create(tsig_config, key_name, algorithm, secret, url):
 def test_rest_tsig_update(tsig_config, tsgi_name, algorithm, secret, url):
     t = ns1.rest.tsig.Tsig(tsig_config)
     t._make_request = mock.MagicMock()
-    t.update(tsgi_name, algorithm, secret)
+    with pytest.warns(DeprecationWarning):
+        t.update(tsgi_name, algorithm, secret)
     t._make_request.assert_called_once_with(
         "POST",
         url,
@@ -97,7 +101,8 @@ def test_rest_tsig_update(tsig_config, tsgi_name, algorithm, secret, url):
 def test_rest_tsig_delete(tsig_config, tsgi_name, url):
     t = ns1.rest.tsig.Tsig(tsig_config)
     t._make_request = mock.MagicMock()
-    t.delete(tsgi_name)
+    with pytest.warns(DeprecationWarning):
+        t.delete(tsgi_name)
     t._make_request.assert_called_once_with(
         "DELETE", url, callback=None, errback=None
     )

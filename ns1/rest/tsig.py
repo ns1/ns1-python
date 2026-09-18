@@ -3,11 +3,19 @@
 #
 # License under The MIT License (MIT). See LICENSE in project root.
 #
+import warnings
+
 from . import permissions
 from . import resource
 
 
 class Tsig(resource.BaseResource):
+    """
+    .. deprecated::
+        The TSIG key API is deprecated and will be removed in a future release.
+        Use :py:class:`ns1.rest.zones.Zones` zone-level TSIG configuration instead.
+    """
+
     ROOT = "tsig"
 
     PASSTHRU_FIELDS = [
@@ -27,6 +35,15 @@ class Tsig(resource.BaseResource):
         errback=None,
         **kwargs
     ):
+        """
+        .. deprecated::
+            The TSIG key API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Tsig.create is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         body = {"algorithm": algorithm, "secret": secret}
         if "permissions" not in kwargs:
             body["permissions"] = permissions._default_perms
@@ -50,6 +67,15 @@ class Tsig(resource.BaseResource):
         errback=None,
         **kwargs
     ):
+        """
+        .. deprecated::
+            The TSIG key API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Tsig.update is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         body = {"algorithm": algorithm, "secret": secret}
         self._buildStdBody(body, kwargs)
 
@@ -62,6 +88,15 @@ class Tsig(resource.BaseResource):
         )
 
     def delete(self, tsig_name, callback=None, errback=None):
+        """
+        .. deprecated::
+            The TSIG key API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Tsig.delete is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._make_request(
             "DELETE",
             "%s/%s" % (self.ROOT, tsig_name),
@@ -70,11 +105,29 @@ class Tsig(resource.BaseResource):
         )
 
     def list(self, callback=None, errback=None):
+        """
+        .. deprecated::
+            The TSIG key API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Tsig.list is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._make_request(
             "GET", "%s" % self.ROOT, callback=callback, errback=errback
         )
 
     def retrieve(self, tsig_name, callback=None, errback=None):
+        """
+        .. deprecated::
+            The TSIG key API is deprecated and will be removed in a future release.
+        """
+        warnings.warn(
+            "Tsig.retrieve is deprecated and will be removed in a future release.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
         return self._make_request(
             "GET",
             "%s/%s" % (self.ROOT, tsig_name),

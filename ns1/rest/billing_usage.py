@@ -62,6 +62,15 @@ class BillingUsage(resource.BaseResource):
             params={},
         )
 
+    def getRedirectsUsage(self, callback=None, errback=None):
+        return self._make_request(
+            "GET",
+            f"{self.ROOT}/redirects",
+            callback=callback,
+            errback=errback,
+            params={},
+        )
+
     def getLimits(self, from_unix, to_unix, callback=None, errback=None):
         return self._make_request(
             "GET",
